@@ -1,0 +1,45 @@
+{
+  "name": "liveog",
+  "version": "0.1.0",
+  "description": "Link previews that stay current: Open Graph tags, covers drawn by a browser you already run, versioned cover addresses, privacy per link kind.",
+  "keywords": [
+    "open graph",
+    "og",
+    "link preview",
+    "twitter card",
+    "og image",
+    "mcp"
+  ],
+  "license": "MIT",
+  "author": "Bilal Abraham",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "default": "./dist/browser.js"
+    }
+  },
+  "bin": {
+    "liveog": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "!dist/**/*.test.*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "test": "npm run build && node --test 'dist/*.test.js'",
+    "prepublishOnly": "npm test"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "7.0.2"
+  }
+}
