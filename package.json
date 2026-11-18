@@ -12,6 +12,12 @@
   ],
   "license": "MIT",
   "author": "Bilal Abraham",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bilal-abraham/liveog.git"
+  },
+  "homepage": "https://github.com/bilal-abraham/liveog#readme",
+  "bugs": "https://github.com/bilal-abraham/liveog/issues",
   "type": "module",
   "exports": {
     ".": {
