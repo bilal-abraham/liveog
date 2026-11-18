@@ -25,21 +25,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #fafafa; --paper: #ffffff; --ink: #0a0a0a; --ink2: #3d3d3d; --mute: #7a7a7a; --line: #d9d9d9; --dash: #c4c4c4;
-    --dot: #cfcfcf; --card: #0a0a0a; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --code: #f2f2f2;
+    --bg: #fafafa; --paper: #ffffff; --ink: #0a0a0a; --ink2: #3d3d3d; --mute: #7a7a7a; --line: #e2e2e2; --soft: #c4c4c4;
+    --dot: #d4d4d4; --card: #0a0a0a; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #2e2e2e; --code: #f4f4f4;
     --sans: Inter, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
     --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #0a0a0a; --paper: #0f0f0f; --ink: #f2f2f2; --ink2: #c4c4c4; --mute: #7a7a7a; --line: #262626; --dash: #333;
-      --dot: #262626; --card: #161616; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --code: #161616; }
+    :root { --bg: #0a0a0a; --paper: #0f0f0f; --ink: #f2f2f2; --ink2: #c4c4c4; --mute: #7a7a7a; --line: #242424; --soft: #3a3a3a;
+      --dot: #262626; --card: #161616; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #333; --code: #161616; }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
   a { color: inherit; }
+  button { font: inherit; color: inherit; }
   .label { font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
-  .frame { max-width: 1200px; margin: 0 auto; border-left: 1px dashed var(--dash); border-right: 1px dashed var(--dash); background: var(--paper); position: relative; }
+  .frame { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); background: var(--paper); }
 
   /* top */
   header { position: sticky; top: 0; z-index: 2; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
@@ -50,86 +51,137 @@
   nav { display: flex; gap: 28px; margin-left: auto; align-items: center; }
   nav a { text-decoration: none; }
   nav a.label:hover { color: var(--ink); }
-  .btn { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 20px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg);
-    font: 500 13px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; cursor: pointer; border-radius: 0; }
+  .btn { display: inline-flex; align-items: center; height: 46px; padding: 0 20px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg);
+    font: 500 13px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
   .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
   .btn.ghost:hover { border-color: var(--ink); }
+
+  /* code, with its copy icon on the right */
+  .code { position: relative; background: var(--code); border: 1px solid var(--line); }
+  .code pre { margin: 0; padding: 18px 56px 18px 20px; overflow-x: auto; font: 400 13.5px/1.7 var(--mono); }
+  .code pre .c { color: var(--mute); }
+  .cp { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; display: grid; place-items: center; border: 0; background: transparent;
+    color: var(--mute); cursor: pointer; border-radius: 6px; }
+  .cp:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 7%, transparent); }
+  .cp svg { width: 16px; height: 16px; }
+  .cp .ok { display: none; }
+  .cp.done .ok { display: block; }
+  .cp.done .copy { display: none; }
+  .chip { display: inline-flex; align-items: center; height: 46px; }
+  .chip pre { padding: 0 52px 0 18px; line-height: 44px; font-size: 14px; }
+  .chip .cp { top: 5px; right: 5px; }
 
   /* hero */
   .hero { position: relative; padding: 112px 24px 96px; text-align: center; overflow: hidden; border-bottom: 1px solid var(--line); }
   .hero::before { content: ""; position: absolute; inset: 0; pointer-events: none;
-    background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 10px 10px;
-    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, transparent 40%, #000 100%); mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, transparent 40%, #000 100%); }
-  .fold { position: absolute; top: 0; right: 0; width: 96px; height: 96px; background: linear-gradient(225deg, var(--bg) 50%, var(--paper) 50%); border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .fold::after { content: ""; position: absolute; inset: 0; background: linear-gradient(225deg, transparent calc(50% - .5px), var(--line) 50%, transparent calc(50% + .5px)); }
+    background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 12px 12px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, transparent 45%, #000 100%); mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, transparent 45%, #000 100%); }
   .pill { display: inline-block; padding: 9px 14px; border: 1px solid var(--line); background: var(--paper); position: relative; }
   h1 { position: relative; margin: 28px auto 0; max-width: 900px; font: 600 clamp(44px, 8vw, 88px)/1.02 var(--sans); letter-spacing: -.045em; }
   .lede { position: relative; margin: 28px auto 0; max-width: 640px; font-size: 19px; color: var(--ink2); }
   .ctas { position: relative; margin-top: 40px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-  /* demo */
-  .demo { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
-  .demo > div { padding: 56px 48px; }
-  .demo > div + div { border-left: 1px solid var(--line); }
-  .demo h2, .ways h2 { margin: 16px 0 0; font: 600 32px/1.15 var(--sans); letter-spacing: -.03em; }
-  .demo p, .ways p { color: var(--ink2); margin: 14px 0 0; }
+  section h2 { margin: 16px 0 0; font: 600 32px/1.15 var(--sans); letter-spacing: -.03em; }
+  section p { color: var(--ink2); margin: 14px 0 0; }
+
+  /* examples */
+  .examples { border-bottom: 1px solid var(--line); }
+  .examples .head { padding: 56px 48px 0; display: flex; align-items: end; gap: 32px; flex-wrap: wrap; }
+  .examples .head > div { max-width: 560px; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 0; margin-left: auto; border: 1px solid var(--line); }
+  .tabs button { border: 0; background: transparent; padding: 12px 14px; cursor: pointer; }
+  .tabs button + button { border-left: 1px solid var(--line); }
+  .tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+  .stage { display: grid; grid-template-columns: 1fr 1fr; margin-top: 40px; border-top: 1px solid var(--line); }
+  .stage > div { padding: 48px; min-width: 0; }
+  .stage > div + div { border-left: 1px solid var(--line); }
+  .why h3 { margin: 16px 0 0; font: 600 24px/1.2 var(--sans); letter-spacing: -.02em; }
+  .changes { list-style: none; margin: 24px 0 0; padding: 0; border-top: 1px solid var(--line); }
+  .changes li { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px; color: var(--ink2); }
+  .changes li .label { padding-top: 3px; min-width: 64px; }
+  .changes li.now { color: var(--ink); }
+  .changes li.now .label { color: var(--ink); }
+
+  .chat { background: var(--bg); border: 1px solid var(--line); padding: 20px; }
+  .msg { font-size: 15px; color: var(--ink2); }
+  .msg u { text-decoration-color: var(--mute); }
+  .preview { margin-top: 12px; border: 1px solid var(--line); background: var(--paper); max-width: 460px; }
+  .cover { aspect-ratio: 1200 / 630; background: var(--card); color: var(--card-ink); position: relative; container-type: inline-size; overflow: hidden; }
+  .cover > .mk { position: absolute; left: 7%; top: 11%; height: 6%; width: auto; }
+  .cover .tag { position: absolute; right: 7%; top: 10%; font: 500 2.6cqw/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--card-mute);
+    display: flex; align-items: center; gap: 1.4cqw; }
+  .cover .tag i { width: 1.6cqw; height: 1.6cqw; border-radius: 50%; background: var(--card-ink); }
+  .cover .tag.pulse i { animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .25; } }
+  .cover .t { position: absolute; left: 7%; right: 7%; bottom: 25%; font: 600 8cqw/1.08 var(--sans); letter-spacing: -.03em;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .cover .l { position: absolute; left: 7%; right: 7%; bottom: 11%; font-size: 3cqw; color: var(--card-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    display: flex; align-items: center; gap: 2cqw; }
+  .faces { display: flex; }
+  .faces b { width: 5.2cqw; height: 5.2cqw; border-radius: 50%; background: #3a3a3a; color: var(--card-ink); font: 600 2.2cqw/5.2cqw var(--sans); text-align: center;
+    box-shadow: 0 0 0 .5cqw var(--card); margin-right: -1.2cqw; }
+  .faces b:last-child { animation: in .4s ease-out; }
+  .faces b:nth-child(2n) { background: #555; } .faces b:nth-child(3n) { background: #777; }
+  @keyframes in { from { transform: scale(.4); opacity: 0; } }
+  .bars { position: absolute; right: 7%; top: 24%; width: 36%; display: grid; gap: 1.6cqw; }
+  .bars i { height: 2.4cqw; background: var(--card-line); display: block; }
+  .bars i b { display: block; height: 100%; background: var(--card-ink); transition: width .6s ease; }
+  .sketch { position: absolute; right: 7%; top: 18%; width: 38%; height: 42%; }
+  .sketch > :last-child { animation: in .5s ease-out; }
+  .addr b.flash { animation: flash .8s ease-out; }
+  @keyframes flash { from { background: var(--ink); color: var(--bg); } }
+  .meta { padding: 12px 14px 14px; }
+  .meta .s { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+  .meta .h { font-weight: 600; margin-top: 4px; }
+  .meta .d { font-size: 14px; color: var(--ink2); margin-top: 2px; }
+  .addr { margin-top: 14px; font: 400 13px var(--mono); color: var(--mute); word-break: break-all; }
+  .addr b { color: var(--ink); font-weight: 500; }
+
+  /* try your own */
+  .own { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+  .own > div { padding: 56px 48px; min-width: 0; }
+  .own > div + div { border-left: 1px solid var(--line); }
   .field { display: block; margin-top: 24px; }
   .field .label { display: block; margin-bottom: 10px; }
   input { width: 100%; height: 48px; padding: 0 14px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 400 16px var(--sans); border-radius: 0; outline: none; }
   input:focus { border-color: var(--ink); }
-  .chat { background: var(--bg); border: 1px solid var(--line); padding: 20px; }
-  .msg { font-size: 15px; color: var(--ink2); }
-  .msg u { text-decoration-color: var(--mute); }
-  .preview { margin-top: 12px; border: 1px solid var(--line); background: var(--paper); max-width: 440px; }
-  .cover { aspect-ratio: 1200 / 630; background: var(--card); color: var(--card-ink); position: relative; container-type: inline-size; overflow: hidden; }
-  .cover svg { position: absolute; left: 8%; top: 12%; height: 6%; width: auto; }
-  .cover .t { position: absolute; left: 8%; right: 8%; bottom: 24%; font: 600 8.6cqw/1.08 var(--sans); letter-spacing: -.03em;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .cover .l { position: absolute; left: 8%; right: 8%; bottom: 12%; font-size: 2.8cqw; color: var(--card-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .cover.flash { animation: flash .5s ease-out; }
-  @keyframes flash { from { opacity: .55; } to { opacity: 1; } }
-  .meta { padding: 12px 14px 14px; }
-  .meta .s { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
-  .meta .h { font-weight: 600; margin-top: 4px; }
-  .meta .d { font-size: 14px; color: var(--ink2); margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .addr { margin-top: 14px; font: 400 13px var(--mono); color: var(--mute); word-break: break-all; }
-  .addr b { color: var(--ink); font-weight: 500; }
 
   /* three */
   .three { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
   .three > div { padding: 36px 32px 40px; }
   .three > div + div { border-left: 1px solid var(--line); }
   .three h3 { margin: 18px 0 0; font: 600 20px/1.25 var(--sans); letter-spacing: -.02em; }
-  .three p { margin: 8px 0 0; color: var(--ink2); font-size: 15px; }
+  .three p { margin: 8px 0 0; font-size: 15px; }
 
   /* two ways */
-  .ways { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+  .ways { display: grid; grid-template-columns: 1fr 1fr; }
   .ways > div { padding: 56px 48px; min-width: 0; }
   .ways > div + div { border-left: 1px solid var(--line); }
-  pre { margin: 24px 0 0; padding: 18px 20px; background: var(--code); border: 1px solid var(--line); overflow-x: auto; font: 400 13.5px/1.7 var(--mono); }
-  pre .c { color: var(--mute); }
-  .copy { margin-top: 12px; }
+  .ways .code { margin-top: 24px; }
+  .ways .ask { margin-top: 20px; }
 
   /* footer */
-  footer { position: relative; max-width: 1200px; margin: 0 auto; height: 360px; overflow: hidden; border-left: 1px dashed var(--dash); border-right: 1px dashed var(--dash); }
-  footer::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 10px 10px;
+  footer { position: relative; max-width: 1200px; margin: 0 auto; height: 360px; overflow: hidden; border-top: 1px solid var(--line); }
+  footer::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 12px 12px;
     -webkit-mask-image: linear-gradient(to top, #000, transparent 75%); mask-image: linear-gradient(to top, #000, transparent 75%); }
   .word { position: absolute; left: 24px; bottom: 72px; font: 700 clamp(120px, 24vw, 300px)/.8 var(--sans); letter-spacing: -.065em;
-    color: transparent; -webkit-text-stroke: 1px var(--dash); user-select: none; }
+    color: transparent; -webkit-text-stroke: 1px var(--soft); user-select: none; }
   .foot { position: absolute; left: 24px; right: 24px; bottom: 28px; display: flex; gap: 28px; flex-wrap: wrap; }
   .foot a { text-decoration: none; }
   .foot a:hover { color: var(--ink); }
   .foot .r { margin-left: auto; }
 
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
   @media (max-width: 860px) {
     nav a.label { display: none; }
-    .hero { padding: 80px 16px 72px; }
-    .fold { width: 56px; height: 56px; }
-    .demo, .ways, .three { grid-template-columns: 1fr; }
-    .demo > div, .ways > div { padding: 40px 16px; }
-    .three > div { padding: 28px 16px 32px; }
-    .demo > div + div, .ways > div + div, .three > div + div { border-left: 0; border-top: 1px solid var(--line); }
     .bar { padding: 0 16px; }
+    .hero { padding: 80px 16px 72px; }
+    .examples .head { padding: 40px 16px 0; }
+    .tabs { margin-left: 0; }
+    .stage, .own, .ways, .three { grid-template-columns: 1fr; }
+    .stage > div, .own > div, .ways > div { padding: 32px 16px; }
+    .three > div { padding: 28px 16px 32px; }
+    .stage > div + div, .own > div + div, .ways > div + div, .three > div + div { border-left: 0; border-top: 1px solid var(--line); }
     footer { height: 260px; }
     .word { left: 16px; bottom: 64px; }
     .foot { left: 16px; right: 16px; }
@@ -137,14 +189,17 @@
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 50 28"><rect fill="none" x="2" y="2" width="46" height="24" rx="6" stroke="currentColor" stroke-width="3"/><circle cx="39.5" cy="10.5" r="3.4" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 16 16"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 3.5v-.5A1.5 1.5 0 0 0 9 1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+  <symbol id="i-ok" viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
 <header><div class="bar">
-  <a class="logo" href="./" aria-label="liveog">
-    <svg viewBox="0 0 50 28" aria-hidden="true"><rect fill="none" x="2" y="2" width="46" height="24" rx="6" stroke="currentColor" stroke-width="3"/><circle cx="39.5" cy="10.5" r="3.4" fill="currentColor"/></svg>
-    <div>live<span>og</span></div>
-  </a>
+  <a class="logo" href="./" aria-label="liveog"><svg viewBox="0 0 50 28" aria-hidden="true"><use href="#mark"/></svg><div>live<span>og</span></div></a>
   <nav>
+    <a class="label" href="#examples">Examples</a>
     <a class="label" href="#ways">Get started</a>
-    <a class="label" href="#agent">MCP</a>
     <a class="label" href="https://www.npmjs.com/package/liveog">npm</a>
     <a class="btn" href="https://github.com/bilal-abraham/liveog">GitHub</a>
   </nav>
@@ -152,37 +207,58 @@
 
 <main class="frame">
   <section class="hero">
-    <div class="fold" aria-hidden="true"></div>
     <div class="pill label">Open source · MIT · Zero dependencies</div>
     <h1>Link previews that stay current.</h1>
     <p class="lede">What your links show when they are pasted into a chat or a post. Covers drawn by a browser you already run, addresses that change when the picture does, and nothing a private link should not show.</p>
     <div class="ctas">
-      <button class="btn" data-copy="npm i liveog" style="text-transform:none;letter-spacing:.02em">npm i liveog</button>
+      <div class="code chip"><pre>npm i liveog</pre><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
       <a class="btn ghost" href="#agent">Add to your agent</a>
     </div>
   </section>
 
-  <section class="demo">
+  <section class="examples" id="examples">
+    <div class="head">
+      <div><div class="label">Examples</div><h2>A link that changes as the thing does.</h2>
+        <p>The same link, pasted again later, shows what is true now. Pick one and watch it.</p></div>
+      <div class="tabs" role="tablist" id="tabs"></div>
+    </div>
+    <div class="stage">
+      <div class="why">
+        <div class="label" id="kind"></div>
+        <h3 id="why"></h3>
+        <p id="whyp"></p>
+        <ul class="changes" id="changes"></ul>
+      </div>
+      <div>
+        <div class="chat">
+          <div class="msg" id="msg"></div>
+          <div class="preview">
+            <div class="cover" id="cover"></div>
+            <div class="meta"><div class="s">yoursite.com</div><div class="h" id="mt"></div><div class="d" id="md"></div></div>
+          </div>
+        </div>
+        <div class="addr">og:image → /c/<span id="cid"></span>/<b id="v">1</b>.png</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="own">
     <div>
-      <div class="label">Try it</div>
+      <div class="label">Try your own</div>
       <h2>Change the words. The link follows.</h2>
       <p>Each new picture gets a new version in its address, so a link pasted again shows it, never a cached one.</p>
-      <label class="field"><span class="label">Title</span><input id="t" value="Join Q4 planning" maxlength="80"></label>
-      <label class="field"><span class="label">Line</span><input id="l" value="3 people are in" maxlength="80"></label>
+      <label class="field"><span class="label">Title</span><input id="ot" value="Join Q4 planning" maxlength="80"></label>
+      <label class="field"><span class="label">Line</span><input id="ol" value="3 people are in" maxlength="80"></label>
     </div>
     <div>
       <div class="chat">
         <div class="msg">come join <u>yoursite.com/join/…</u></div>
         <div class="preview">
-          <div class="cover" id="cover">
-            <svg viewBox="0 0 50 28" aria-hidden="true"><rect fill="none" x="2" y="2" width="46" height="24" rx="6" stroke="currentColor" stroke-width="3"/><circle cx="39.5" cy="10.5" r="3.4" fill="currentColor"/></svg>
-            <div class="t" id="ct"></div>
-            <div class="l" id="cl"></div>
-          </div>
-          <div class="meta"><div class="s">yoursite.com</div><div class="h" id="mt"></div><div class="d">The invite code stays out of the preview.</div></div>
+          <div class="cover" id="ocover"><svg class="mk" viewBox="0 0 50 28" aria-hidden="true"><use href="#mark"/></svg><div class="t" id="oct"></div><div class="l" id="ocl"></div></div>
+          <div class="meta"><div class="s">yoursite.com</div><div class="h" id="omt"></div><div class="d">The invite code stays out of the preview.</div></div>
         </div>
       </div>
-      <div class="addr">og:image → /c/<span id="cid">x7Kq2mR9vTzL4pWn8bYc0A</span>/<b id="v">1</b>.png</div>
+      <div class="addr">og:image → /c/Rk8vYp2QmT0xLw5nZc7HbA/<b id="ov">1</b>.png</div>
     </div>
   </section>
 
@@ -197,23 +273,20 @@
       <div class="label">By hand</div>
       <h2>Three lines in your server.</h2>
       <p>Node 22+, Deno, Bun, Cloudflare Workers, Vercel.</p>
-<pre><span class="c"># the default cover, or your own page</span>
-npx liveog cover "Your site" public/og/home.png
-
-<span class="c">// where your server sends a page</span>
+      <div class="code"><pre>npm i liveog
+npx liveog cover "Your site" public/og/home.png</pre><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+      <div class="code"><pre><span class="c">// where your server sends a page</span>
 import { links, originOf } from 'liveog';
 const site = links('yoursite', kinds, home);
-res.end(site.page(html, path, originOf(host)));</pre>
+res.end(site.page(html, path, originOf(host)));</pre><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
     </div>
     <div id="agent">
       <div class="label">With your agent</div>
       <h2>Your agent designs. liveog draws.</h2>
       <p>It reads your colours, fonts, logo and routes, plans each kind of link with you, draws covers and looks at them, then checks the result.</p>
-<pre>claude mcp add liveog -- npx -y liveog mcp
-
-<span class="c">Then ask:</span>
-"Plan link previews for this project."</pre>
-      <button class="btn ghost copy" data-copy="claude mcp add liveog -- npx -y liveog mcp">Copy</button>
+      <div class="code"><pre>claude mcp add liveog -- npx -y liveog mcp</pre><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+      <p class="ask">Then ask:</p>
+      <div class="code"><pre>Plan link previews for this project.</pre><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
     </div>
   </section>
 </main>
@@ -230,24 +303,95 @@ res.end(site.page(html, path, originOf(host)));</pre>
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const t = $('t'), l = $('l'), cover = $('cover');
-  let v = 1, timer = 0;
-  const show = () => { $('ct').textContent = t.value || 'Untitled'; $('cl').textContent = l.value; $('mt').textContent = t.value || 'Untitled'; };
-  const bump = () => {
-    clearTimeout(timer);
-    show();
-    timer = setTimeout(() => { $('v').textContent = ++v; cover.classList.remove('flash'); void cover.offsetWidth; cover.classList.add('flash'); }, 600);
-  };
-  t.addEventListener('input', bump);
-  l.addEventListener('input', bump);
-  show();
-  for (const b of document.querySelectorAll('[data-copy]')) {
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const mark = '<svg class="mk" viewBox="0 0 50 28" aria-hidden="true"><use href="#mark"/></svg>';
+  const flash = (el) => { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); };   // the version number, as it goes up
+
+  // --- copy: the clipboard, else the old way; the icon says it worked -------------------------
+  async function copy(text) {
+    try { await navigator.clipboard.writeText(text); return true; } catch {}
+    const ta = Object.assign(document.createElement('textarea'), { value: text });
+    ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.append(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch {}
+    ta.remove();
+    return ok;
+  }
+  for (const b of document.querySelectorAll('.cp')) {
     b.addEventListener('click', async () => {
-      const was = b.textContent;
-      try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied'; } catch { b.textContent = 'Copy failed'; }
-      setTimeout(() => { b.textContent = was; }, 1400);
+      const text = b.parentElement.querySelector('pre').textContent.trim();
+      if (await copy(text)) { b.classList.add('done'); b.setAttribute('aria-label', 'Copied'); setTimeout(() => { b.classList.remove('done'); b.setAttribute('aria-label', 'Copy'); }, 1400); }
     });
   }
+
+  // --- examples: each a few states that follow one another --------------------------------------
+  const faces = (n) => `<span class="faces">${['AK', 'JM', 'SR', 'LT', 'PD', 'NE'].slice(0, n).map((x) => `<b>${x}</b>`).join('')}</span>`;
+  const sketch = (n) => `<svg class="sketch" viewBox="0 0 100 60" fill="none" stroke="#f2f2f2" stroke-width="1.6">${[
+    '<rect x="2" y="4" width="28" height="16" rx="2"/>', '<path d="M30 12h14" stroke-dasharray="3 3"/>', '<rect x="44" y="4" width="28" height="16" rx="2"/>',
+    '<path d="M58 20v12"/>', '<rect x="44" y="32" width="28" height="16" rx="2"/>', '<circle cx="88" cy="40" r="8"/>', '<path d="M72 40h8"/>',
+  ].slice(0, n).join('')}</svg>`;
+  const bars = (a, b, c) => `<div class="bars"><i><b style="width:${a}%"></b></i><i><b style="width:${b}%"></b></i><i><b style="width:${c}%"></b></i></div>`;
+  const EX = [
+    { key: 'Invite', msg: 'come join <u>yoursite.com/join/…</u>', why: 'Who is in, before you click.', whyp: 'An invite that shows the room filling up gets answered. The code itself never shows.',
+      states: [1, 2, 3, 4, 5].map((n) => ({ note: `${['Ana', 'Jon', 'Sam', 'Lea', 'Priya'][n - 1]} joined`, title: 'Join Q4 planning', d: `${n} ${n === 1 ? 'person is' : 'people are'} in`,
+        html: `${mark}<div class="tag pulse"><i></i>Open</div><div class="t">Join Q4 planning</div><div class="l">${faces(n)}<span>${n} in</span></div>` })) },
+    { key: 'Live', msg: 'we are on → <u>yoursite.com/live</u>', why: 'Starting soon, then live, then the replay.', whyp: 'One link for the whole event. Shared early, it still tells the truth later.',
+      states: [
+        { note: 'Starts in 10 min', title: 'Launch week, day 3', d: 'Starts in 10 minutes', html: `${mark}<div class="tag">Soon</div><div class="t">Launch week, day 3</div><div class="l">Starts in 10 minutes</div>` },
+        { note: 'Went live', title: 'Launch week, day 3', d: 'Live · 412 watching', html: `${mark}<div class="tag pulse"><i></i>Live</div><div class="t">Launch week, day 3</div><div class="l">412 watching</div>` },
+        { note: 'More joined', title: 'Launch week, day 3', d: 'Live · 1,204 watching', html: `${mark}<div class="tag pulse"><i></i>Live</div><div class="t">Launch week, day 3</div><div class="l">1,204 watching</div>` },
+        { note: 'Ended', title: 'Launch week, day 3', d: 'Replay · 48 min', html: `${mark}<div class="tag">Replay</div><div class="t">Launch week, day 3</div><div class="l">Watch the replay · 48 min</div>` },
+      ] },
+    { key: 'Board', msg: 'here is where we got to <u>yoursite.com/s/…</u>', why: 'The board itself, as it is now.', whyp: 'A shared board, doc or design shows its latest state, drawn in the page that has it open.',
+      states: [2, 3, 5, 7].map((n, i) => ({ note: ['Shared', 'Added a step', 'Linked two', 'Finished'][i], title: 'Onboarding flow', d: `${n} shapes · edited just now`,
+        html: `${mark}${sketch(n)}<div class="t" style="right:50%">Onboarding flow</div><div class="l">${['Draft', 'Draft', 'In review', 'Done'][i]}</div>` })) },
+    { key: 'Drop', msg: 'it is out <u>yoursite.com/p/field-jacket</u>', why: 'Price and stock that are right.', whyp: 'A product link that says sold out when it is, instead of sending people to a dead end.',
+      states: [24, 12, 3, 0].map((n) => ({ note: n ? `${n} left` : 'Sold out', title: 'Field jacket, black', d: n ? `$180 · ${n} left` : 'Sold out · notify me',
+        html: `${mark}<div class="tag${n && n < 5 ? ' pulse' : ''}">${n ? (n < 5 ? '<i></i>Almost gone' : 'In stock') : 'Sold out'}</div><div class="t">Field jacket, black</div><div class="l">${n ? `$180 · ${n} left` : 'Sold out · notify me'}</div>` })) },
+    { key: 'Pull request', msg: 'review pls <u>yoursite.com/pr/482</u>', why: 'Checks, reviews, merged.', whyp: 'A link in a team chat that shows where the work is, without opening it.',
+      states: [
+        { note: 'Opened', title: '#482 Faster cold starts', d: 'Checks running', html: `${mark}<div class="tag pulse"><i></i>Running</div><div class="t">#482 Faster cold starts</div><div class="l">Checks running</div>${bars(30, 10, 0)}` },
+        { note: 'Checks passed', title: '#482 Faster cold starts', d: 'Checks passed · 0 of 2 reviews', html: `${mark}<div class="tag">Passed</div><div class="t">#482 Faster cold starts</div><div class="l">0 of 2 reviews</div>${bars(100, 100, 100)}` },
+        { note: 'Approved', title: '#482 Faster cold starts', d: 'Approved · 2 of 2 reviews', html: `${mark}<div class="tag">Approved</div><div class="t">#482 Faster cold starts</div><div class="l">2 of 2 reviews</div>${bars(100, 100, 100)}` },
+        { note: 'Merged', title: '#482 Faster cold starts', d: 'Merged into main', html: `${mark}<div class="tag">Merged</div><div class="t">#482 Faster cold starts</div><div class="l">Merged into main</div>` },
+      ] },
+  ];
+  const ids = ['x7Kq2mR9vTzL4pWn8bYc0A', 'Hc3pQ8wLr1ZtVy6mN0kBsE', 'Tn5Gv0aYq7LcW2mXp9RdUf', 'Bw9Lk4sNe2QhZ8pVt1MyCa', 'Pz1Jx6uRm3KcW0tGq8LvYn'];
+  let ex = 0, at = 0, v = 1, timer = 0;
+  const tabs = $('tabs');
+  EX.forEach((e, i) => {
+    const b = Object.assign(document.createElement('button'), { className: 'label', textContent: e.key, role: 'tab' });
+    b.addEventListener('click', () => pick(i));
+    tabs.append(b);
+  });
+  function render() {
+    const e = EX[ex], s = e.states[at];
+    $('cover').innerHTML = s.html; if (at) flash($('v'));
+    $('mt').textContent = s.title; $('md').textContent = s.d; $('v').textContent = v;
+    $('changes').innerHTML = e.states.slice(0, at + 1).map((x, i) => `<li class="${i === at ? 'now' : ''}"><span class="label">v${v - at + i}</span><span>${esc(x.note)}</span></li>`).join('');
+  }
+  function pick(i) {
+    ex = i; at = 0; v = 1;
+    [...tabs.children].forEach((b, k) => b.setAttribute('aria-selected', String(k === i)));
+    const e = EX[i];
+    $('kind').textContent = e.key; $('why').textContent = e.why; $('whyp').textContent = e.whyp; $('msg').innerHTML = e.msg; $('cid').textContent = ids[i];
+    render();
+    clearInterval(timer);
+    timer = setInterval(() => {
+      const e = EX[ex];
+      if (at + 1 < e.states.length) { at++; v++; render(); }
+      else pick((ex + 1) % EX.length);
+    }, 2400);
+  }
+  pick(0);
+
+  // --- try your own ------------------------------------------------------------------------------
+  const ot = $('ot'), ol = $('ol');
+  let ov = 1, otimer = 0;
+  const showOwn = () => { $('oct').textContent = ot.value || 'Untitled'; $('ocl').textContent = ol.value; $('omt').textContent = ot.value || 'Untitled'; };
+  const bump = () => { clearTimeout(otimer); showOwn(); otimer = setTimeout(() => { $('ov').textContent = ++ov; flash($('ov')); }, 600); };
+  ot.addEventListener('input', bump); ol.addEventListener('input', bump);
+  showOwn();
 </script>
 </body>
 </html>
