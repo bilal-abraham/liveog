@@ -90,15 +90,16 @@
   h1 { margin: 28px 0 0; max-width: 820px; font: 500 clamp(40px, 6.6vw, 76px)/1.04 var(--sans); letter-spacing: -.045em; }
   .lede { margin: 22px 0 0; max-width: 520px; font-size: 19px; color: var(--ink2); }
   .ctas { margin-top: 36px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; max-width: 100%; }
-  .users { position: relative; display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 26px 24px 30px; border-top: 1px solid var(--line); background: var(--paper); }
-  .logos { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
+  .users { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: 48px; flex-wrap: wrap; padding: 28px 24px; border-top: 1px solid var(--line); background: var(--paper); }
+  .logos { display: flex; align-items: flex-end; gap: 48px; }
+  .users > .label { padding-bottom: 1px; }
   .logos a { display: block; }
   .logos svg { display: block; height: 24px; width: auto; color: var(--ink); opacity: .75; }
-  .logos svg.ev { height: 27px; }
+  .logos svg.ev { height: 28px; margin-bottom: calc(-28px * 15 / 65); }
 
   /* examples */
   .ex-head { padding: 56px 48px 40px; }
-  h2 { margin: 14px 0 0; font: 500 clamp(30px, 4vw, 44px)/1.1 var(--sans); letter-spacing: -.035em; }
+  h2 { margin: 0; font: 500 clamp(30px, 4vw, 44px)/1.1 var(--sans); letter-spacing: -.035em; }
   .ex-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; }
   .ex-head h2 { font-size: clamp(30px, 3.6vw, 42px); }
   .seg { flex: none; }
@@ -173,7 +174,8 @@
   footer { position: relative; max-width: 1200px; margin: 0 auto; height: 340px; overflow: hidden; }
   footer::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 12px 12px;
     -webkit-mask-image: linear-gradient(to top, #000, transparent 75%); mask-image: linear-gradient(to top, #000, transparent 75%); }
-  .word { position: absolute; left: 24px; bottom: 72px; font: 700 clamp(110px, 24vw, 300px)/.8 var(--sans); letter-spacing: -.065em; color: transparent; -webkit-text-stroke: 1px var(--soft); user-select: none; }
+  /* drawn as fill over a doubled stroke: the letters' overlapping shapes leave no seams inside */
+  .word { position: absolute; left: 24px; bottom: 72px; font: 700 clamp(110px, 24vw, 300px)/.8 var(--sans); letter-spacing: -.065em; color: var(--bg); -webkit-text-stroke: 2px var(--soft); paint-order: stroke fill; user-select: none; }
   .foot { position: absolute; left: 24px; right: 24px; bottom: 28px; display: flex; gap: 28px; flex-wrap: wrap; }
   .foot a { text-decoration: none; }
   .foot a:hover { color: var(--ink); }
@@ -238,11 +240,11 @@
         <div class="cmd glow"><svg><use href="#i-term"/></svg><code>claude mcp add liveog</code><button class="cp" data-copy="claude mcp add liveog -- npx -y liveog mcp" aria-label="Copy the command for your agent"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
       </div>
     </div>
-    <div class="users"><span class="label">Working with</span><div class="logos"><svg viewBox="0 0 231 100" role="img" aria-label="limn"><path d="M64 100V59A27 27 0 0 1 118 59V100H105V59A14 14 0 0 0 77 59V100ZM105 100V59A27 27 0 0 1 159 59V100H146V59A14 14 0 0 0 118 59V100ZM177 100V59A27 27 0 0 1 231 59V100H218V59A14 14 0 0 0 190 59V100Z" fill="currentColor"/><rect x="33" y="32" width="13" height="68" fill="currentColor"/><rect width="13" height="100" fill="currentColor"/><circle cx="39.5" cy="15.5" r="7.5" fill="currentColor"/></svg><a href="https://www.exploravist.net" aria-label="ExploraVist"><svg class="ev" viewBox="-2 30 337 65" aria-hidden="true" fill="currentColor" font-weight="700"><text x="0" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">e</text><text x="30" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">x</text><text x="63.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">p</text><text x="97.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">l</text><text x="114" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">o</text><text x="146" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">r</text><text x="173" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">a</text><text x="196" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="italic">V</text><text x="225" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="italic" transform="translate(0 80) skewX(-23) translate(0 -80)">ı</text><text x="250.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">s</text><text x="278.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">t</text><path transform="translate(249.5 46.75)" d="M0 -5.4 L1.4 -1.4 L5.4 0 L1.4 1.4 L0 5.4 L-1.4 1.4 L-5.4 0 L-1.4 -1.4 Z"></path></svg></a></div></div>
+    <div class="users"><span class="label">Working with</span><div class="logos"><a href="https://limn.web.app/" aria-label="limn"><svg viewBox="0 0 231 100" aria-hidden="true"><path d="M64 100V59A27 27 0 0 1 118 59V100H105V59A14 14 0 0 0 77 59V100ZM105 100V59A27 27 0 0 1 159 59V100H146V59A14 14 0 0 0 118 59V100ZM177 100V59A27 27 0 0 1 231 59V100H218V59A14 14 0 0 0 190 59V100Z" fill="currentColor"/><rect x="33" y="32" width="13" height="68" fill="currentColor"/><rect width="13" height="100" fill="currentColor"/><circle cx="39.5" cy="15.5" r="7.5" fill="currentColor"/></svg></a><a href="https://www.exploravist.net" aria-label="ExploraVist"><svg class="ev" viewBox="-2 30 337 65" aria-hidden="true" fill="currentColor" font-weight="700"><text x="0" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">e</text><text x="30" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">x</text><text x="63.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">p</text><text x="97.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">l</text><text x="114" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">o</text><text x="146" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">r</text><text x="173" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">a</text><text x="196" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="italic">V</text><text x="225" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="italic" transform="translate(0 80) skewX(-23) translate(0 -80)">ı</text><text x="250.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">s</text><text x="278.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">t</text><path transform="translate(249.5 46.75)" d="M0 -5.4 L1.4 -1.4 L5.4 0 L1.4 1.4 L0 5.4 L-1.4 1.4 L-5.4 0 L-1.4 -1.4 Z"></path></svg></a></div></div>
   </section>
 
   <section class="screen" id="examples">
-    <div class="ex-head"><div><div class="label">[01] Examples</div><h2>Links that look alive get shared</h2></div><div class="seg" role="tablist" id="tabs"></div></div>
+    <div class="ex-head"><div><h2>Links that look alive get shared</h2></div><div class="seg" role="tablist" id="tabs"></div></div>
     <div class="stage">
       <div class="shot">
         <div class="chat">
@@ -264,7 +266,7 @@
   </section>
 
   <section class="screen" id="start">
-    <div class="ways-head"><div class="label">[02]</div><h2>Get started</h2></div>
+    <div class="ways-head"><h2>Get started</h2></div>
     <div class="ways">
       <div>
         <div class="label">By hand</div>
@@ -358,11 +360,11 @@ Set up link previews for this project.</pre><button class="cp" data-copy="Set up
       states: [['$62', '3 bids', 'Live auction', 1], ['$84', '7 bids', 'Live auction', 1], ['$112', '12 bids', 'Ends in 1h', 1], ['$140', 'Sold', 'Sold', 0]].map(([p, b, tag, live]) => ({
         title: 'Vintage tee', d: b === 'Sold' ? `Sold for ${p}` : `${p} · ${b}`,
         html: `${logo}<div class="tag">${live ? '<i></i>' : ''}${tag}</div>${jacket}<div class="t narrow">Vintage tee</div><div class="l">${b === 'Sold' ? 'Sold for' : 'Top bid'} <strong class="bump">${p}</strong>${b === 'Sold' ? '' : ` · ${b}`}</div>` })) },
-    { key: 'Fundraisers', icon: 'i-goal', who: ['D', 'Dominick'], msg: 'help the wildcats get to state <u>yoursite.com/f/…</u>',
+    { key: 'Fundraisers', icon: 'i-goal', who: ['C', 'Cindy'], msg: 'ruby is so close!! <u>yoursite.com/f/…</u>',
       why: 'A goal that shows how close it is', whyp: 'A bar that moves gets shared again. A stale one does not.',
       points: [['Current', 'Each gift moves the bar'], ['Free', 'No image server to pay for'], ['Simple', 'Three lines in your server']],
-      states: [[1200, 18], [2900, 41], [4600, 77], [5300, 96]].map(([n, d]) => ({ title: 'Send the Wildcats to State', d: n >= 5000 ? `Goal reached · ${d} donors` : `$${n.toLocaleString('en-US')} of $5,000 · ${d} donors`,
-        html: `${logo}<div class="tag">${n >= 5000 ? 'Goal reached' : '<i></i>Raising'}</div><div class="goal"><b style="width:${Math.min(100, n / 50)}%"></b></div><div class="t">Send the Wildcats to State</div><div class="l"><strong class="bump">$${n.toLocaleString('en-US')}</strong> of $5,000 · ${d} donors</div>` })) },
+      states: [[1200, 18], [2900, 41], [4600, 77], [5300, 96]].map(([n, d]) => ({ title: "Ruby's surgery", d: n >= 5000 ? `Goal reached · ${d} donors` : `$${n.toLocaleString('en-US')} of $5,000 · ${d} donors`,
+        html: `${logo}<div class="tag">${n >= 5000 ? 'Goal reached' : '<i></i>Raising'}</div><div class="goal"><b style="width:${Math.min(100, n / 50)}%"></b></div><div class="t">Ruby's surgery</div><div class="l"><strong class="bump">$${n.toLocaleString('en-US')}</strong> of $5,000 · ${d} donors</div>` })) },
   ];
   const ids = ['x7Kq2mR9vTzL4pWn8bYc0A', 'Hc3pQ8wLr1ZtVy6mN0kBsE', 'Tn5Gv0aYq7LcW2mXp9RdUf'];
   const STEP = 2200;
