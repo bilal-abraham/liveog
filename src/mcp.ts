@@ -13,6 +13,7 @@ export const INSTRUCTIONS = `liveog gives a project link previews that stay curr
 
 How to work, with the person:
 1. study_project, then say in a few lines which of its links people share (home, an article, a profile, an invite, a listing, a share) and what each preview should show. Ask which matter; do not decide alone.
+   If no logo file turns up (it may live in a component, an image host or a design tool), ask the person for one: an SVG, a PNG, or a screenshot to trace.
 2. For the ones they pick, draw two or three ideas with draw_cover in the project's own colours, fonts and mark. Look at each, fix what is off, then show them. Let the person choose.
 3. setup_project for the code, then wire it in. Save the chosen covers with out.
 4. check_link on a deployed link to confirm.
