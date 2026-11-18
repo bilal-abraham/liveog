@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/bilal-abraham/liveog.git"
   },
-  "homepage": "https://github.com/bilal-abraham/liveog#readme",
+  "homepage": "https://bilal-abraham.github.io/liveog/",
   "bugs": "https://github.com/bilal-abraham/liveog/issues",
   "type": "module",
   "exports": {

@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>liveog · Link previews that stay current</title>
+<meta name="description" content="Open Graph tags, covers drawn by a browser you already run, versioned cover addresses, privacy per link kind. Open source, zero dependencies.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="liveog">
+<meta property="og:title" content="liveog">
+<meta property="og:description" content="Link previews that stay current. Open source, zero dependencies.">
+<meta property="og:url" content="https://bilal-abraham.github.io/liveog/">
+<meta property="og:image" content="https://bilal-abraham.github.io/liveog/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="liveog: Link previews that stay current.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="liveog">
+<meta name="twitter:description" content="Link previews that stay current. Open source, zero dependencies.">
+<meta name="twitter:image" content="https://bilal-abraham.github.io/liveog/og.png">
+<meta name="twitter:image:alt" content="liveog: Link previews that stay current.">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafafa; --paper: #ffffff; --ink: #0a0a0a; --ink2: #3d3d3d; --mute: #7a7a7a; --line: #d9d9d9; --dash: #c4c4c4;
+    --dot: #cfcfcf; --card: #0a0a0a; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --code: #f2f2f2;
+    --sans: Inter, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0a0a0a; --paper: #0f0f0f; --ink: #f2f2f2; --ink2: #c4c4c4; --mute: #7a7a7a; --line: #262626; --dash: #333;
+      --dot: #262626; --card: #161616; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --code: #161616; }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .label { font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+  .frame { max-width: 1200px; margin: 0 auto; border-left: 1px dashed var(--dash); border-right: 1px dashed var(--dash); background: var(--paper); position: relative; }
+
+  /* top */
+  header { position: sticky; top: 0; z-index: 2; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .bar { max-width: 1200px; margin: 0 auto; height: 64px; padding: 0 24px; display: flex; align-items: center; gap: 32px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 600 22px/1 var(--sans); letter-spacing: -.04em; }
+  .logo svg { height: 18px; width: auto; }
+  .logo span { color: var(--mute); }
+  nav { display: flex; gap: 28px; margin-left: auto; align-items: center; }
+  nav a { text-decoration: none; }
+  nav a.label:hover { color: var(--ink); }
+  .btn { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 20px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg);
+    font: 500 13px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; cursor: pointer; border-radius: 0; }
+  .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn.ghost:hover { border-color: var(--ink); }
+
+  /* hero */
+  .hero { position: relative; padding: 112px 24px 96px; text-align: center; overflow: hidden; border-bottom: 1px solid var(--line); }
+  .hero::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 10px 10px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, transparent 40%, #000 100%); mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, transparent 40%, #000 100%); }
+  .fold { position: absolute; top: 0; right: 0; width: 96px; height: 96px; background: linear-gradient(225deg, var(--bg) 50%, var(--paper) 50%); border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .fold::after { content: ""; position: absolute; inset: 0; background: linear-gradient(225deg, transparent calc(50% - .5px), var(--line) 50%, transparent calc(50% + .5px)); }
+  .pill { display: inline-block; padding: 9px 14px; border: 1px solid var(--line); background: var(--paper); position: relative; }
+  h1 { position: relative; margin: 28px auto 0; max-width: 900px; font: 600 clamp(44px, 8vw, 88px)/1.02 var(--sans); letter-spacing: -.045em; }
+  .lede { position: relative; margin: 28px auto 0; max-width: 640px; font-size: 19px; color: var(--ink2); }
+  .ctas { position: relative; margin-top: 40px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* demo */
+  .demo { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+  .demo > div { padding: 56px 48px; }
+  .demo > div + div { border-left: 1px solid var(--line); }
+  .demo h2, .ways h2 { margin: 16px 0 0; font: 600 32px/1.15 var(--sans); letter-spacing: -.03em; }
+  .demo p, .ways p { color: var(--ink2); margin: 14px 0 0; }
+  .field { display: block; margin-top: 24px; }
+  .field .label { display: block; margin-bottom: 10px; }
+  input { width: 100%; height: 48px; padding: 0 14px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 400 16px var(--sans); border-radius: 0; outline: none; }
+  input:focus { border-color: var(--ink); }
+  .chat { background: var(--bg); border: 1px solid var(--line); padding: 20px; }
+  .msg { font-size: 15px; color: var(--ink2); }
+  .msg u { text-decoration-color: var(--mute); }
+  .preview { margin-top: 12px; border: 1px solid var(--line); background: var(--paper); max-width: 440px; }
+  .cover { aspect-ratio: 1200 / 630; background: var(--card); color: var(--card-ink); position: relative; container-type: inline-size; overflow: hidden; }
+  .cover svg { position: absolute; left: 8%; top: 12%; height: 6%; width: auto; }
+  .cover .t { position: absolute; left: 8%; right: 8%; bottom: 24%; font: 600 8.6cqw/1.08 var(--sans); letter-spacing: -.03em;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .cover .l { position: absolute; left: 8%; right: 8%; bottom: 12%; font-size: 2.8cqw; color: var(--card-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cover.flash { animation: flash .5s ease-out; }
+  @keyframes flash { from { opacity: .55; } to { opacity: 1; } }
+  .meta { padding: 12px 14px 14px; }
+  .meta .s { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+  .meta .h { font-weight: 600; margin-top: 4px; }
+  .meta .d { font-size: 14px; color: var(--ink2); margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .addr { margin-top: 14px; font: 400 13px var(--mono); color: var(--mute); word-break: break-all; }
+  .addr b { color: var(--ink); font-weight: 500; }
+
+  /* three */
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
+  .three > div { padding: 36px 32px 40px; }
+  .three > div + div { border-left: 1px solid var(--line); }
+  .three h3 { margin: 18px 0 0; font: 600 20px/1.25 var(--sans); letter-spacing: -.02em; }
+  .three p { margin: 8px 0 0; color: var(--ink2); font-size: 15px; }
+
+  /* two ways */
+  .ways { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+  .ways > div { padding: 56px 48px; min-width: 0; }
+  .ways > div + div { border-left: 1px solid var(--line); }
+  pre { margin: 24px 0 0; padding: 18px 20px; background: var(--code); border: 1px solid var(--line); overflow-x: auto; font: 400 13.5px/1.7 var(--mono); }
+  pre .c { color: var(--mute); }
+  .copy { margin-top: 12px; }
+
+  /* footer */
+  footer { position: relative; max-width: 1200px; margin: 0 auto; height: 360px; overflow: hidden; border-left: 1px dashed var(--dash); border-right: 1px dashed var(--dash); }
+  footer::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 10px 10px;
+    -webkit-mask-image: linear-gradient(to top, #000, transparent 75%); mask-image: linear-gradient(to top, #000, transparent 75%); }
+  .word { position: absolute; left: 24px; bottom: 72px; font: 700 clamp(120px, 24vw, 300px)/.8 var(--sans); letter-spacing: -.065em;
+    color: transparent; -webkit-text-stroke: 1px var(--dash); user-select: none; }
+  .foot { position: absolute; left: 24px; right: 24px; bottom: 28px; display: flex; gap: 28px; flex-wrap: wrap; }
+  .foot a { text-decoration: none; }
+  .foot a:hover { color: var(--ink); }
+  .foot .r { margin-left: auto; }
+
+  @media (max-width: 860px) {
+    nav a.label { display: none; }
+    .hero { padding: 80px 16px 72px; }
+    .fold { width: 56px; height: 56px; }
+    .demo, .ways, .three { grid-template-columns: 1fr; }
+    .demo > div, .ways > div { padding: 40px 16px; }
+    .three > div { padding: 28px 16px 32px; }
+    .demo > div + div, .ways > div + div, .three > div + div { border-left: 0; border-top: 1px solid var(--line); }
+    .bar { padding: 0 16px; }
+    footer { height: 260px; }
+    .word { left: 16px; bottom: 64px; }
+    .foot { left: 16px; right: 16px; }
+  }
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="logo" href="./" aria-label="liveog">
+    <svg viewBox="0 0 50 28" aria-hidden="true"><rect fill="none" x="2" y="2" width="46" height="24" rx="6" stroke="currentColor" stroke-width="3"/><circle cx="39.5" cy="10.5" r="3.4" fill="currentColor"/></svg>
+    <div>live<span>og</span></div>
+  </a>
+  <nav>
+    <a class="label" href="#ways">Get started</a>
+    <a class="label" href="#agent">MCP</a>
+    <a class="label" href="https://www.npmjs.com/package/liveog">npm</a>
+    <a class="btn" href="https://github.com/bilal-abraham/liveog">GitHub</a>
+  </nav>
+</div></header>
+
+<main class="frame">
+  <section class="hero">
+    <div class="fold" aria-hidden="true"></div>
+    <div class="pill label">Open source · MIT · Zero dependencies</div>
+    <h1>Link previews that stay current.</h1>
+    <p class="lede">What your links show when they are pasted into a chat or a post. Covers drawn by a browser you already run, addresses that change when the picture does, and nothing a private link should not show.</p>
+    <div class="ctas">
+      <button class="btn" data-copy="npm i liveog" style="text-transform:none;letter-spacing:.02em">npm i liveog</button>
+      <a class="btn ghost" href="#agent">Add to your agent</a>
+    </div>
+  </section>
+
+  <section class="demo">
+    <div>
+      <div class="label">Try it</div>
+      <h2>Change the words. The link follows.</h2>
+      <p>Each new picture gets a new version in its address, so a link pasted again shows it, never a cached one.</p>
+      <label class="field"><span class="label">Title</span><input id="t" value="Join Q4 planning" maxlength="80"></label>
+      <label class="field"><span class="label">Line</span><input id="l" value="3 people are in" maxlength="80"></label>
+    </div>
+    <div>
+      <div class="chat">
+        <div class="msg">come join <u>yoursite.com/join/…</u></div>
+        <div class="preview">
+          <div class="cover" id="cover">
+            <svg viewBox="0 0 50 28" aria-hidden="true"><rect fill="none" x="2" y="2" width="46" height="24" rx="6" stroke="currentColor" stroke-width="3"/><circle cx="39.5" cy="10.5" r="3.4" fill="currentColor"/></svg>
+            <div class="t" id="ct"></div>
+            <div class="l" id="cl"></div>
+          </div>
+          <div class="meta"><div class="s">yoursite.com</div><div class="h" id="mt"></div><div class="d">The invite code stays out of the preview.</div></div>
+        </div>
+      </div>
+      <div class="addr">og:image → /c/<span id="cid">x7Kq2mR9vTzL4pWn8bYc0A</span>/<b id="v">1</b>.png</div>
+    </div>
+  </section>
+
+  <section class="three">
+    <div><div class="label">01 · No server cost</div><h3>Drawn by a browser you already run.</h3><p>Your Chrome at build time, or your user's page at run time. The server only checks the PNG and keeps it.</p></div>
+    <div><div class="label">02 · Always current</div><h3>Versioned cover addresses.</h3><p>/c/&lt;id&gt;/&lt;v&gt;.png. An old version redirects to the newest; a stopped link's picture is gone.</p></div>
+    <div><div class="label">03 · Private by kind</div><h3>Invites and shares keep their secrets.</h3><p>No code or token in the preview, and out of search, Referers and caches.</p></div>
+  </section>
+
+  <section class="ways" id="ways">
+    <div>
+      <div class="label">By hand</div>
+      <h2>Three lines in your server.</h2>
+      <p>Node 22+, Deno, Bun, Cloudflare Workers, Vercel.</p>
+<pre><span class="c"># the default cover, or your own page</span>
+npx liveog cover "Your site" public/og/home.png
+
+<span class="c">// where your server sends a page</span>
+import { links, originOf } from 'liveog';
+const site = links('yoursite', kinds, home);
+res.end(site.page(html, path, originOf(host)));</pre>
+    </div>
+    <div id="agent">
+      <div class="label">With your agent</div>
+      <h2>Your agent designs. liveog draws.</h2>
+      <p>It reads your colours, fonts, logo and routes, plans each kind of link with you, draws covers and looks at them, then checks the result.</p>
+<pre>claude mcp add liveog -- npx -y liveog mcp
+
+<span class="c">Then ask:</span>
+"Plan link previews for this project."</pre>
+      <button class="btn ghost copy" data-copy="claude mcp add liveog -- npx -y liveog mcp">Copy</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="word" aria-hidden="true">liveog</div>
+  <div class="foot">
+    <a class="label" href="https://github.com/bilal-abraham/liveog">GitHub</a>
+    <a class="label" href="https://www.npmjs.com/package/liveog">npm</a>
+    <a class="label" href="#agent">MCP</a>
+    <span class="label r">MIT</span>
+  </div>
+</footer>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const t = $('t'), l = $('l'), cover = $('cover');
+  let v = 1, timer = 0;
+  const show = () => { $('ct').textContent = t.value || 'Untitled'; $('cl').textContent = l.value; $('mt').textContent = t.value || 'Untitled'; };
+  const bump = () => {
+    clearTimeout(timer);
+    show();
+    timer = setTimeout(() => { $('v').textContent = ++v; cover.classList.remove('flash'); void cover.offsetWidth; cover.classList.add('flash'); }, 600);
+  };
+  t.addEventListener('input', bump);
+  l.addEventListener('input', bump);
+  show();
+  for (const b of document.querySelectorAll('[data-copy]')) {
+    b.addEventListener('click', async () => {
+      const was = b.textContent;
+      try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied'; } catch { b.textContent = 'Copy failed'; }
+      setTimeout(() => { b.textContent = was; }, 1400);
+    });
+  }
+</script>
+</body>
+</html>
