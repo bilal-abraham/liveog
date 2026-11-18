@@ -117,13 +117,14 @@
   .meta .h { font-weight: 600; font-size: 14.5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .meta .s { font-size: 13px; color: var(--mute); margin-top: 2px; }
   .cover { aspect-ratio: 1200 / 630; background: var(--card); color: var(--card-ink); position: relative; container-type: inline-size; overflow: hidden; }
-  .cover .site { position: absolute; left: 8%; top: 11%; font: 500 4.4cqw/1 var(--sans); letter-spacing: -.02em; color: var(--card-ink); opacity: .92; }
+  .cover .site { position: absolute; left: 8%; top: 10%; display: flex; align-items: center; gap: 1.6cqw; font: 600 4.2cqw/1 var(--sans); letter-spacing: -.03em; color: var(--card-ink); }
+  .cover .site svg { width: 5cqw; height: 5cqw; }
   .cover .tag { position: absolute; right: 7%; top: 10%; font: 500 2.6cqw/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--card-mute); display: flex; align-items: center; gap: 1.4cqw; }
   .cover .tag i { width: 1.6cqw; height: 1.6cqw; border-radius: 50%; background: var(--card-ink); animation: pulse 1.6s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: .25; } }
   .cover .t { position: absolute; left: 8%; right: 8%; bottom: 31%; font: 500 7cqw/1.1 var(--sans); letter-spacing: -.03em; }
   .cover .l { position: absolute; left: 8%; right: 8%; bottom: 12%; font-size: 3.8cqw; line-height: 6.6cqw; color: #a8a8a8; white-space: nowrap; }
-  .cover .l > * { vertical-align: middle; }
+  .cover .l .faces { vertical-align: middle; }
   .cover .l strong { color: var(--card-ink); font-weight: 600; }
   .cover .art { position: absolute; right: 7%; top: 18%; width: 26%; color: var(--card-ink); }
   .cover .t.narrow { right: 38%; }
@@ -336,26 +337,28 @@ Set up link previews for this project.</pre><button class="cp" data-copy="Set up
   }
 
   // --- examples: everyday links whose preview follows what happens -----------------------------
+  const logo = `<div class="site"><svg viewBox="0 0 20 20"><rect x="1" y="1" width="18" height="18" rx="5" fill="currentColor"/><circle cx="10" cy="10" r="4" fill="var(--card)"/></svg>Logo</div>`;
   const jacket = `<svg class="art" viewBox="0 0 100 92" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M36 6 18 13 4 40l13 7 8-15v56h50V32l8 15 13-7-14-27-18-7c-2 6-7 10-14 10S38 12 36 6z"/><path d="M50 16v72M36 6l14 10 14-10M58 48h10M58 58h10"/></svg>`;
+    <path d="M36 6c3 7 8 10 14 10s11-3 14-10l22 9 10 21-15 7-5-9v54H24V34l-5 9-15-7 10-21z"/><path d="M36 6c3 7 8 10 14 10s11-3 14-10"/>
+    <text x="50" y="56" text-anchor="middle" fill="currentColor" stroke="none" font-family="JetBrains Mono, Menlo, monospace" font-size="15" font-weight="500" letter-spacing="1">'78</text></svg>`;
   const faces = (n) => `<span class="faces">${['M', 'J', 'S', 'L', 'P'].slice(0, n).map((x) => `<b>${x}</b>`).join('')}${n < 5 ? '<i></i>' : ''}</span>`;
   const EX = [
     { key: 'Invites', icon: 'i-invite', who: ['M', 'Maya'], msg: 'dinner friday? <u>yoursite.com/i/…</u>',
       why: 'An invite that shows who is going', whyp: 'People answer an invite when they can see their friends are in.',
       points: [['Current', 'Each yes redraws the cover'], ['Private', 'The invite code never shows'], ['Free', 'Drawn in the host\'s browser']],
       states: [1, 2, 3, 4, 5].map((n) => ({ title: 'Dinner at Lucia\'s', d: `Friday 8pm · ${n} going`,
-        html: `<div class="site">yoursite</div><div class="tag"><i></i>Friday 8pm</div><div class="t">Dinner at Lucia's</div><div class="l">${faces(n)}<span><strong class="bump">${n} going</strong></span></div>` })) },
+        html: `${logo}<div class="tag"><i></i>Friday 8pm</div><div class="t">Dinner at Lucia's</div><div class="l">${faces(n)}<span><strong class="bump">${n} going</strong></span></div>` })) },
     { key: 'Auctions', icon: 'i-bid', who: ['J', 'Jon'], msg: 'look at this one <u>yoursite.com/l/…</u>',
       why: 'A listing that shows the bid now', whyp: 'The price people see when they tap is the price on the page.',
       points: [['Current', 'Every bid is a new picture'], ['Fresh', 'Old covers redirect to the newest'], ['Ends', 'Shows sold, not a dead link']],
       states: [['$62', '3 bids', 'Live auction', 1], ['$84', '7 bids', 'Live auction', 1], ['$112', '12 bids', 'Ends in 1h', 1], ['$140', 'Sold', 'Sold', 0]].map(([p, b, tag, live]) => ({
-        title: 'Corduroy jacket', d: b === 'Sold' ? `Sold for ${p}` : `${p} · ${b}`,
-        html: `<div class="site">yoursite</div><div class="tag">${live ? '<i></i>' : ''}${tag}</div>${jacket}<div class="t narrow">Corduroy jacket</div><div class="l">${b === 'Sold' ? 'Sold for' : 'Top bid'} <strong class="bump">${p}</strong>${b === 'Sold' ? '' : ` · ${b}`}</div>` })) },
+        title: 'Vintage tee', d: b === 'Sold' ? `Sold for ${p}` : `${p} · ${b}`,
+        html: `${logo}<div class="tag">${live ? '<i></i>' : ''}${tag}</div>${jacket}<div class="t narrow">Vintage tee</div><div class="l">${b === 'Sold' ? 'Sold for' : 'Top bid'} <strong class="bump">${p}</strong>${b === 'Sold' ? '' : ` · ${b}`}</div>` })) },
     { key: 'Fundraisers', icon: 'i-goal', who: ['S', 'Sam'], msg: 'we are so close!! <u>yoursite.com/f/…</u>',
       why: 'A goal that shows how close it is', whyp: 'A bar that moves gets shared again. A stale one does not.',
       points: [['Current', 'Each gift moves the bar'], ['Free', 'No image server to pay for'], ['Simple', 'Three lines in your server']],
       states: [[1200, 18], [2900, 41], [4600, 77], [5300, 96]].map(([n, d]) => ({ title: 'New roof for the hall', d: n >= 5000 ? `Goal reached · ${d} donors` : `$${n.toLocaleString('en-US')} of $5,000 · ${d} donors`,
-        html: `<div class="site">yoursite</div><div class="tag">${n >= 5000 ? 'Goal reached' : '<i></i>Raising'}</div><div class="goal"><b style="width:${Math.min(100, n / 50)}%"></b></div><div class="t">New roof for the hall</div><div class="l"><strong class="bump">$${n.toLocaleString('en-US')}</strong> of $5,000 · ${d} donors</div>` })) },
+        html: `${logo}<div class="tag">${n >= 5000 ? 'Goal reached' : '<i></i>Raising'}</div><div class="goal"><b style="width:${Math.min(100, n / 50)}%"></b></div><div class="t">New roof for the hall</div><div class="l"><strong class="bump">$${n.toLocaleString('en-US')}</strong> of $5,000 · ${d} donors</div>` })) },
   ];
   const ids = ['x7Kq2mR9vTzL4pWn8bYc0A', 'Hc3pQ8wLr1ZtVy6mN0kBsE', 'Tn5Gv0aYq7LcW2mXp9RdUf'];
   const STEP = 2200;
