@@ -18,12 +18,16 @@ Link previews that stay current. Extracted from limn's link-preview system.
 
 ## CLI
 - `liveog draw <page.html> <out.png>`: local Chrome, headless, its own `--screenshot`; checks the size
+- `liveog cover <title> <out.png> [site]`: the default cover (`coverHtml`), black, white and grey
 - `liveog check <url>`: fetches the page, reports its tags and whether the image is a reachable 1200 x 630
 - `liveog mcp`: the MCP server on stdio
 
 ## MCP tools
 - `check_link(url)`: the same report as `liveog check`, for an agent
+- `study_project(dir?)`: colours, fonts, logo files, existing previews and routes, then a nudge to plan link kinds with the person
+- `draw_cover(html | title, look?, out?)`: draws with local Chrome and returns the picture, so the agent can look and change it
 - `setup_project()`: the steps and code to add liveog to the project the agent is in
+The agent is the designer; liveog gives it eyes (study), a pen (draw) and a check.
 
 ## The page (later, GitHub Pages, free)
 One page, black/white/grey. A link box that shows its preview. Two ways in: **by hand** (`npm i liveog`, three lines of code) and **with your agent** (one line to add the MCP server). Footer: "made by limn".

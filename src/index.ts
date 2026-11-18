@@ -5,3 +5,4 @@ export {
   type Answer, type Cover,
 } from './cover.js';
 export { check, describe, readTags, type Report } from './check.js';
+export { coverHtml, type CoverWords, type Look } from './template.js';

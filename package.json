@@ -31,6 +31,10 @@
     "./draw": {
       "types": "./dist/draw.d.ts",
       "default": "./dist/draw.js"
+    },
+    "./study": {
+      "types": "./dist/study.d.ts",
+      "default": "./dist/study.js"
     }
   },
   "bin": {
