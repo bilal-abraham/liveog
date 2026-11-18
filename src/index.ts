@@ -5,4 +5,3 @@ export {
   type Answer, type Cover,
 } from './cover.js';
 export { check, describe, readTags, type Report } from './check.js';
-export { draw, findChrome, type DrawOptions } from './draw.js';

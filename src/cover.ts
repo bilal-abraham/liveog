@@ -2,7 +2,6 @@
 // your server, served at versioned addresses: /c/<id>/<v>.png. v goes up with each new picture,
 // so a link pasted again names one no app has cached; an older v is sent to the newest; a new id
 // ends the old picture's address (a share link stopped or replaced).
-import { randomBytes } from 'node:crypto';
 import { COVER_SIZE } from './og.js';
 
 /** The most a cover may weigh. */
@@ -44,7 +43,11 @@ export interface Cover {
   v: number;
 }
 export const COVER_ID = /^[A-Za-z0-9_-]{22}$/;
-export const newCoverId = (): string => randomBytes(16).toString('base64url');
+// 16 random bytes, base64url: Web Crypto, so it runs in Node, Deno, Bun, workers and browsers alike
+export function newCoverId(): string {
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  return btoa(String.fromCharCode(...b)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
 export const coverPath = (c: Cover): string => `/c/${c.id}/${c.v}.png`;
 
 /** The cover after a new picture: the same id one version up, or a new id at 1 when fresh (or none before). */

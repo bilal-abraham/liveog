@@ -27,6 +27,10 @@
     "./browser": {
       "types": "./dist/browser.d.ts",
       "default": "./dist/browser.js"
+    },
+    "./draw": {
+      "types": "./dist/draw.d.ts",
+      "default": "./dist/draw.js"
     }
   },
   "bin": {

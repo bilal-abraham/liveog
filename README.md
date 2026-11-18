@@ -2,7 +2,9 @@
 
 Link previews that stay current. Open Graph and Twitter card tags, covers drawn by a browser you
 already run (no image service, no headless browser on your server), versioned cover addresses,
-and privacy per link kind. Zero runtime dependencies. Node 22+, ESM.
+and privacy per link kind. Zero runtime dependencies, ESM. The main import uses web APIs only, so it
+runs wherever your server does: Node 22+, Deno, Bun, Cloudflare Workers, Vercel. A static site can
+write the tags at build time with `tags()`; covers that change per link need a server to keep them.
 
 ```sh
 npm i liveog
@@ -82,7 +84,7 @@ address is nothing from then. A private kind's words never hold its path, and it
 | `isCover(bytes)`, `imageSize(bytes)` | PNG, JPEG, GIF headers read, nothing decoded |
 | `nextCover`, `coverPath`, `parseCoverPath`, `answer` | versioned cover addresses |
 | `check(url)`, `describe(report)`, `readTags(html)` | the checker |
-| `draw(page, out)`, `findChrome()` | covers from local Chrome (`CHROME` to choose one) |
+| `liveog/draw`: `draw(page, out)`, `findChrome()` | covers from local Chrome (`CHROME` to choose one); Node only |
 | `liveog/browser`: `drawCover`, `sendCover` | covers drawn in the page |
 
 MIT. Made by [limn](https://limn.ai).
