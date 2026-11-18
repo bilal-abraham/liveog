@@ -103,4 +103,4 @@ picture's address is nothing from then.
 
 ---
 
-MIT · made by [limn](https://limn.ai)
+MIT

@@ -30,7 +30,7 @@ Link previews that stay current. Extracted from limn's link-preview system.
 The agent is the designer; liveog gives it eyes (study), a pen (draw) and a check.
 
 ## The page (later, GitHub Pages, free)
-One page, black/white/grey. A link box that shows its preview. Two ways in: **by hand** (`npm i liveog`, three lines of code) and **with your agent** (one line to add the MCP server). Footer: "made by limn".
+One page, black/white/grey. A link box that shows its preview. Two ways in: **by hand** (`npm i liveog`, three lines of code) and **with your agent** (one line to add the MCP server). Footer: the wordmark large and outlined over a faint dot grid; GITHUB · NPM · MCP.
 
 ## License: MIT, public repo
 MIT is the shortest well-known licence: anyone can use it, including in closed products, so it spreads and nobody needs to ask. It asks only for the notice. limn keeps nothing back by it: liveog is the generic part, limn's product is elsewhere. A public repo is free on GitHub (Actions, Pages), and npm packages are public anyway.
