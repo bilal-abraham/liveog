@@ -27,15 +27,19 @@ a 1200 x 630 cover, and nothing it should not show.
 claude mcp add liveog -- npx -y liveog mcp
 ```
 
-Any MCP client runs `npx -y liveog mcp`. Then ask: *"Plan link previews for this project."* Your
+Any MCP client runs `npx -y liveog mcp`. Then ask: *"Set up link previews for this project."* Your
 agent is the designer; liveog gives it the tools:
 
 | Tool | |
 |---|---|
 | `study_project` | the project's colours, fonts, logo files, existing previews and routes |
-| `draw_cover` | draws a cover (its own HTML, or the default in your colours) and shows it |
+| `draw_cover` | draws a cover (the default, in your colours, or your own HTML) and shows it |
+| `setup_project` | the code to wire it in |
 | `check_link` | what a link's preview shows, as a chat app sees it, and what is wrong |
-| `setup_project` | the steps and code to wire it in |
+
+The server tells your agent how to work: study the project, ask you which links matter, draw two
+or three ideas, let you choose, then wire it in and check. And what a good cover is: even sides,
+one font, the title short, the line under it saying what is true now.
 
 ## By hand
 
@@ -93,7 +97,7 @@ picture's address is nothing from then.
 | `tags(card)`, `inject(html, tags)` | the meta tags; put before `</head>` |
 | `cleanHost(x)`, `originOf(host, site?)` | a plain host only |
 | `links(site, kinds, fallback)` | `.of`, `.card`, `.headers`, `.page` for a path |
-| `coverHtml(words, look?)` | the default cover as HTML |
+| `coverHtml(words, look?)` | the default cover as HTML: site, tag, title, line, art |
 | `isCover`, `imageSize` | headers read, nothing decoded |
 | `nextCover`, `coverPath`, `parseCoverPath`, `answer` | versioned cover addresses |
 | `check`, `describe`, `readTags` | the checker |

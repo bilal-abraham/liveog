@@ -17,6 +17,9 @@ test('coverHtml: a look that is not a colour or a font is let go', () => {
   assert.doesNotMatch(h, /display:none|color: red/);
 });
 
-test('coverHtml: a mark in place of the site name', () => {
-  assert.match(coverHtml({ title: 't', site: 's' }, { mark: '<svg viewBox="0 0 1 1"></svg>' }), /<div class="mark"><svg/);
+test('coverHtml: a mark before the site name, a tag and a picture', () => {
+  const h = coverHtml({ title: 't', site: 's', tag: 'Live <now>', art: '<svg id="a"></svg>' }, { mark: '<svg viewBox="0 0 1 1"></svg>' });
+  assert.match(h, /<div class="site"><svg viewBox="0 0 1 1"><\/svg><span>s<\/span><\/div>/);
+  assert.match(h, /<div class="tag">Live &lt;now&gt;<\/div>/);
+  assert.match(h, /<div class="art"><svg id="a"><\/svg><\/div>/);
 });
