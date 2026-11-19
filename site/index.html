@@ -150,8 +150,6 @@
   .cover .site { position: absolute; left: 8%; top: 10%; display: flex; align-items: center; gap: 1.6cqw; font: 600 4.2cqw/1 var(--sans); letter-spacing: -.03em; color: var(--card-ink); }
   .cover .site svg { width: 5cqw; height: 5cqw; }
   .cover .tag { position: absolute; right: 8%; top: 10%; font: 500 2.6cqw/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--card-mute); display: flex; align-items: center; gap: 1.4cqw; }
-  .cover .tag i { width: 1.6cqw; height: 1.6cqw; border-radius: 50%; background: var(--card-ink); transform: translateY(-.15cqw); animation: pulse 1.6s ease-in-out infinite; }
-  @keyframes pulse { 50% { opacity: .25; } }
   .cover .t { position: absolute; left: 8%; right: 8%; bottom: 31%; font: 500 7cqw/1.1 var(--sans); letter-spacing: -.03em; }
   .cover .l { position: absolute; left: 8%; right: 8%; bottom: 12%; font-size: 3.8cqw; line-height: 6.6cqw; color: #a8a8a8; white-space: nowrap; }
   .cover .l .faces { vertical-align: middle; }
@@ -390,7 +388,7 @@
         <div class="ba">
           <div class="light"><div class="bare"><div><b>abc</b><span>abc.xyz</span></div><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#8e8e93"/><path fill="#f2f2f7" d="m16.6 7.4-2.1 6.2a1.6 1.6 0 0 1-.9.9l-6.2 2.1 2.1-6.2a1.6 1.6 0 0 1 .9-.9z"/><circle cx="12" cy="12" r="1.3" fill="#8e8e93"/></svg></div><div class="msg-d">dinner friday?<svg class="tl2" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div><span class="cap">Before</span></div>
           <div class="dark">
-            <div class="rich"><div class="cover"><div class="site">abc</div><div class="tag"><i></i>Friday 8pm</div><div class="t">Dinner at Lucia's</div><div class="l"><span class="faces"><b>M</b><b>J</b><b>S</b><i></i><i></i></span><strong>3 going</strong></div></div><div class="m"><b>Dinner at Lucia's</b><span>abc.xyz</span></div></div>
+            <div class="rich"><div class="cover"><div class="site">abc</div><div class="tag">Friday 8pm</div><div class="t">Dinner at Lucia's</div><div class="l"><span class="faces"><b>M</b><b>J</b><b>S</b><i></i><i></i></span><strong>3 going</strong></div></div><div class="m"><b>Dinner at Lucia's</b><span>abc.xyz</span></div></div>
             <div class="msg-d">dinner friday?<svg class="tl2" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div>
             <span class="cap">After</span>
           </div>
@@ -528,15 +526,15 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
     { key: 'Invites', dir: 'out', icon: 'i-invite', av: 'MA', msg: 'dinner friday? <u>yoursite.com/i/…</u>',
       why: 'An invite that shows who is going',
       states: [1, 2, 3, 4, 5].map((n) => ({ title: "Dinner at Lucia's",
-        html: `${logo}<div class="tag"><i></i>Friday 8pm</div><div class="t">Dinner at Lucia's</div><div class="l">${faces(n)}<strong class="bump">${n} going</strong></div>` })) },
+        html: `${logo}<div class="tag">Friday 8pm</div><div class="t">Dinner at Lucia's</div><div class="l">${faces(n)}<strong class="bump">${n} going</strong></div>` })) },
     { key: 'Listings', dir: 'in', icon: 'i-home', av: 'HE', msg: 'is this the one? <u>yoursite.com/h/…</u>',
       why: 'A listing with your brand and its price now',
       states: [['Open house Sat', 725000, 1], ['New price', 699000, 0], ['Under contract', 699000, 0], ['Sold', 712000, 0]].map(([tag, p, live]) => ({ title: '14 Maple Street',
-        html: `${agency}<div class="tag">${live ? '<i></i>' : ''}${tag}</div>${house}<div class="t narrow">14 Maple Street</div><div class="l"><strong class="bump">${money(p)}</strong> · 3 bd · 2 ba</div>` })) },
+        html: `${agency}<div class="tag">${tag}</div>${house}<div class="t narrow">14 Maple Street</div><div class="l"><strong class="bump">${money(p)}</strong> · 3 bd · 2 ba</div>` })) },
     { key: 'Auctions', dir: 'out', icon: 'i-bid', av: 'BR', msg: 'look at this one <u>yoursite.com/l/…</u>',
       why: 'An auction that shows the bid now',
       states: [[62, 3, 'Live auction'], [84, 7, 'Live auction'], [112, 12, 'Ends in 1h'], [140, 0, 'Sold']].map(([p, b, tag]) => ({ title: 'Vintage tee',
-        html: `${logo}<div class="tag">${b ? '<i></i>' : ''}${tag}</div>${tee}<div class="t narrow">Vintage tee</div><div class="l">${b ? 'Top bid' : 'Sold for'} <strong class="bump">${money(p)}</strong>${b ? ` · ${b} bids` : ''}</div>` })) },
+        html: `${logo}<div class="tag">${tag}</div>${tee}<div class="t narrow">Vintage tee</div><div class="l">${b ? 'Top bid' : 'Sold for'} <strong class="bump">${money(p)}</strong>${b ? ` · ${b} bids` : ''}</div>` })) },
     { key: 'Fundraisers', dir: 'in', icon: 'i-goal', av: 'CI', msg: 'ruby is so close! <u>yoursite.com/f/…</u>',
       why: 'A goal that shows how close it is',
       states: [[1200, 18], [2900, 41], [4600, 77], [5300, 96]].map(([n, d]) => ({ title: "Ruby's surgery",
