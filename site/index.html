@@ -432,25 +432,6 @@
         <h3>Install it yourself</h3>
         <p>Node, Deno, Bun, Cloudflare, Vercel.</p>
         <div class="cmd"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <div class="code"><pre><span class="cm">// 1 · say what your links are</span>
-<span class="k">import</span> { <span class="tipped" tabindex="0" data-tip="Name each kind of link once. The first that matches a path wins; the last one covers everything else.">links</span>, <span class="tipped" tabindex="0" data-tip="A safe absolute address for the pictures, taken only from a plain host.">originOf</span> } <span class="k">from</span> <span class="s">'liveog'</span>;
-
-<span class="k">const</span> site = <span class="f">links</span>(<span class="s">'yoursite'</span>, [{
-  name: <span class="s">'invite'</span>,
-  match: (p) =&gt; p.<span class="f">startsWith</span>(<span class="s">'/i/'</span>),
-  <span class="tipped" tabindex="0" data-tip="Invite codes never show in a preview, and these pages stay out of search, referrers and caches.">private: <span class="k">true</span></span>,
-  title: <span class="s">'Join the dinner'</span>,
-  description: <span class="s">'On yoursite.'</span>,
-  <span class="tipped" tabindex="0" data-tip="A 1200 × 630 picture. Draw it once with npx liveog cover, or let your agent draw it.">cover: <span class="s">'/og/invite.png'</span></span>,
-}], {
-  name: <span class="s">'home'</span>,
-  title: <span class="s">'yoursite'</span>,
-  description: <span class="s">'Dinners with friends.'</span>,
-  cover: <span class="s">'/og/home.png'</span>,
-});
-
-<span class="cm">// 2 · put the tags in each page</span>
-res.<span class="f">end</span>(site.<span class="tipped" tabindex="0" data-tip="Adds the Open Graph and X card tags to the page’s head, with the right picture for this path."><span class="f">page</span></span>(html, path, <span class="f">originOf</span>(host)));</pre><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#readme">Read the guide →</a></div>
       </div>
       <div>
