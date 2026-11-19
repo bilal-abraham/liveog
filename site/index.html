@@ -312,7 +312,8 @@
     .win, .wf, .agent { left: 16px; right: 16px; top: 80px; }
     .win { bottom: 20px; }
     .agent { grid-template-columns: 1fr; bottom: 20px; }
-    .face { position: absolute; width: 64px; right: 0; top: -62px; }
+    .face { position: absolute; width: 56px; right: 0; top: -58px; }
+    .tile:has(.agent) .ct { max-width: calc(100% - 104px); }
     .tty { font-size: 11px; padding: 12px; }
             }
 </style>
@@ -454,6 +455,7 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   </div>
 </footer>
 
+<script src="water.js"></script>
 <script>
   const $ = (id) => document.getElementById(id);
   const svg = (id, cls = '') => `<svg class="${cls}"><use href="#${id}"/></svg>`;
@@ -623,92 +625,9 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
     requestAnimationFrame(paintFrame);
   }
 
-  // --- 3 · a bucket crosses the top and pours; the sand fills the picture, then becomes the mark ---
-  // Drawn as limn draws its sand plate: grains are counted into a 2 x 3 grid inside each character
-  // cell, and each cell takes the glyph whose own ink over those six parts is nearest.
-  const sand = $('sand'), sx = sand.getContext('2d');
-  const GL = " .,'`-_:;~^\"=+*<>/\\|()[]{}!#", GRAIN = ".:,'.`:.'";
-  const CW = 7, CH = 14;
-  let shapes = [], cols = 0, rows = 0, SX = 0, SY = 0, hgt, grains = [], bx = 0, phase = 'pour', phaseT = 0, mark = [], flip = [], ink = '#bdbdbd', quiet = '#7a7a7a';
-  function glyphs() {
-    const S = 4, w = CW * S, h = CH * S, c = Object.assign(document.createElement('canvas'), { width: w, height: h }), x = c.getContext('2d', { willReadFrequently: true });
-    x.font = `${(CW / 0.6) * S}px JetBrains Mono, monospace`; x.textAlign = 'center'; x.textBaseline = 'middle';
-    shapes = [...GL].map((ch) => {
-      x.fillStyle = '#000'; x.fillRect(0, 0, w, h); x.fillStyle = '#fff'; x.fillText(ch, w / 2, h / 2 + S * .5);
-      const d = x.getImageData(0, 0, w, h).data, v = new Float32Array(6);
-      for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) v[((px * 2 / w) | 0) + 2 * ((py * 3 / h) | 0)] += d[(py * w + px) * 4] / 255;
-      for (let k = 0; k < 6; k++) v[k] /= (w / 2) * (h / 3);
-      return v;
-    });
-    const mx = new Float32Array(6); for (const v of shapes) for (let k = 0; k < 6; k++) mx[k] = Math.max(mx[k], v[k]);
-    for (const v of shapes) for (let k = 0; k < 6; k++) v[k] /= mx[k] || 1;
-  }
-  const best = (o) => { let b = 0, bd = 1e9; for (let i = 0; i < shapes.length; i++) { let d = 0; for (let k = 0; k < 6; k++) { const q = o[k] - shapes[i][k]; d += q * q; } if (d < bd) { bd = d; b = i; } } return b; };
-  // the mark, as # on . : drawn into a grid one pixel per cell (a cell is twice as tall as wide)
-  function markGrid() {
-    const c = Object.assign(document.createElement('canvas'), { width: cols, height: rows }), x = c.getContext('2d', { willReadFrequently: true });
-    const w = Math.min(cols * .74, rows * 2 * (50 / 28) * .74), h = w * (28 / 50) / 2;
-    x.setTransform(w / 50, 0, 0, h / 28, (cols - w) / 2, (rows - h) / 2);
-    x.strokeStyle = '#fff'; x.lineWidth = (28 / h) * 1.05;
-    const ring = (X, Y, W, H, R) => { x.beginPath(); x.roundRect(X, Y, W, H, R); x.stroke(); };
-    // in characters the mark reads best simplest: one outline, two solid eyes
-    ring(1.5, 1.5, 47, 25, 7);
-    x.fillStyle = '#fff'; for (const ex of [30.5, 39.5]) { x.beginPath(); x.ellipse(ex, 10.5, 3.2, 3.2, 0, 0, Math.PI * 2); x.fill(); }
-    const d = x.getImageData(0, 0, cols, rows).data;
-    return Array.from({ length: cols * rows }, (_, i) => d[i * 4 + 3] > 60);
-  }
-  function sandReset() {
-    const r = sand.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
-    cols = Math.max(12, Math.floor(r.width / CW)); rows = Math.max(6, Math.floor(r.height / CH));
-    sand.width = Math.round(r.width * dpr); sand.height = Math.round(r.height * dpr); sx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    SX = cols * 2; SY = rows * 3; hgt = new Float32Array(SX); grains = []; bx = -8; phase = 'pour'; phaseT = performance.now();
-    mark = markGrid(); flip = Array.from({ length: cols * rows }, () => Math.random());
-    const css = getComputedStyle(root); ink = css.getPropertyValue('--ink2').trim() || ink; quiet = css.getPropertyValue('--mute').trim() || quiet;
-  }
-  function sandFrame(now) {
-    const el = (now - phaseT) / 1000;
-    if (phase === 'pour') {
-      // one slow pass, left to right; it pours a little ahead of where it is
-      bx = -8 + (SX + 16) * Math.min(1, el / 7.5);
-      const per = Math.ceil((SX * SY) / (7.5 * 60) * 1.15);
-      if (bx > 0 && bx < SX) for (let k = 0; k < per; k++) grains.push({ x: Math.max(0, Math.min(SX - 1, (bx + 3 + Math.random() * 3) | 0)), y: 3, v: .5 + Math.random() * .4 });
-      if (el >= 7.5 && !grains.length) { phase = 'level'; phaseT = now; }
-    } else if (phase === 'level') {
-      // what is left settles flat to the brim
-      for (let x = 0; x < SX; x++) hgt[x] = Math.min(SY, hgt[x] + SY * .02);
-      if (hgt.every((v) => v >= SY)) { phase = 'mark'; phaseT = now; }
-    } else if (phase === 'mark' && el > 6.2) { sandReset(); phaseT = now; }
-    for (const g of grains) {
-      g.y += g.v; g.v = Math.min(2, g.v + .06);
-      if (g.y >= SY - hgt[g.x] - 1) {
-        let x = g.x;
-        for (let s = 0; s < 8; s++) { const l = x > 0 ? hgt[x - 1] : 1e9, r = x < SX - 1 ? hgt[x + 1] : 1e9; if (hgt[x] - l > 1.4 && l <= r) x--; else if (hgt[x] - r > 1.4) x++; else break; }
-        hgt[x] = Math.min(SY, hgt[x] + 1); g.done = true;
-      }
-    }
-    grains = grains.filter((g) => !g.done);
-    sx.clearRect(0, 0, cols * CW, rows * CH);
-    sx.font = `${CW / 0.6}px JetBrains Mono, monospace`; sx.textAlign = 'center'; sx.textBaseline = 'middle';
-    const toMark = phase === 'mark' ? ease(((now - phaseT) / 1000) / 1.8) : 0;
-    const occ = new Float32Array(SX * SY);
-    for (let x = 0; x < SX; x++) for (let y = Math.max(0, Math.floor(SY - hgt[x])); y < SY; y++) occ[y * SX + x] = 1;
-    for (const g of grains) { const y = g.y | 0; if (y >= 0 && y < SY) occ[y * SX + g.x] = Math.max(occ[y * SX + g.x], .7); }
-    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-      const i = r * cols + c, X = c * CW + CW / 2, Y = r * CH + CH / 2 + .5;
-      if (toMark > flip[i]) {   // this cell has turned: part of the mark, or the ground around it
-        sx.globalAlpha = mark[i] ? 1 : .32; sx.fillStyle = mark[i] ? ink : quiet; sx.fillText(mark[i] ? '#' : '.', X, Y); continue;
-      }
-      const b = r * 3 * SX + c * 2, o = [occ[b], occ[b + 1], occ[b + SX], occ[b + SX + 1], occ[b + 2 * SX], occ[b + 2 * SX + 1]];
-      const tot = o[0] + o[1] + o[2] + o[3] + o[4] + o[5]; if (tot < .5) continue;
-      if (tot > 5.5) { sx.globalAlpha = .38; sx.fillStyle = quiet; sx.fillText(GRAIN[(r * 7 + c * 13 + ((r * c) % 5)) % GRAIN.length], X, Y); continue; }
-      const g = best(o); if (!g) continue;
-      sx.globalAlpha = .95; sx.fillStyle = ink; sx.fillText(GL[g], X, Y);
-    }
-    // the bucket, tipped a little, crossing the top
-    if (phase === 'pour' && bx > -8 && bx < SX + 8) { sx.globalAlpha = 1; sx.fillStyle = ink; sx.textAlign = 'left'; sx.fillText('\\___/', (bx / 2 - 3) * CW, CH * .5); sx.textAlign = 'center'; }
-    sx.globalAlpha = 1;
-    requestAnimationFrame(sandFrame);
-  }
+  // --- 3 · water pours into the picture, splashes, settles, and becomes the mark (water.js) ----------
+  let water = null;
+  const inkNow = () => { const css = getComputedStyle(root); return [css.getPropertyValue('--ink2').trim(), css.getPropertyValue('--mute').trim()]; };
 
   // --- 4 · a terminal, typed one key at a time; the mark beside it watches ------------------------
   const tty = $('tty'), face = $('face'), feyes = $('feyes');
@@ -750,12 +669,12 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
 
   document.fonts.ready.then(() => {
     paintSize(); requestAnimationFrame(paintFrame);
-    glyphs(); sandReset(); requestAnimationFrame(sandFrame);
+    if (window.startWater) { const [ink, quiet] = inkNow(); water = window.startWater($('sand'), { ink, quiet, cell: [7, 14], font: 'JetBrains Mono, monospace' }); }
     session();
   });
   let rsz;
-  addEventListener('resize', () => { clearTimeout(rsz); rsz = setTimeout(() => { paintSize(); sandReset(); }, 200); });
-  const recolor = () => { const css = getComputedStyle(root); ink = css.getPropertyValue('--ink2').trim(); quiet = css.getPropertyValue('--mute').trim(); };
+  addEventListener('resize', () => { clearTimeout(rsz); rsz = setTimeout(() => { paintSize(); water?.resize(); }, 200); });
+  const recolor = () => { const [ink, quiet] = inkNow(); water?.recolor(ink, quiet); };
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', recolor);
   themeBtn.addEventListener('click', recolor);
 
