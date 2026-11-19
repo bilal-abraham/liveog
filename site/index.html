@@ -207,17 +207,13 @@
   /* window chrome shared by the browser and the terminal: real proportions, a small real radius */
   .chrome { flex: none; height: 34px; display: flex; align-items: center; gap: 12px; padding: 0 12px; border-bottom: 1px solid var(--win-line); background: var(--win-top); }
   .lights { display: flex; gap: 7px; } .lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; } .lights i + i { background: #febc2e; } .lights i + i + i { background: #28c840; }
-  .omni { flex: 1; max-width: 260px; margin: 0 auto; height: 22px; border-radius: 6px; background: var(--win-field); display: flex; align-items: center; justify-content: center; gap: 6px;
-    font: 400 11.5px/1 var(--sans); color: var(--ink2); min-width: 0; }
-  .omni svg { width: 11px; height: 11px; color: var(--mute); }
 
   /* 2 · the browser on your user's screen draws the page itself: blank, characters, the cover */
-  .win { position: absolute; left: 48px; right: 48px; top: 120px; bottom: 48px; border: 1px solid var(--win-line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;
-    background: var(--win-page); box-shadow: 0 24px 60px -36px rgba(0,0,0,.5); }
-  .win canvas { flex: 1; min-height: 0; width: 100%; display: block; }
 
   /* 3 · a link preview as a wireframe; a bucket pours sand into its picture until the picture is a picture */
   .wf { position: absolute; left: 48px; right: 48px; top: 120px; bottom: 48px; border: 1px solid var(--soft); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  #why .tile { display: grid; place-items: center; padding: 56px 24px; }
+  #why .wf { position: relative; inset: auto; width: min(560px, 100%); height: 400px; }
   .wf canvas { flex: 1; min-height: 0; width: 100%; display: block; border-bottom: 1px solid var(--soft); }
   .wf .m { flex: none; padding: 12px 16px 14px; } .wf .m b { display: block; font-weight: 600; font-size: 15px; } .wf .m span { color: var(--mute); font: 400 12px var(--mono); }
 
@@ -325,10 +321,8 @@
   .ba .bare svg { width: 34px; height: 34px; flex: none; }
   .ba .msg-l, .ba .msg-d { font-size: 12.5px; padding: 7px 11px; }
     .arrow { width: 50px; height: 50px; } .arrow svg { width: 21px; height: 21px; }
-    .win, .wf { left: 16px; right: 16px; top: 80px; }
-    .win { bottom: 20px; }
-                }
-</style>
+    .wf { left: 16px; right: 16px; top: 80px; }
+  </style>
 </head>
 <body>
 <div id="tip" role="tooltip"></div>
@@ -406,14 +400,9 @@
   </section>
 
   <section class="screen alt" id="why">
-    <div class="bento wrap">
+    <div class="bento solo wrap">
       <div class="tile" data-rise style="--d:.0s">
-        <h3 class="ct tl">Make any link yours</h3>
         <div class="wf"><canvas id="sand" aria-hidden="true"></canvas><div class="m"><b>Get creative!</b><span>abc.xyz</span></div></div>
-      </div>
-      <div class="tile" data-rise style="--d:.08s">
-        <h3 class="ct tl">Nothing to run or pay for</h3>
-        <div class="win"><div class="chrome"><span class="lights"><i></i><i></i><i></i></span><span class="omni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>abc.xyz/f/ruby</span></div><canvas id="paint" aria-hidden="true"></canvas></div>
       </div>
     </div>
   </section>
@@ -601,69 +590,15 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   const ease = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
   const htm = (t) => t.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
 
-  // --- 2 · the browser draws the page itself: a blank page, then blocks of colour, then the cover ---
-  const paint = $('paint'), pc = paint.getContext('2d');
-  const full = document.createElement('canvas'), fc = full.getContext('2d');
-  const tiny = document.createElement('canvas'), tc = tiny.getContext('2d');
-  let blocks = [], pT = 0;
-  function coverOn(c, w, h) {
-    c.fillStyle = '#0b0b0b'; c.fillRect(0, 0, w, h);
-    // type sized to fit both ways, so a wide, short window still holds the page
-    const u = Math.min(w, h * 1.9), p = Math.max(w * .08, 16);
-    c.textBaseline = 'alphabetic'; c.fillStyle = '#f2f2f2';
-    c.font = `600 ${u * .042}px Inter, sans-serif`; c.fillText('Logo', p, h * .22);
-    c.font = `500 ${u * .08}px Inter, sans-serif`; c.fillText("Ruby's surgery", p, h * .6);
-    // the goal: a rounded bar, a quiet track, 92% full
-    const bw = w - 2 * p, bh = Math.max(3, u * .014), by = h * .68, rad = bh / 2;
-    c.fillStyle = '#2b2b2b'; c.beginPath(); c.roundRect(p, by, bw, bh, rad); c.fill();
-    c.fillStyle = '#f2f2f2'; c.beginPath(); c.roundRect(p, by, bw * .92, bh, rad); c.fill();
-    c.fillStyle = '#a8a8a8'; c.font = `${u * .038}px Inter, sans-serif`; c.fillText('$4,600 of $5,000 · 77 donors', p, h * .8);
-  }
-  function paintSize() {
-    const r = paint.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
-    paint.width = full.width = Math.max(1, Math.round(r.width * dpr));
-    paint.height = full.height = Math.max(1, Math.round(r.height * dpr));
-    coverOn(fc, full.width, full.height);
-    // the first, coarse pass: square blocks that arrive in no order, as a page comes in over a slow line
-    const B = Math.max(8, Math.round(paint.width / 16));
-    blocks = [];
-    for (let y = 0; y < paint.height; y += B) for (let x = 0; x < paint.width; x += B) blocks.push({ x, y, at: Math.random() });
-    paintSize.B = B;
-    pT = performance.now();
-  }
-  function pixelate(px) {
-    tiny.width = Math.max(1, Math.ceil(paint.width / px)); tiny.height = Math.max(1, Math.ceil(paint.height / px));
-    tc.imageSmoothingEnabled = true; tc.drawImage(full, 0, 0, tiny.width, tiny.height);
-    pc.imageSmoothingEnabled = false; pc.drawImage(tiny, 0, 0, tiny.width, tiny.height, 0, 0, tiny.width * px, tiny.height * px);
-  }
-  function paintFrame(now) {
-    const k = ((now - pT) / 1000) % 8, W = paint.width, H = paint.height, B = paintSize.B;
-    pc.globalAlpha = 1; pc.fillStyle = '#ffffff'; pc.fillRect(0, 0, W, H);
-    if (k >= .7 && k < 2) {
-      // blocks pop in at the coarse size
-      const shown = (k - .7) / 1.3;
-      tiny.width = Math.ceil(W / B); tiny.height = Math.ceil(H / B); tc.imageSmoothingEnabled = true; tc.drawImage(full, 0, 0, tiny.width, tiny.height);
-      pc.imageSmoothingEnabled = false;
-      for (const b of blocks) if (b.at < shown) pc.drawImage(tiny, b.x / B, b.y / B, 1, 1, b.x, b.y, B, B);
-    } else if (k >= 2 && k < 3.2) {
-      // then each pass halves the blocks, until they are pixels
-      const steps = []; for (let s = B; s > 1; s = Math.floor(s / 2)) steps.push(s); steps.push(1);
-      pixelate(steps[Math.min(steps.length - 1, Math.floor((k - 2) / 1.2 * steps.length))]);
-    } else if (k >= 3.2 && k < 7.4) pc.drawImage(full, 0, 0);
-    else if (k >= 7.4) { pc.drawImage(full, 0, 0); pc.globalAlpha = (k - 7.4) / .6; pc.fillStyle = '#ffffff'; pc.fillRect(0, 0, W, H); pc.globalAlpha = 1; }
-    requestAnimationFrame(paintFrame);
-  }
-
   // --- 3 · water pours into the picture, splashes, settles, and becomes the mark (water.js) ----------
   let water = null;
   const inkNow = () => { const css = getComputedStyle(root); return [css.getPropertyValue('--ink2').trim(), css.getPropertyValue('--mute').trim()]; };
 
   document.fonts.ready.then(() => {
-    paintSize(); requestAnimationFrame(paintFrame);
     if (window.startWater) { const [ink, quiet] = inkNow(); water = window.startWater($('sand'), { ink, quiet, cell: [7, 14], font: 'JetBrains Mono, monospace' }); }
   });
   let rsz;
-  addEventListener('resize', () => { clearTimeout(rsz); rsz = setTimeout(() => { paintSize(); water?.resize(); }, 200); });
+  addEventListener('resize', () => { clearTimeout(rsz); rsz = setTimeout(() => { water?.resize(); }, 200); });
   const recolor = () => { const [ink, quiet] = inkNow(); water?.recolor(ink, quiet); };
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', recolor);
   themeBtn.addEventListener('click', recolor);
