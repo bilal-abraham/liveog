@@ -243,11 +243,6 @@
   .code .cp { position: absolute; top: 9px; right: 7px; }
   .more { margin-top: 28px; }
   .ways .ask { margin-top: 16px; }
-  .ways .hire { margin-top: 16px; }
-  .mail { padding: 0; border: 0; background: none; font: inherit; color: var(--ink); font-weight: 500; cursor: pointer; text-decoration: underline; text-decoration-color: var(--soft); text-underline-offset: 3px; }
-  .mail:hover { text-decoration-color: var(--ink); }
-  .copied { margin-left: 10px; font-size: 13px; color: var(--mute); opacity: 0; transition: opacity .2s ease; }
-  .copied.on { opacity: 1; }
   @media (min-width: 1000px) { .ways .ask { white-space: nowrap; } } .ways .ask b { color: var(--ink); font-weight: 500; }
   /* the agent apps: set up for you, or one step by hand */
   .apps { margin-top: 28px; }
@@ -402,7 +397,6 @@
         <h3>Install it yourself</h3>
         <p>Node, Deno, Bun, Cloudflare, Vercel.</p>
         <div class="cmd rtext"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <p class="hire">Want it set up for you? <button class="mail" type="button" data-email="babraham@hmc.edu">Email me</button><span class="copied" aria-live="polite"></span></p>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#readme">Read the guide →</a></div>
       </div>
       <div>
@@ -591,11 +585,6 @@
     h.addEventListener('pointerleave', () => { h.style.setProperty('--mx', '-999px'); h.style.setProperty('--my', '-999px'); });
   });
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { $('shineGo')?.remove(); $('shineGo2')?.remove(); }
-  document.querySelectorAll('.mail').forEach((b) => b.addEventListener('click', async () => {
-    const note = b.nextElementSibling, email = b.dataset.email;
-    try { await navigator.clipboard.writeText(email); note.textContent = 'Email copied to clipboard'; } catch { note.textContent = email; }
-    note.classList.add('on'); clearTimeout(b.t); b.t = setTimeout(() => note.classList.remove('on'), 2600);
-  }));
   foot.addEventListener('pointermove', (e) => {
     const r = foot.getBoundingClientRect();
     foot.style.setProperty('--mx', `${e.clientX - r.left}px`); foot.style.setProperty('--my', `${e.clientY - r.top}px`);
