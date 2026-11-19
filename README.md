@@ -5,111 +5,133 @@
   </picture>
 </p>
 
-<p align="center">Give your product a great first impression: link previews that stay current.<br><a href="https://bilal-abraham.github.io/liveog/">bilal-abraham.github.io/liveog</a></p>
+<p align="center">
+  Link previews that stay current.<br>
+  <a href="https://bilal-abraham.github.io/liveog/">Website</a> · <a href="https://www.npmjs.com/package/liveog">npm</a> · MIT
+</p>
 
 ---
 
-What a link shows when it is pasted into a chat or a post: the Open Graph and Twitter card tags,
-a 1200 x 630 cover, and nothing it should not show. An invite that shows who is going, a listing
-with its price now, a fundraiser with its bar: the next person who shares it sees what is true.
+When someone pastes your link into iMessage, Slack, X or WhatsApp, the app shows a preview card.
+liveog makes that card show **what is true right now**: who is going, the current bid, how close
+the fundraiser is. And it does it without an image server.
 
-- **More people tap.** A preview that shows what is happening gets opened, and shared again.
-- **Your brand on every link.** Your logo, colours and type on every link anyone sends.
-- **Drawn in the browser.** Your Chrome at build time, or your user's page at run time. Your
-  server only checks and keeps the PNG: no image service, no headless browser.
-- **Always current.** Versioned cover addresses (`/c/<id>/<v>.png`): a link shared again shows
-  the new picture, never a cached one.
-- **Private where it counts.** Invite codes and share tokens never show, and those links stay out
-  of search, Referers and caches.
-- **Zero dependencies.** The main import uses web APIs only: Node 22+, Deno, Bun, Cloudflare
-  Workers, Vercel.
+- **Covers drawn in a browser**: your Chrome at build time, or your user's open page at run time.
+  Your server only stores a PNG.
+- **Always fresh**: every new picture gets a new address, so a link shared again never shows a
+  stale, cached image.
+- **Private links stay private**: invite codes and share tokens never show in a preview, and those
+  pages stay out of search engines and caches.
+- **Zero dependencies**, ESM. Works on Node 22+, Deno, Bun, Cloudflare Workers and Vercel.
 
-## With your agent
+## Quick start
+
+### Let your agent do it
 
 ```sh
 npx liveog mcp add
 ```
 
-That adds the MCP server to every agent app it finds: Claude Code, Codex, Cursor, VS Code,
-Windsurf and Claude Desktop. Any other MCP client runs `npx -y liveog mcp` over stdio. Then ask:
-*"Set up link previews for this project."* Your agent is the designer; liveog gives it the tools:
+This finds the agent apps on your machine and adds the liveog MCP server to each one: Claude Code,
+Codex, Cursor, VS Code, Windsurf, Gemini CLI, Kiro, LM Studio, OpenCode and Claude Desktop.
+Restart the app, then ask:
 
-| Tool | |
-|---|---|
-| `study_project` | the project's colours, fonts, logo files, existing previews and routes |
-| `draw_cover` | draws a cover (the default, in your colours, or your own HTML) and shows it |
-| `setup_project` | the code to wire it in |
-| `check_link` | what a link's preview shows, as a chat app sees it, and what is wrong |
+> Set up link previews for this project.
 
-The server tells your agent how to work: study the project, ask you which links matter, draw two
-or three ideas, let you choose, then wire it in and check. And what a good cover is: even sides,
-one font, the title short, the line under it saying what is true now.
+The agent studies your project (colours, fonts, logo, routes), asks you which links matter, draws
+two or three cover ideas for you to pick from, wires in the code, and checks the result.
 
-## By hand
+### Or do it yourself
 
 ```sh
 npm i liveog
-npx liveog cover "Your site" public/og/home.png   # the default cover
-npx liveog draw cover.html public/og/home.png     # or your own page, 1200 x 630
-npx liveog check https://yoursite.com/            # what the preview shows
-npx liveog mcp add                                # the MCP server in every agent app here
 ```
 
 ```js
 import { links, originOf } from 'liveog';
 
+// 1. Say what kinds of link you have. First match wins; the last argument is the fallback.
 const site = links('yoursite', [
-  { name: 'invite', match: (p) => p.startsWith('/join/'), title: 'Join a board',
-    description: 'On yoursite.', cover: '/og/join.png', private: true },
-], { name: 'home', title: 'yoursite', description: 'What it is.', cover: '/og/home.png' });
+  { name: 'invite', match: (p) => p.startsWith('/join/'), private: true,
+    title: 'Join the team', description: 'On yoursite.', cover: '/og/invite.png' },
+], { name: 'home', title: 'yoursite', description: 'What it does.', cover: '/og/home.png' });
 
-// where your server sends a page
-const origin = originOf(req.headers.host, process.env.SITE);
+// 2. Wherever your server sends an HTML page:
+const origin = originOf(req.headers.host, process.env.SITE);   // SITE = your public domain
 for (const [k, v] of Object.entries(site.headers(path))) res.setHeader(k, v);
 res.end(site.page(html, path, origin));
 ```
 
-A static site can write the tags at build time with `tags()`.
+Then draw the covers once and commit them:
 
-## Covers that stay current
-
-A link's own cover (an invite naming its board, a shared board's picture) is drawn in your user's
-page and sent to your server:
-
-```js
-// in the page
-import { drawCover, sendCover } from 'liveog/browser';
-const png = await drawCover((ctx, w, h) => { /* draw on a 1200 x 630 canvas */ });
-await sendCover('/api/boards/42/cover', png);
-
-// on the server
-import { isCover, nextCover, coverPath, parseCoverPath, answer } from 'liveog';
-if (!isCover(bytes)) return reply(400);   // a 1200 x 630 PNG, at most 300 KB
-board.cover = nextCover(board.cover);     // same id, v + 1
-// keep the bytes; the link's preview is { image: coverPath(board.cover) }
-
-// GET /c/<id>/<v>.png
-const a = answer(parseCoverPath(path), board.cover);   // 200, 302 to the newest, or 404
+```sh
+npx liveog cover "yoursite" public/og/home.png     # the built-in cover, black and white
+npx liveog draw cover.html public/og/home.png      # or your own 1200 x 630 HTML page
+npx liveog check https://yoursite.com/             # see what a chat app will show
 ```
 
-When a private link is stopped or replaced, `nextCover(prev, true)` makes a new id and the old
-picture's address is nothing from then.
+Static site? Call `tags(card)` at build time and paste the result into each page's `<head>`.
+
+## Covers that change
+
+For links whose picture should change (an invite filling up, a price, a bid), the page that has
+the thing open draws the cover and sends it to your server:
+
+```js
+// In the browser
+import { drawCover, sendCover } from 'liveog/browser';
+const png = await drawCover((ctx, w, h) => { /* draw on a 1200 x 630 canvas */ });
+await sendCover('/api/invites/42/cover', png);
+```
+
+```js
+// On your server
+import { isCover, nextCover, coverPath, parseCoverPath, answer } from 'liveog';
+
+if (!isCover(bytes)) return reply(400);     // must be a 1200 x 630 PNG under 300 KB
+invite.cover = nextCover(invite.cover);     // same id, version + 1
+save(bytes);                                // the link's preview image is coverPath(invite.cover)
+
+// GET /c/<id>/<version>.png
+const a = answer(parseCoverPath(path), invite.cover);   // 200, a 302 to the newest, or 404
+```
+
+If a private link is stopped or replaced, call `nextCover(cover, true)`: it makes a new id, and the
+old picture's address stops working.
+
+There is always a fallback: until a link has its own cover, it shows its kind's generic one.
+
+## Any other MCP client
+
+liveog's MCP server speaks the standard protocol over stdin/stdout. Point your client at:
+
+```json
+{ "mcpServers": { "liveog": { "command": "npx", "args": ["-y", "liveog", "mcp"] } } }
+```
+
+Its tools:
+
+| Tool | What it does |
+|---|---|
+| `study_project` | reads your project's colours, fonts, logo files, routes and existing previews |
+| `draw_cover` | draws a 1200 x 630 cover and shows it to the agent |
+| `setup_project` | the code to wire liveog into your server |
+| `check_link` | fetches a live link the way a chat app does and reports what's wrong |
 
 ## API
 
-| | |
+| Import | |
 |---|---|
-| `tags(card)`, `inject(html, tags)` | the meta tags; put before `</head>` |
-| `cleanHost(x)`, `originOf(host, site?)` | a plain host only |
-| `links(site, kinds, fallback)` | `.of`, `.card`, `.headers`, `.page` for a path |
-| `coverHtml(words, look?)` | the default cover as HTML: site, tag, title, line, art |
-| `isCover`, `imageSize` | headers read, nothing decoded |
+| `tags(card)`, `inject(html, tags)` | the meta tags, and putting them before `</head>` |
+| `links(site, kinds, fallback)` | `.page()`, `.headers()`, `.card()` and `.of()` for a path |
+| `originOf(host, site?)`, `cleanHost(x)` | a safe absolute origin for image addresses |
+| `coverHtml(words, look?)` | the built-in cover as HTML (site, tag, title, line, picture) |
+| `isCover`, `imageSize` | checks a PNG's size without decoding it |
 | `nextCover`, `coverPath`, `parseCoverPath`, `answer` | versioned cover addresses |
-| `check`, `describe`, `readTags` | the checker |
-| `liveog/draw`: `draw`, `findChrome` | covers from local Chrome (`CHROME=` to choose); Node only |
-| `liveog/study`: `study` | what `study_project` reads; Node only |
-| `liveog/browser`: `drawCover`, `sendCover` | covers drawn in the page |
+| `check`, `describe`, `readTags` | the link checker |
+| `liveog/draw` | `draw(page, out)` with your local Chrome (Node only) |
+| `liveog/browser` | `drawCover`, `sendCover` for the user's page |
 
----
+## License
 
 MIT

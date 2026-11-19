@@ -19,7 +19,7 @@
 <meta name="twitter:description" content="Link previews that stay current. Open source, zero dependencies.">
 <meta name="twitter:image" content="https://bilal-abraham.github.io/liveog/og.png">
 <meta name="twitter:image:alt" content="liveog: Give your product a great first impression.">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -27,7 +27,7 @@
 <style>
   :root {
     --bg: #fafafa; --paper: #ffffff; --ink: #0a0a0a; --ink2: #444; --mute: #7a7a7a; --line: #e4e4e4; --soft: #c8c8c8;
-    --dot: #d6d6d6; --card: #0a0a0a; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #2e2e2e; --code: #f3f3f3;
+    --dot: #d6d6d6; --card: #0a0a0a; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #2e2e2e; --code: #f3f3f3; --inb: #e9e9eb;
     --sans: Inter, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
     --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
     --head: 64px;
@@ -35,10 +35,10 @@
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) { --bg: #0a0a0a; --paper: #0e0e0e; --ink: #f2f2f2; --ink2: #bdbdbd; --mute: #7a7a7a; --line: #232323; --soft: #3a3a3a;
-      --dot: #262626; --card: #171717; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #333; --code: #151515; color-scheme: dark; }
+      --dot: #262626; --card: #171717; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #333; --code: #151515; --inb: #26252a; color-scheme: dark; }
   }
   :root[data-theme="dark"] { --bg: #0a0a0a; --paper: #0e0e0e; --ink: #f2f2f2; --ink2: #bdbdbd; --mute: #7a7a7a; --line: #232323; --soft: #3a3a3a;
-    --dot: #262626; --card: #171717; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #333; --code: #151515; color-scheme: dark; }
+    --dot: #262626; --card: #171717; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #333; --code: #151515; --inb: #26252a; color-scheme: dark; }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: var(--head); }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
@@ -120,14 +120,21 @@
   .shot { position: relative; border-right: 1px solid var(--line); }
   /* the dots run out to the screen's edge */
   .shot::before { content: ""; position: absolute; inset: 0 0 0 -100vw; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 12px 12px; opacity: .7; }
-  .chat { position: relative; max-width: 460px; width: 100%; margin: 0 auto; background: var(--paper); border: 1px solid var(--line); border-radius: 28px; padding: 22px 20px 24px;
-    box-shadow: 0 24px 60px -30px rgba(0,0,0,.25); }
-  .row { display: flex; align-items: flex-end; gap: 8px; }
-  .av { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: var(--bg); display: grid; place-items: center; font: 600 11px/1 var(--sans); letter-spacing: .02em; }
-  .bubbles { min-width: 0; flex: 1; }
-  .msg { display: inline-block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 9px 14px; border-radius: 20px; background: var(--code); font-size: 15px; line-height: 1.35; color: var(--ink); }
-  .msg u { text-decoration-color: var(--mute); }
-  .preview { margin-top: 6px; max-width: 360px; border-radius: 20px; overflow: hidden; background: var(--code); border: 1px solid var(--line); }
+  /* a sent message, as a phone shows it: the link's preview, then the blue bubble with its tail */
+  .chat { position: relative; max-width: 400px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .bub { position: relative; max-width: 100%; }
+  .msg { display: block; max-width: 100%; padding: 9px 14px; border-radius: 20px; background: #0a84ff; color: #fff; font-size: 15.5px; line-height: 1.35;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .msg u { text-decoration-color: rgba(255,255,255,.65); text-underline-offset: 2px; }
+  .tail { position: absolute; right: -5px; bottom: 0; width: 17px; height: 21px; color: #0a84ff; }
+  .delivered { margin: 2px 4px 0 0; font-size: 11.5px; color: var(--mute); }
+  /* a message that came in: grey, on the left, its tail the other way */
+  .chat.in { align-items: flex-start; }
+  .chat.in .msg { background: var(--inb); color: var(--ink); border: 0; }
+  .chat.in .msg u { text-decoration-color: var(--mute); }
+  .chat.in .tail { right: auto; left: -5px; transform: scaleX(-1); color: var(--inb); }
+  .chat.in .delivered { visibility: hidden; }
+  .preview { width: 100%; max-width: 340px; border-radius: 18px; overflow: hidden; background: var(--code); border: 1px solid var(--line); box-shadow: 0 18px 50px -28px rgba(0,0,0,.45); }
   .meta { padding: 10px 14px 12px; }
   .meta .h { font-weight: 600; font-size: 14.5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .meta .s { font-size: 13px; color: var(--mute); margin-top: 2px; }
@@ -153,12 +160,12 @@
   .goal + .t { bottom: 36%; }
   .bump { animation: bump .5s ease-out; }
   @keyframes bump { from { transform: translateY(6px); opacity: .2; } }
-  .addr { position: relative; margin: 16px auto 0; max-width: 460px; width: 100%; font: 400 12.5px var(--mono); color: var(--mute); word-break: break-all; }
+  .addr { position: relative; margin: 20px auto 0; max-width: 400px; width: 100%; font: 400 12.5px var(--mono); color: var(--mute); word-break: break-all; }
   .addr b { color: var(--ink); font-weight: 500; padding: 0 2px; }
   .addr b.flash { animation: flash .8s ease-out; }
   @keyframes flash { from { background: var(--ink); color: var(--bg); } }
   .say .label.kind { display: inline-block; padding: 8px 12px; border: 1px solid var(--line); }
-  .say h3 { margin: 0; font: 500 clamp(24px, 2.6vw, 32px)/1.15 var(--sans); letter-spacing: -.03em; max-width: 440px; }
+  .say h3 { margin: 0; font: 500 clamp(24px, 2.6vw, 32px)/1.15 var(--sans); letter-spacing: -.03em; max-width: 480px; text-wrap: pretty; }
   .say p { margin: 14px 0 0; color: var(--ink2); max-width: 440px; }
 
   /* why: four cards, each with a small picture of the point */
@@ -226,16 +233,15 @@
   footer::after { background-image: radial-gradient(var(--ink) 1.1px, transparent 1.3px); opacity: .5;
     -webkit-mask-image: radial-gradient(160px circle at var(--mx) var(--my), #000, transparent); mask-image: radial-gradient(160px circle at var(--mx) var(--my), #000, transparent); }
   .fin { position: relative; z-index: 1; padding: 96px 48px 36px; }
-  .big { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; opacity: 0; transform: translateY(24px);
+  .big { display: flex; align-items: flex-end; gap: clamp(24px, 4vw, 56px); opacity: 0; transform: translateY(24px);
     transition: opacity 1.2s ease, transform 1.2s cubic-bezier(.2,.7,.2,1); user-select: none; }
   footer.on .big { opacity: 1; transform: none; }
   .big svg { display: block; height: var(--h); width: auto; overflow: visible; }
   .big path, .big rect, .big circle { fill: none; stroke: var(--soft); stroke-width: 1px; vector-effect: non-scaling-stroke; }
   .eyes { transition: transform .25s ease-out; }
   .foot { display: flex; align-items: center; gap: 28px; margin-top: 44px; }
-  .foot a { text-decoration: none; }
+  .foot a { text-decoration: none; font: 400 15px/1 var(--sans); letter-spacing: 0; text-transform: none; color: var(--ink2); }
   .foot a:hover { color: var(--ink); }
-  .foot .rule { flex: 1; height: 1px; margin: 0 8px; background: linear-gradient(90deg, transparent, var(--soft) 22%, var(--soft) 78%, transparent); opacity: .7; }
 
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } .big, .js [data-rise] { opacity: 1; transform: none; } .scan { display: none; } }
   @media (max-width: 560px) {
@@ -306,7 +312,7 @@
         <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
       </div>
     </div>
-    <div class="users"><span class="label">Working with</span><div class="logos"><a href="https://limn.web.app/" aria-label="limn"><svg viewBox="0 0 231 100" aria-hidden="true"><path d="M64 100V59A27 27 0 0 1 118 59V100H105V59A14 14 0 0 0 77 59V100ZM105 100V59A27 27 0 0 1 159 59V100H146V59A14 14 0 0 0 118 59V100ZM177 100V59A27 27 0 0 1 231 59V100H218V59A14 14 0 0 0 190 59V100Z" fill="currentColor"/><rect x="33" y="32" width="13" height="68" fill="currentColor"/><rect width="13" height="100" fill="currentColor"/><circle cx="39.5" cy="15.5" r="7.5" fill="currentColor"/></svg></a><a href="https://www.exploravist.net" aria-label="ExploraVist"><svg class="ev" viewBox="-2 30 337 65" aria-hidden="true" fill="currentColor" font-weight="700"><text x="0" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">e</text><text x="30" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">x</text><text x="63.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">p</text><text x="97.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">l</text><text x="114" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">o</text><text x="146" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">r</text><text x="173" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">a</text><text x="196" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="italic">V</text><text x="225" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="italic" transform="translate(0 80) skewX(-23) translate(0 -80)">ı</text><text x="250.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">s</text><text x="278.5" y="80" font-family="Georgia, &#x27;Times New Roman&#x27;, serif" font-size="54" font-style="normal">t</text><path transform="translate(249.5 46.75)" d="M0 -5.4 L1.4 -1.4 L5.4 0 L1.4 1.4 L0 5.4 L-1.4 1.4 L-5.4 0 L-1.4 -1.4 Z"></path></svg></a></div></div>
+    <!-- "Working with" comes back with more names -->
   </section>
 
   <section class="screen" id="examples">
@@ -314,16 +320,12 @@
     <div class="split"><div class="stage wrap">
       <div class="shot">
         <div class="chat" data-rise>
-          <div class="row">
-            <div class="av" id="av"></div>
-            <div class="bubbles">
-              <div class="msg" id="msg"></div>
-              <div class="preview">
-                <div class="cover" id="cover"></div>
-                <div class="meta"><div class="h" id="mt"></div><div class="s">yoursite.com</div></div>
-              </div>
-            </div>
+          <div class="preview">
+            <div class="cover" id="cover"></div>
+            <div class="meta"><div class="h" id="mt"></div><div class="s">yoursite.com</div></div>
           </div>
+          <div class="bub"><div class="msg" id="msg"></div><svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div>
+          <div class="delivered">Delivered</div>
         </div>
         <div class="addr">og:image → /c/<span id="cid"></span>/<b id="v">1</b>.png</div>
       </div>
@@ -374,11 +376,11 @@ res.end(site.page(html, path, originOf(host)));</pre><button class="cp" aria-lab
       </div>
       <div>
         <h3>Or let your agent do it</h3>
-        <p>Adds liveog to Claude Code, Cursor, Codex, VS Code and Windsurf.</p>
+        <p>Finds your agent apps and adds liveog to each: Claude Code, Codex, Cursor, VS Code, Windsurf, Gemini CLI, Kiro, OpenCode and more.</p>
         <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
         <div class="code"><pre><span class="c">then ask your agent to</span>
 set up link previews for this project</pre><button class="cp" data-copy="Set up link previews for this project." aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#with-your-agent">Any other MCP client →</a></div>
+        <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#any-other-mcp-client">Using another MCP client? →</a></div>
       </div>
     </div></div>
   </section>
@@ -387,17 +389,16 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
 <footer id="foot" class="alt">
   <div class="fin wrap">
     <div class="big">
-      <svg viewBox="18.8 -230.3 759.7 295" aria-hidden="true"><path d="M62.6953125 -218.26171875V0.0H18.75V-218.26171875ZM80.548828125 0.0V-163.76953125H124.494140625V0.0ZM102.521484375 -185.15625Q92.560546875 -185.15625 85.529296875 -191.748046875Q78.498046875 -198.33984375 78.498046875 -207.71484375Q78.498046875 -217.08984375 85.529296875 -223.681640625Q92.560546875 -230.2734375 102.521484375 -230.2734375Q112.482421875 -230.2734375 119.5869140625 -223.7548828125Q126.69140625 -217.236328125 126.69140625 -207.71484375Q126.69140625 -198.33984375 119.5869140625 -191.748046875Q112.482421875 -185.15625 102.521484375 -185.15625ZM188.490234375 0.0 128.138671875 -163.76953125H174.8671875L202.40625 -78.80859375Q207.38671875 -62.841796875 211.1953125 -46.58203125Q212.513671875 -40.283203125 213.978515625 -33.837890625Q215.443359375 -40.283203125 216.908203125 -46.58203125Q220.5703125 -62.841796875 225.55078125 -78.80859375L252.796875 -163.76953125H298.939453125L238.44140625 0.0ZM376.705078125 3.22265625Q351.65625 3.22265625 333.4921875 -7.03125Q315.328125 -17.28515625 305.5869140625 -36.181640625Q295.845703125 -55.078125 295.845703125 -81.005859375Q295.845703125 -106.34765625 305.513671875 -125.390625Q315.181640625 -144.43359375 332.90625 -155.126953125Q350.630859375 -165.8203125 374.5078125 -165.8203125Q390.62109375 -165.8203125 404.537109375 -160.693359375Q418.453125 -155.56640625 429.0 -145.2392578125Q439.546875 -134.912109375 445.4794921875 -119.384765625Q451.412109375 -103.857421875 451.412109375 -82.763671875V-70.458984375H339.3515625Q339.791015625 -58.0078125 344.185546875 -49.21875Q348.873046875 -39.55078125 357.4423828125 -34.716796875Q366.01171875 -29.8828125 377.4375 -29.8828125Q385.201171875 -29.8828125 391.5 -32.080078125Q397.798828125 -34.27734375 402.2666015625 -38.5986328125Q406.734375 -42.919921875 409.078125 -49.21875L448.921875 -41.748046875Q444.966796875 -28.271484375 435.15234375 -18.0908203125Q425.337890625 -7.91015625 410.6162109375 -2.34375Q395.89453125 3.22265625 376.705078125 3.22265625ZM339.64453125 -97.998046875H409.078125Q408.19921875 -106.201171875 405.5625 -112.939453125Q401.607421875 -122.314453125 393.9169921875 -127.5146484375Q386.2265625 -132.71484375 374.947265625 -132.71484375Q363.521484375 -132.71484375 355.5380859375 -127.44140625Q347.5546875 -122.16796875 343.453125 -113.232421875Q340.376953125 -106.34765625 339.64453125 -97.998046875ZM535.18359375 3.22265625Q510.57421875 3.22265625 492.556640625 -7.3974609375Q474.5390625 -18.017578125 464.7978515625 -36.9873046875Q455.056640625 -55.95703125 455.056640625 -81.15234375Q455.056640625 -106.640625 464.7978515625 -125.6103515625Q474.5390625 -144.580078125 492.556640625 -155.2001953125Q510.57421875 -165.8203125 535.18359375 -165.8203125Q559.939453125 -165.8203125 577.8837890625 -155.2001953125Q595.828125 -144.580078125 605.5693359375 -125.6103515625Q615.310546875 -106.640625 615.310546875 -81.15234375Q615.310546875 -55.95703125 605.5693359375 -36.9873046875Q595.828125 -18.017578125 577.8837890625 -7.3974609375Q559.939453125 3.22265625 535.18359375 3.22265625ZM535.18359375 -31.34765625Q546.90234375 -31.34765625 554.8125 -37.8662109375Q562.72265625 -44.384765625 566.677734375 -55.7373046875Q570.6328125 -67.08984375 570.6328125 -81.298828125Q570.6328125 -95.80078125 566.677734375 -107.080078125Q562.72265625 -118.359375 554.8125 -124.8046875Q546.90234375 -131.25 535.18359375 -131.25Q523.46484375 -131.25 515.6279296875 -124.8046875Q507.791015625 -118.359375 503.8359375 -107.080078125Q499.880859375 -95.80078125 499.880859375 -81.298828125Q499.880859375 -67.08984375 503.8359375 -55.7373046875Q507.791015625 -44.384765625 515.6279296875 -37.8662109375Q523.46484375 -31.34765625 535.18359375 -31.34765625ZM699.228515625 64.74609375Q678.720703125 64.74609375 663.486328125 59.5458984375Q648.251953125 54.345703125 638.73046875 45.263671875Q629.208984375 36.181640625 625.546875 24.609375L663.33984375 14.0625Q665.390625 18.603515625 669.7119140625 22.9248046875Q674.033203125 27.24609375 681.2109375 30.029296875Q688.388671875 32.8125 698.935546875 32.8125Q715.78125 32.8125 725.3759765625 25.1220703125Q734.970703125 17.431640625 734.970703125 1.171875V-29.00390625H731.6015625Q728.671875 -22.412109375 723.10546875 -16.259765625Q717.5390625 -10.107421875 708.5302734375 -6.2255859375Q699.521484375 -2.34375 686.19140625 -2.34375Q667.734375 -2.34375 652.646484375 -10.986328125Q637.55859375 -19.62890625 628.5498046875 -37.353515625Q619.541015625 -55.078125 619.541015625 -82.177734375Q619.541015625 -109.86328125 628.6962890625 -128.466796875Q637.8515625 -147.0703125 653.0126953125 -156.4453125Q668.173828125 -165.8203125 686.337890625 -165.8203125Q700.107421875 -165.8203125 709.482421875 -161.2060546875Q718.857421875 -156.591796875 724.6435546875 -149.6337890625Q730.4296875 -142.67578125 733.359375 -136.23046875H735.263671875V-163.76953125H778.4765625V-1.318359375Q778.4765625 20.80078125 768.2958984375 35.44921875Q758.115234375 50.09765625 740.244140625 57.421875Q722.373046875 64.74609375 699.228515625 64.74609375ZM699.9609375 -35.7421875Q711.240234375 -35.7421875 719.0771484375 -41.30859375Q726.9140625 -46.875 731.015625 -57.3486328125Q735.1171875 -67.822265625 735.1171875 -82.470703125Q735.1171875 -96.97265625 731.015625 -107.8125Q726.9140625 -118.65234375 719.0771484375 -124.658203125Q711.240234375 -130.6640625 699.9609375 -130.6640625Q688.388671875 -130.6640625 680.5517578125 -124.4384765625Q672.71484375 -118.212890625 668.6865234375 -107.373046875Q664.658203125 -96.533203125 664.658203125 -82.470703125Q664.658203125 -68.115234375 668.6865234375 -57.6416015625Q672.71484375 -47.16796875 680.625 -41.455078125Q688.53515625 -35.7421875 699.9609375 -35.7421875Z"/></svg>
       <svg class="mark-o" viewBox="0 -230.3 292.9 295" aria-hidden="true"><g transform="translate(0 -164.0) scale(5.8571)">
       <rect x=".5" y=".5" width="49" height="27" rx="7.5"/><rect x="3.5" y="3.5" width="43" height="21" rx="4.5"/>
       <g class="eyes" id="eyes"><circle cx="30.5" cy="10.5" r="3"/><circle cx="39.5" cy="10.5" r="3"/></g></g></svg>
+      <svg viewBox="18.8 -230.3 759.7 295" aria-hidden="true"><path d="M62.6953125 -218.26171875V0.0H18.75V-218.26171875ZM80.548828125 0.0V-163.76953125H124.494140625V0.0ZM102.521484375 -185.15625Q92.560546875 -185.15625 85.529296875 -191.748046875Q78.498046875 -198.33984375 78.498046875 -207.71484375Q78.498046875 -217.08984375 85.529296875 -223.681640625Q92.560546875 -230.2734375 102.521484375 -230.2734375Q112.482421875 -230.2734375 119.5869140625 -223.7548828125Q126.69140625 -217.236328125 126.69140625 -207.71484375Q126.69140625 -198.33984375 119.5869140625 -191.748046875Q112.482421875 -185.15625 102.521484375 -185.15625ZM188.490234375 0.0 128.138671875 -163.76953125H174.8671875L202.40625 -78.80859375Q207.38671875 -62.841796875 211.1220703125 -46.58203125Q214.857421875 -30.322265625 218.8125 -12.890625H209.4375Q213.24609375 -30.322265625 216.908203125 -46.58203125Q220.5703125 -62.841796875 225.55078125 -78.80859375L252.796875 -163.76953125H298.939453125L238.44140625 0.0ZM376.705078125 3.22265625Q351.65625 3.22265625 333.4921875 -7.03125Q315.328125 -17.28515625 305.5869140625 -36.181640625Q295.845703125 -55.078125 295.845703125 -81.005859375Q295.845703125 -106.34765625 305.513671875 -125.390625Q315.181640625 -144.43359375 332.90625 -155.126953125Q350.630859375 -165.8203125 374.5078125 -165.8203125Q390.62109375 -165.8203125 404.537109375 -160.693359375Q418.453125 -155.56640625 429.0 -145.2392578125Q439.546875 -134.912109375 445.4794921875 -119.384765625Q451.412109375 -103.857421875 451.412109375 -82.763671875V-70.458984375H313.86328125V-97.998046875H429.87890625L409.37109375 -90.673828125Q409.37109375 -103.41796875 405.4892578125 -112.8662109375Q401.607421875 -122.314453125 393.9169921875 -127.5146484375Q386.2265625 -132.71484375 374.947265625 -132.71484375Q363.521484375 -132.71484375 355.5380859375 -127.44140625Q347.5546875 -122.16796875 343.453125 -113.1591796875Q339.3515625 -104.150390625 339.3515625 -92.578125V-73.095703125Q339.3515625 -58.88671875 344.1123046875 -49.21875Q348.873046875 -39.55078125 357.4423828125 -34.716796875Q366.01171875 -29.8828125 377.4375 -29.8828125Q385.201171875 -29.8828125 391.5 -32.080078125Q397.798828125 -34.27734375 402.2666015625 -38.5986328125Q406.734375 -42.919921875 409.078125 -49.21875L448.921875 -41.748046875Q444.966796875 -28.271484375 435.15234375 -18.0908203125Q425.337890625 -7.91015625 410.6162109375 -2.34375Q395.89453125 3.22265625 376.705078125 3.22265625ZM535.18359375 3.22265625Q510.57421875 3.22265625 492.556640625 -7.3974609375Q474.5390625 -18.017578125 464.7978515625 -36.9873046875Q455.056640625 -55.95703125 455.056640625 -81.15234375Q455.056640625 -106.640625 464.7978515625 -125.6103515625Q474.5390625 -144.580078125 492.556640625 -155.2001953125Q510.57421875 -165.8203125 535.18359375 -165.8203125Q559.939453125 -165.8203125 577.8837890625 -155.2001953125Q595.828125 -144.580078125 605.5693359375 -125.6103515625Q615.310546875 -106.640625 615.310546875 -81.15234375Q615.310546875 -55.95703125 605.5693359375 -36.9873046875Q595.828125 -18.017578125 577.8837890625 -7.3974609375Q559.939453125 3.22265625 535.18359375 3.22265625ZM535.18359375 -31.34765625Q546.90234375 -31.34765625 554.8125 -37.8662109375Q562.72265625 -44.384765625 566.677734375 -55.7373046875Q570.6328125 -67.08984375 570.6328125 -81.298828125Q570.6328125 -95.80078125 566.677734375 -107.080078125Q562.72265625 -118.359375 554.8125 -124.8046875Q546.90234375 -131.25 535.18359375 -131.25Q523.46484375 -131.25 515.6279296875 -124.8046875Q507.791015625 -118.359375 503.8359375 -107.080078125Q499.880859375 -95.80078125 499.880859375 -81.298828125Q499.880859375 -67.08984375 503.8359375 -55.7373046875Q507.791015625 -44.384765625 515.6279296875 -37.8662109375Q523.46484375 -31.34765625 535.18359375 -31.34765625ZM699.228515625 64.74609375Q678.720703125 64.74609375 663.486328125 59.5458984375Q648.251953125 54.345703125 638.73046875 45.263671875Q629.208984375 36.181640625 625.546875 24.609375L663.33984375 14.0625Q665.390625 18.603515625 669.7119140625 22.9248046875Q674.033203125 27.24609375 681.2109375 30.029296875Q688.388671875 32.8125 698.935546875 32.8125Q715.78125 32.8125 725.3759765625 25.1220703125Q734.970703125 17.431640625 734.970703125 1.171875V-29.00390625H731.6015625Q728.671875 -22.412109375 723.10546875 -16.259765625Q717.5390625 -10.107421875 708.5302734375 -6.2255859375Q699.521484375 -2.34375 686.19140625 -2.34375Q667.734375 -2.34375 652.646484375 -10.986328125Q637.55859375 -19.62890625 628.5498046875 -37.353515625Q619.541015625 -55.078125 619.541015625 -82.177734375Q619.541015625 -109.86328125 628.6962890625 -128.466796875Q637.8515625 -147.0703125 653.0126953125 -156.4453125Q668.173828125 -165.8203125 686.337890625 -165.8203125Q700.107421875 -165.8203125 709.482421875 -161.2060546875Q718.857421875 -156.591796875 724.6435546875 -149.6337890625Q730.4296875 -142.67578125 733.359375 -136.23046875H735.263671875V-163.76953125H778.4765625V-1.318359375Q778.4765625 20.80078125 768.2958984375 35.44921875Q758.115234375 50.09765625 740.244140625 57.421875Q722.373046875 64.74609375 699.228515625 64.74609375ZM699.9609375 -35.7421875Q711.240234375 -35.7421875 719.0771484375 -41.30859375Q726.9140625 -46.875 731.015625 -57.3486328125Q735.1171875 -67.822265625 735.1171875 -82.470703125Q735.1171875 -96.97265625 731.015625 -107.8125Q726.9140625 -118.65234375 719.0771484375 -124.658203125Q711.240234375 -130.6640625 699.9609375 -130.6640625Q688.388671875 -130.6640625 680.5517578125 -124.4384765625Q672.71484375 -118.212890625 668.6865234375 -107.373046875Q664.658203125 -96.533203125 664.658203125 -82.470703125Q664.658203125 -68.115234375 668.6865234375 -57.6416015625Q672.71484375 -47.16796875 680.625 -41.455078125Q688.53515625 -35.7421875 699.9609375 -35.7421875Z"/></svg>
     </div>
     <div class="foot">
       <a class="label" href="https://github.com/bilal-abraham/liveog">GitHub</a>
       <a class="label" href="https://www.npmjs.com/package/liveog">npm</a>
       <a class="label" href="#start">MCP</a>
-      <span class="rule" aria-hidden="true"></span>
-      <a class="label" href="https://github.com/bilal-abraham/liveog/blob/main/LICENSE">MIT licence</a>
+      <a class="label" style="margin-left:auto" href="https://github.com/bilal-abraham/liveog/blob/main/LICENSE">MIT licence</a>
     </div>
   </div>
 </footer>
@@ -458,19 +459,19 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   const faces = (n) => `<span class="faces">${['M', 'J', 'S', 'L', 'P'].slice(0, n).map((x) => `<b>${x}</b>`).join('')}${n < 5 ? '<i></i>' : ''}</span>`;
   const money = (n) => `$${n.toLocaleString('en-US')}`;
   const EX = [
-    { key: 'Invites', icon: 'i-invite', av: 'MA', msg: 'dinner friday? <u>yoursite.com/i/…</u>',
+    { key: 'Invites', dir: 'out', icon: 'i-invite', av: 'MA', msg: 'dinner friday? <u>yoursite.com/i/…</u>',
       why: 'An invite that shows who is going',
       states: [1, 2, 3, 4, 5].map((n) => ({ title: "Dinner at Lucia's",
         html: `${logo}<div class="tag"><i></i>Friday 8pm</div><div class="t">Dinner at Lucia's</div><div class="l">${faces(n)}<strong class="bump">${n} going</strong></div>` })) },
-    { key: 'Listings', icon: 'i-home', av: 'HE', msg: 'is this the one? <u>yoursite.com/h/…</u>',
+    { key: 'Listings', dir: 'in', icon: 'i-home', av: 'HE', msg: 'is this the one? <u>yoursite.com/h/…</u>',
       why: 'A listing with your brand and its price now',
       states: [['Open house Sat', 725000, 1], ['New price', 699000, 0], ['Under contract', 699000, 0], ['Sold', 712000, 0]].map(([tag, p, live]) => ({ title: '14 Maple Street',
         html: `${agency}<div class="tag">${live ? '<i></i>' : ''}${tag}</div>${house}<div class="t narrow">14 Maple Street</div><div class="l"><strong class="bump">${money(p)}</strong> · 3 bd · 2 ba</div>` })) },
-    { key: 'Auctions', icon: 'i-bid', av: 'BR', msg: 'look at this one <u>yoursite.com/l/…</u>',
+    { key: 'Auctions', dir: 'out', icon: 'i-bid', av: 'BR', msg: 'look at this one <u>yoursite.com/l/…</u>',
       why: 'An auction that shows the bid now',
       states: [[62, 3, 'Live auction'], [84, 7, 'Live auction'], [112, 12, 'Ends in 1h'], [140, 0, 'Sold']].map(([p, b, tag]) => ({ title: 'Vintage tee',
         html: `${logo}<div class="tag">${b ? '<i></i>' : ''}${tag}</div>${tee}<div class="t narrow">Vintage tee</div><div class="l">${b ? 'Top bid' : 'Sold for'} <strong class="bump">${money(p)}</strong>${b ? ` · ${b} bids` : ''}</div>` })) },
-    { key: 'Fundraisers', icon: 'i-goal', av: 'CI', msg: 'ruby is so close! <u>yoursite.com/f/…</u>',
+    { key: 'Fundraisers', dir: 'in', icon: 'i-goal', av: 'CI', msg: 'ruby is so close! <u>yoursite.com/f/…</u>',
       why: 'A goal that shows how close it is',
       states: [[1200, 18], [2900, 41], [4600, 77], [5300, 96]].map(([n, d]) => ({ title: "Ruby's surgery",
         html: `${logo}<div class="tag">${n >= 5000 ? 'Goal reached' : '<i></i>Raising'}</div><div class="goal"><b style="width:${Math.min(100, n / 50)}%"></b></div><div class="t">Ruby's surgery</div><div class="l"><strong class="bump">${money(n)}</strong> of $5,000 · ${d} donors</div>` })) },
@@ -496,7 +497,7 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
     ex = i; at = 0;
     const e = EX[i];
     [...tabs.children].forEach((b, k) => b.setAttribute('aria-selected', String(k === i)));
-    $('av').textContent = e.av; $('msg').innerHTML = e.msg; $('cid').textContent = ids[i];
+    $('msg').innerHTML = e.msg; document.querySelector('.chat').classList.toggle('in', e.dir === 'in'); $('cid').textContent = ids[i];
     $('why').textContent = e.why;
     render();
     clearInterval(timer);
