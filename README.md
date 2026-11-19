@@ -133,6 +133,11 @@ Its tools:
 | `liveog/draw` | `draw(page, out)` with your local Chrome (Node only) |
 | `liveog/browser` | `drawCover`, `sendCover` for the user's page |
 
+## Using liveog?
+
+Tell us in [Using liveog? Tell us](https://github.com/bilal-abraham/liveog/discussions/7): what you built and
+what your previews show. Want it set up for you instead? Email babraham@hmc.edu.
+
 ## License
 
 MIT
