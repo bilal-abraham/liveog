@@ -1,23 +1,26 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset=".github/logo-dark.svg">
-    <img src=".github/logo-light.svg" alt="liveog" width="220" height="48">
+    <img src=".github/logo-light.svg" alt="liveog" width="177" height="40">
   </picture>
 </p>
 
-<p align="center">Link previews that stay current.<br><a href="https://bilal-abraham.github.io/liveog/">bilal-abraham.github.io/liveog</a></p>
+<p align="center">Give your product a great first impression: link previews that stay current.<br><a href="https://bilal-abraham.github.io/liveog/">bilal-abraham.github.io/liveog</a></p>
 
 ---
 
 What a link shows when it is pasted into a chat or a post: the Open Graph and Twitter card tags,
-a 1200 x 630 cover, and nothing it should not show.
+a 1200 x 630 cover, and nothing it should not show. An invite that shows who is going, a listing
+with its price now, a fundraiser with its bar: the next person who shares it sees what is true.
 
-- **Covers drawn by a browser you already run.** Your Chrome at build time, or your user's page at
-  run time. Your server only checks and keeps the PNG: no image service, no headless browser.
-- **Covers that stay current.** Versioned addresses (`/c/<id>/<v>.png`), so a link pasted again
-  shows the new picture, never a cached one.
-- **Privacy per link kind.** An invite or share link's preview never holds its code, and its
-  answers stay out of search, Referers and caches.
+- **More people tap.** A preview that shows what is happening gets opened, and shared again.
+- **Your brand on every link.** Your logo, colours and type on every link anyone sends.
+- **Drawn in the browser.** Your Chrome at build time, or your user's page at run time. Your
+  server only checks and keeps the PNG: no image service, no headless browser.
+- **Always current.** Versioned cover addresses (`/c/<id>/<v>.png`): a link shared again shows
+  the new picture, never a cached one.
+- **Private where it counts.** Invite codes and share tokens never show, and those links stay out
+  of search, Referers and caches.
 - **Zero dependencies.** The main import uses web APIs only: Node 22+, Deno, Bun, Cloudflare
   Workers, Vercel.
 
@@ -49,6 +52,7 @@ npm i liveog
 npx liveog cover "Your site" public/og/home.png   # the default cover
 npx liveog draw cover.html public/og/home.png     # or your own page, 1200 x 630
 npx liveog check https://yoursite.com/            # what the preview shows
+npx liveog mcp add                                # the MCP server in every agent app here
 ```
 
 ```js
