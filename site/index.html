@@ -523,10 +523,10 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   const faces = (n) => `<span class="faces">${['M', 'J', 'S', 'L', 'P'].slice(0, n).map((x) => `<b>${x}</b>`).join('')}${n < 5 ? '<i></i>' : ''}</span>`;
   const money = (n) => `$${n.toLocaleString('en-US')}`;
   const EX = [
-    { key: 'Invites', dir: 'out', icon: 'i-invite', av: 'MA', msg: 'dinner friday? <u>yoursite.com/i/…</u>',
+    { key: 'Invites', dir: 'out', icon: 'i-invite', av: 'MA', msg: 'movie night? <u>yoursite.com/i/…</u>',
       why: 'An invite that shows who is going',
-      states: [1, 2, 3, 4, 5].map((n) => ({ title: "Dinner at Lucia's",
-        html: `${logo}<div class="tag">Friday 8pm</div><div class="t">Dinner at Lucia's</div><div class="l">${faces(n)}<strong class="bump">${n} going</strong></div>` })) },
+      states: [1, 2, 3, 4, 5].map((n) => ({ title: 'Rooftop movie night',
+        html: `${logo}<div class="tag">Saturday 9pm</div><div class="t">Rooftop movie night</div><div class="l">${faces(n)}<strong class="bump">${n} going</strong></div>` })) },
     { key: 'Listings', dir: 'in', icon: 'i-home', av: 'HE', msg: 'is this the one? <u>yoursite.com/h/…</u>',
       why: 'A listing with your brand and its price now',
       states: [['Open house Sat', 725000, 1], ['New price', 699000, 0], ['Under contract', 699000, 0], ['Sold', 712000, 0]].map(([tag, p, live]) => ({ title: '14 Maple Street',
