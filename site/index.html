@@ -529,7 +529,7 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
         html: `${logo}<div class="tag">Saturday 9pm</div><div class="t">Rooftop movie night</div><div class="l">${faces(n)}<strong class="bump">${n} going</strong></div>` })) },
     { key: 'Listings', dir: 'in', icon: 'i-home', av: 'HE', msg: 'is this the one? <u>yoursite.com/h/…</u>',
       why: 'A listing with your brand and its price now',
-      states: [['Open house Sat', 725000, 1], ['New price', 699000, 0], ['Under contract', 699000, 0], ['Sold', 712000, 0]].map(([tag, p, live]) => ({ title: '14 Maple Street',
+      states: [['Open house Sat', 725000, 1], ['On sale', 699000, 0], ['Under contract', 699000, 0], ['Sold', 712000, 0]].map(([tag, p, live]) => ({ title: '14 Maple Street',
         html: `${agency}<div class="tag">${tag}</div>${house}<div class="t narrow">14 Maple Street</div><div class="l"><strong class="bump">${money(p)}</strong> · 3 bd · 2 ba</div>` })) },
     { key: 'Auctions', dir: 'out', icon: 'i-bid', av: 'BR', msg: 'look at this one <u>yoursite.com/l/…</u>',
       why: 'An auction that shows the bid now',
