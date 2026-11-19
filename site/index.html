@@ -87,6 +87,7 @@
   .glow { border-color: transparent; background: linear-gradient(var(--code), var(--code)) padding-box,
     conic-gradient(from var(--a), #ff5f6d, #ffc371, #47e891, #3fa9f5, #a46bff, #ff5f6d) border-box; animation: spin 4s linear infinite; }
   .glow > svg { color: var(--ink); }
+  .cmd.open { background: none; border-color: transparent; }
   .rtext code { background: linear-gradient(90deg, #ff5f6d, #ffc371, #47e891, #3fa9f5, #a46bff, #ff5f6d) 0 0 / 200% 100%;
     -webkit-background-clip: text; background-clip: text; color: transparent; animation: flow 6s linear infinite; }
   .rtext code .p { color: transparent; }
@@ -123,8 +124,15 @@
   .tab::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform .3s ease; }
   .tab[aria-selected="true"] { color: var(--ink); }
   .tab[aria-selected="true"]::after { transform: scaleX(1); }
-  .stage { display: grid; grid-template-columns: 1fr; }
-  .stage > div { padding: 72px 48px 96px; min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; }
+  .stage { display: grid; grid-template-columns: 1fr 1fr; }
+  .half { position: relative; overflow: hidden; justify-content: center !important; }
+  .half + .half { border-left: 1px solid var(--line); }
+  .lbl { position: absolute; top: 24px; left: 24px; z-index: 1; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+  /* what iMessage shows for a page with no preview: a title, the address, a compass */
+  .bare { width: 100%; max-width: 340px; display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-radius: 18px; background: var(--inb); color: var(--ink); }
+  .bare div { flex: 1; min-width: 0; } .bare b { display: block; font-size: 15px; font-weight: 600; } .bare span { font-size: 13.5px; color: var(--mute); }
+  .bare svg { width: 34px; height: 34px; flex: none; }
+  .stage > div { padding: 96px 48px 96px; min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; }
   .shot { position: relative; }
   /* the dots run out to the screen's edge */
   .shot::before { content: ""; position: absolute; inset: 0 -100vw; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 12px 12px; opacity: .7; }
@@ -182,22 +190,6 @@
   .tile .tl { left: 48px; top: 34px; } .tile .bl { left: 48px; bottom: 34px; }
 
   /* 1 · before and after, as a phone shows each */
-  .ba { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; }
-  .ba > div { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; padding: 72px 12% 48px; }
-  .ba .light { background: #f4f4f5; } .ba .dark { background: #000; }
-  .ba .cap { position: absolute; top: 34px; padding: 7px 12px 8px; border-radius: 999px; font: 600 12.5px/1 var(--sans); letter-spacing: .02em; }
-  .ba .light .cap { right: 28px; color: #0a0a0a; background: #e2e2e5; } .ba .dark .cap { right: 28px; color: #fff; background: #1f1f22; box-shadow: inset 0 0 0 1px #2e2e32; }
-  /* what iMessage shows for a page with no preview tags: a title, the domain, a compass */
-  .ba .bare { width: 100%; max-width: 320px; display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-radius: 17px; background: #e5e5ea; color: #0a0a0a; }
-  .ba .bare div { flex: 1; min-width: 0; } .ba .bare b { display: block; font-size: 15px; font-weight: 600; } .ba .bare span { font-size: 13.5px; color: #6e6e73; }
-  .ba .bare svg { width: 34px; height: 34px; flex: none; }
-  .ba .msg-l, .ba .msg-d { position: relative; padding: 9px 14px; border-radius: 19px; font-size: 15px; line-height: 1.35; max-width: 100%; }
-  .ba .msg-l { background: #0a84ff; color: #fff; } .ba .msg-l u { text-decoration-color: rgba(255,255,255,.6); }
-  .ba .msg-d { background: #0a84ff; color: #fff; margin-top: 4px; }
-  .ba .tl2 { position: absolute; right: -5px; bottom: 0; width: 17px; height: 21px; color: #0a84ff; }
-  .ba .rich { width: 100%; max-width: 320px; border-radius: 17px; overflow: hidden; background: #1c1c1e; }
-  .ba .rich .cover { font-size: 0; }
-  .ba .rich .m { padding: 9px 12px 11px; color: #f2f2f2; border-top: 1px solid #2c2c2e; background: #232326; } .ba .rich .m b { display: block; font-size: 13.5px; } .ba .rich .m span { color: #8e8e93; font-size: 12px; }
   .arrow { position: absolute; z-index: 2; left: 50%; top: 50%; translate: -50% -50%; width: 64px; height: 64px; border-radius: 50%; background: #000; color: #fff;
     box-shadow: 0 0 0 1px #3a3a3a, 0 0 0 8px rgba(255,255,255,.06), 0 14px 34px -12px rgba(0,0,0,.6); display: grid; place-items: center; }
   .arrow svg { width: 26px; height: 26px; stroke-width: 1.6; }
@@ -209,12 +201,10 @@
   /* 2 · the browser on your user's screen draws the page itself: blank, characters, the cover */
 
   /* 3 · a link preview as a wireframe; a bucket pours sand into its picture until the picture is a picture */
-  .wf { position: absolute; left: 48px; right: 48px; top: 120px; bottom: 48px; border: 1px solid var(--soft); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
-  #before { min-height: 0; border-bottom: 0; }
   .water { padding: clamp(64px, 10vw, 140px) 16px; border-bottom: 1px solid var(--line); display: grid; place-items: center; }
-  .water .wf { position: relative; inset: auto; width: min(960px, 100%); height: clamp(380px, 46vw, 600px); }
-  .wf canvas { flex: 1; min-height: 0; width: 100%; display: block; border-bottom: 1px solid var(--soft); }
-  .wf .m { flex: none; padding: 12px 16px 14px; } .wf .m b { display: block; font-weight: 600; font-size: 15px; } .wf .m span { color: var(--mute); font: 400 12px var(--mono); }
+  .chat.wide { max-width: 760px; }
+  .chat.wide .preview { max-width: 760px; }
+  .chat.wide canvas { display: block; width: 100%; aspect-ratio: 1200 / 630; }
 
   /* 4 · a terminal, typed exactly; the mark beside it watches */
 
@@ -272,7 +262,7 @@
   .chip.etc::after { display: none; }
   .more a { text-decoration: none; border-bottom: 1px solid var(--soft); }
   .more a:hover { border-color: var(--ink); }
-  .ways-head, .why-head { padding: 104px 48px 48px; }
+  .ways-head { padding: 80px 48px 40px; }
 
   /* footer: the word and the mark in thin outline, on one baseline; under them the links, with a line between that fades out */
   footer { position: relative; overflow: hidden; --mx: -999px; --my: -999px; --h: clamp(96px, calc((min(100vw, 1200px) - 160px) / 3.6), 290px); }
@@ -306,25 +296,16 @@
     .stage, .ways { grid-template-columns: 1fr; }
     .stage > div, .ways > div { padding: 32px 16px 56px; }
     .icons { gap: 8px; }
-    .ways > div + div { border-left: 0; border-top: 1px solid var(--line); }
+    .ways > div + div, .half + .half { border-left: 0; border-top: 1px solid var(--line); }
+    .lbl { top: 20px; left: 16px; }
+    .stage > div { padding-top: 64px; }
     .cmd { font-size: 12.5px; }
     .fin { padding: 72px 16px 28px; }
     .foot { gap: 18px; margin-top: 32px; }
     .bento { grid-template-columns: 1fr; grid-auto-rows: 400px; margin-bottom: 72px; }
       .bento.solo { grid-auto-rows: auto; }
-    /* before over after, each with room */
-    .ba { position: relative; inset: auto; grid-template-columns: 1fr; }
-    .ba > div { min-height: 330px; padding: 76px 10% 40px; }
-    .ba .light .cap, .ba .dark .cap { top: 24px; right: 20px; }
     .tile .ct { font-size: 22px; } .tile .tl { left: 16px; top: 24px; }
-    .ba > div { padding: 0 6%; }
-    /* what iMessage shows for a page with no preview tags: a title, the domain, a compass */
-  .ba .bare { width: 100%; max-width: 320px; display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-radius: 17px; background: #e5e5ea; color: #0a0a0a; }
-  .ba .bare div { flex: 1; min-width: 0; } .ba .bare b { display: block; font-size: 15px; font-weight: 600; } .ba .bare span { font-size: 13.5px; color: #6e6e73; }
-  .ba .bare svg { width: 34px; height: 34px; flex: none; }
-  .ba .msg-l, .ba .msg-d { font-size: 12.5px; padding: 7px 11px; }
     .arrow { width: 50px; height: 50px; } .arrow svg { width: 21px; height: 21px; }
-    .wf { left: 16px; right: 16px; top: 80px; }
   </style>
 </head>
 <body>
@@ -361,8 +342,8 @@
       <h1 data-rise>Give your product a great first impression</h1>
       <p class="lede" data-rise style="--d:.12s">Link previews that stay current.</p>
       <div class="ctas" data-rise style="--d:.24s">
-        <div class="cmd"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+        <div class="cmd glow"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+        <div class="cmd rtext open"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
       </div>
     </div>
     <!-- "Working with" comes back with more names -->
@@ -370,7 +351,19 @@
 
   <section class="screen" id="examples">
     <div class="ex-head wrap"><h2>Links that look alive get shared</h2><div class="seg" role="tablist" id="tabs"></div></div>
-    <div class="split"><div class="stage wrap">
+    <div class="split"><div class="stage">
+      <div class="half">
+        <span class="lbl">[ Before ]</span>
+        <div class="shot">
+        <div class="chat" id="bchat" data-rise>
+          <div class="bare"><div><b id="bt"></b><span>yoursite.com</span></div><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#8e8e93"/><path fill="#f2f2f7" d="m16.6 7.4-2.1 6.2a1.6 1.6 0 0 1-.9.9l-6.2 2.1 2.1-6.2a1.6 1.6 0 0 1 .9-.9z"/><circle cx="12" cy="12" r="1.3" fill="#8e8e93"/></svg></div>
+          <div class="bub"><div class="msg" id="bmsg"></div><svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div>
+          <div class="delivered">Delivered</div>
+        </div>
+        </div>
+      </div>
+      <div class="half">
+        <span class="lbl">[ After ]</span>
       <div class="shot">
         <div class="chat" data-rise>
           <div class="preview">
@@ -382,31 +375,21 @@
         </div>
         <div class="addr tipped" tabindex="0" data-tip="The picture’s address. The number goes up each time the picture changes, so a link shared again never shows an old copy.">og:image → /c/<span id="cid"></span>/<b id="v">1</b>.png</div>
       </div>
+      </div>
     </div></div>
   </section>
 
-  <section class="screen" id="before">
-    <div class="why-head wrap"><h2>Make the change</h2></div>
-    <div class="bento solo wrap">
-      <div class="tile">
-        <div class="ba">
-          <div class="light"><div class="bare"><div><b>Dinner Reservation</b><span>reservation.xyz</span></div><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#8e8e93"/><path fill="#f2f2f7" d="m16.6 7.4-2.1 6.2a1.6 1.6 0 0 1-.9.9l-6.2 2.1 2.1-6.2a1.6 1.6 0 0 1 .9-.9z"/><circle cx="12" cy="12" r="1.3" fill="#8e8e93"/></svg></div><div class="msg-d">dinner friday?<svg class="tl2" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div><span class="cap">Before</span></div>
-          <div class="dark">
-            <div class="rich"><div class="cover"><div class="site">reservation</div><div class="tag">Friday 8pm</div><div class="t">Dinner at Carbone</div><div class="l"><span class="faces"><b>M</b><b>J</b><b>S</b><i></i><i></i></span><strong>3 going</strong></div></div><div class="m"><b>Dinner at Carbone</b><span>reservation.xyz</span></div></div>
-            <div class="msg-d">dinner friday?<svg class="tl2" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div>
-            <span class="cap">After</span>
-          </div>
-        </div>
-      </div>
+
+  <section class="water" id="why">
+    <div class="chat wide" data-rise>
+      <div class="preview"><canvas id="sand" aria-hidden="true"></canvas><div class="meta"><div class="h">Get creative!</div><div class="s">yoursite.com</div></div></div>
+      <div class="bub"><div class="msg">made this for you <u>yoursite.com/…</u></div><svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div>
+      <div class="delivered">Delivered</div>
     </div>
   </section>
 
-  <section class="water" id="why">
-    <div class="wf" data-rise><canvas id="sand" aria-hidden="true"></canvas><div class="m"><b>Get creative!</b><span>abc.xyz</span></div></div>
-  </section>
-
   <section class="screen" id="start">
-    <div class="ways-head wrap"><h2>Get started</h2></div>
+    <div class="ways-head wrap"><h2>Two ways to start</h2></div>
     <div class="split"><div class="ways wrap">
       <div>
         <h3>Install it yourself</h3>
@@ -512,8 +495,6 @@
 
   // --- examples: everyday links whose preview follows what happens -----------------------------
   const logo = `<div class="site"><svg viewBox="0 0 20 20"><rect x="1" y="1" width="18" height="18" rx="5" fill="currentColor"/><circle cx="10" cy="10" r="4" fill="var(--card)"/></svg>Logo</div>`;
-  const tee = `<svg class="art" viewBox="0 4 100 86" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M36 6c3 7 8 10 14 10s11-3 14-10l22 9 10 21-15 7-5-9v54H24V34l-5 9-15-7 10-21z"/></svg>`;
   const house = `<svg class="art" viewBox="0 4 100 86" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
     <path d="M10 44 50 10l40 34"/><path d="M20 36v52h60V36"/><path d="M42 88V62h16v26"/><path d="M66 22V12h8v17"/></svg>`;
   // a brand of its own, as a listing's agency would put on its links
@@ -521,19 +502,15 @@
   const faces = (n) => `<span class="faces">${['M', 'J', 'S', 'L', 'P'].slice(0, n).map((x) => `<b>${x}</b>`).join('')}${n < 5 ? '<i></i>' : ''}</span>`;
   const money = (n) => `$${n.toLocaleString('en-US')}`;
   const EX = [
-    { key: 'Invites', dir: 'out', icon: 'i-invite', av: 'MA', msg: 'movie night? <u>yoursite.com/i/…</u>',
+    { key: 'Invites', plain: 'Invite', dir: 'out', icon: 'i-invite', av: 'MA', msg: 'movie night? <u>yoursite.com/i/…</u>',
       why: 'An invite that shows who is going',
       states: [1, 2, 3, 4, 5].map((n) => ({ title: 'Rooftop movie night',
         html: `${logo}<div class="tag">Saturday 9pm</div><div class="t">Rooftop movie night</div><div class="l">${faces(n)}<strong class="bump">${n} going</strong></div>` })) },
-    { key: 'Listings', dir: 'in', icon: 'i-home', av: 'HE', msg: 'is this the one? <u>yoursite.com/h/…</u>',
+    { key: 'Listings', plain: 'Listing', dir: 'in', icon: 'i-home', av: 'HE', msg: 'is this the one? <u>yoursite.com/h/…</u>',
       why: 'A listing with your brand and its price now',
       states: [['Open house Sat', 725000, 1], ['On sale', 699000, 0], ['Under contract', 699000, 0], ['Sold', 712000, 0]].map(([tag, p, live]) => ({ title: '14 Maple Street',
         html: `${agency}<div class="tag">${tag}</div>${house}<div class="t narrow">14 Maple Street</div><div class="l"><strong class="bump">${money(p)}</strong> · 3 bd · 2 ba</div>` })) },
-    { key: 'Auctions', dir: 'out', icon: 'i-bid', av: 'BR', msg: 'look at this one <u>yoursite.com/l/…</u>',
-      why: 'An auction that shows the bid now',
-      states: [[62, 3, 'Live auction'], [84, 7, 'Live auction'], [112, 12, 'Ends in 1h'], [140, 0, 'Sold']].map(([p, b, tag]) => ({ title: 'Vintage tee',
-        html: `${logo}<div class="tag">${tag}</div>${tee}<div class="t narrow">Vintage tee</div><div class="l">${b ? 'Top bid' : 'Sold for'} <strong class="bump">${money(p)}</strong>${b ? ` · ${b} bids` : ''}</div>` })) },
-    { key: 'Fundraisers', dir: 'in', icon: 'i-goal', av: 'CI', msg: 'ruby is so close! <u>yoursite.com/f/…</u>',
+    { key: 'Fundraisers', plain: 'Fundraiser', dir: 'in', icon: 'i-goal', av: 'CI', msg: 'ruby is so close! <u>yoursite.com/f/…</u>',
       why: 'A goal that shows how close it is',
       states: [[1200, 18], [2900, 41], [4600, 77], [5300, 96]].map(([n, d]) => ({ title: "Ruby's surgery",
         html: `${logo}${n >= 5000 ? '<div class="tag">Goal reached</div>' : ''}<div class="goal"><b style="width:${Math.min(100, n / 50)}%"></b></div><div class="t">Ruby's surgery</div><div class="l"><strong class="bump">${money(n)}</strong> of $5,000 · ${d} donors</div>` })) },
@@ -559,10 +536,10 @@
     ex = i; at = 0;
     const e = EX[i];
     [...tabs.children].forEach((b, k) => b.setAttribute('aria-selected', String(k === i)));
-    const chat = document.querySelector('.chat');
+    const chats = [...document.querySelectorAll('#examples .chat')];
     clearInterval(timer);
-    const swap = () => { $('msg').innerHTML = e.msg; chat.classList.toggle('in', e.dir === 'in'); $('cid').textContent = ids[i]; render(); chat.style.opacity = ''; };
-    if (pick.ran && !matchMedia('(prefers-reduced-motion: reduce)').matches) { chat.style.opacity = '0'; setTimeout(swap, 230); } else swap();
+    const swap = () => { $('msg').innerHTML = e.msg; $('bmsg').innerHTML = e.msg; $('bt').textContent = e.plain; chats.forEach((c) => { c.classList.toggle('in', e.dir === 'in'); c.style.opacity = ''; }); $('cid').textContent = ids[i]; render(); };
+    if (pick.ran && !matchMedia('(prefers-reduced-motion: reduce)').matches) { chats.forEach((c) => { c.style.opacity = '0'; }); setTimeout(swap, 230); } else swap();
     pick.ran = true;
     timer = setInterval(() => {
       if (at + 1 < EX[ex].states.length) { at++; render(); }
