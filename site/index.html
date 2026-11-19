@@ -637,7 +637,11 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
     const u = Math.min(w, h * 1.9), p = Math.max(w * .08, 16);
     c.textBaseline = 'alphabetic'; c.fillStyle = '#f2f2f2';
     c.font = `600 ${u * .042}px Inter, sans-serif`; c.fillText('Logo', p, h * .22);
-    c.font = `500 ${u * .08}px Inter, sans-serif`; c.fillText("Ruby's surgery", p, h * .66);
+    c.font = `500 ${u * .08}px Inter, sans-serif`; c.fillText("Ruby's surgery", p, h * .6);
+    // the goal: a rounded bar, a quiet track, 92% full
+    const bw = w - 2 * p, bh = Math.max(3, u * .014), by = h * .68, rad = bh / 2;
+    c.fillStyle = '#2b2b2b'; c.beginPath(); c.roundRect(p, by, bw, bh, rad); c.fill();
+    c.fillStyle = '#f2f2f2'; c.beginPath(); c.roundRect(p, by, bw * .92, bh, rad); c.fill();
     c.fillStyle = '#a8a8a8'; c.font = `${u * .038}px Inter, sans-serif`; c.fillText('$4,600 of $5,000 · 77 donors', p, h * .8);
   }
   function paintSize() {
@@ -713,23 +717,19 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
     lookAtCursor(); await wait(1200);
     await type(PROMPT, 'claude', 85); await wait(650);
     await type('<span class="pr">&gt;</span> ', 'set up link previews for this project', 46); await wait(550);
-    // what the agent does next, with liveog's tools
+    // what the agent does next, said plainly
     const think = async (n) => { lines.push(''); for (let i = 0; i < n; i++) { lines[lines.length - 1] = `<span class="dim">  Working${'.'.repeat(i % 4)}</span>`; tshow(false); lookAtLast(); await wait(340); } lines.pop(); };
-    const say = async (l, ms = 420) => { lines.push(l); tshow(false); lookAtLast(); await wait(ms); };
-    const tool = (n, d = '') => `<span class="ok">⏺</span> liveog · ${n}${d ? ` <span class="dim">${d}</span>` : ''}`;
-    await think(5);
-    await say(tool('study_project'), 500);
-    await say('<span class="dim">  ⎿ 3 routes · #0B0B0B, #F2F2F2 · Inter · logo.svg</span>', 900);
-    await say('<span class="ok">⏺</span> People share /i/ invites and /h/ listings. Covers for both?', 1200);
-    await type('<span class="pr">&gt;</span> ', 'yes', 90); await wait(400);
+    const step = async (what, done, ms = 900) => {
+      lines.push(`<span class="ok">⏺</span> ${what}`); tshow(false); lookAtLast(); await wait(ms);
+      if (done) { lines.push(`<span class="dim">  ⎿ ${done}</span>`); tshow(false); lookAtLast(); await wait(ms * .7); }
+    };
     await think(4);
-    await say(tool('draw_cover', '×3'), 500);
-    await say('<span class="dim">  ⎿ public/og/invite.png · public/og/listing.png</span>', 800);
-    await say(tool('setup_project'), 450);
-    await say('<span class="dim">  ⎿ tags on 2 routes · invite codes kept private</span>', 800);
-    await say(tool('check_link', 'abc.xyz/i/8f2k'), 500);
-    await say('<span class="dim">  ⎿ </span><span class="ok">✓</span> 1200 × 630 · title · image', 1400);
-    await say('<span class="ok">⏺</span> Done. Your links now show who is going.', 2600);
+    await step('Reading your project', 'your colours, fonts, logo and pages');
+    await step('Finding the links people share', 'invites /i/ and listings /h/');
+    await step('Drawing cover ideas in your style', '3 ideas · you pick one', 1100);
+    await step('Adding the preview to every page', 'invite codes stay private');
+    await step('Checking it like iMessage would', '<span class="ok">✓</span> abc.xyz/i/8f2k shows who is going', 1100);
+    await step('Done. Your links stay current.', '', 2800);
     await wait(400); session();
   }
 
