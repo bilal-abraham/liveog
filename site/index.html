@@ -128,7 +128,7 @@
   .stage { display: grid; grid-template-columns: 1fr 1fr; }
   .half { position: relative; overflow: hidden; }
   .half + .half { border-left: 1px solid var(--line); }
-  .lbl { position: absolute; top: 24px; left: 24px; z-index: 1; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+  .lbl { position: absolute; top: 24px; left: 24px; z-index: 1; font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
   /* what iMessage shows for a page with no preview: a title, the address, a compass */
   .bare { width: 100%; max-width: 340px; display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-radius: 18px; background: var(--inb); color: var(--ink); }
   .bare div { flex: 1; min-width: 0; } .bare b { display: block; font-size: 15px; font-weight: 600; } .bare span { font-size: 13.5px; color: var(--mute); }
@@ -230,11 +230,12 @@
 
   /* get started */
   .ways { display: grid; grid-template-columns: 1fr 1fr; }
-  .ways > div { padding: 64px 48px 104px; min-width: 0; display: flex; flex-direction: column; }
+  .ways > div { padding: 56px 48px 96px; min-width: 0; display: flex; flex-direction: column; }
   .ways > div + div { border-left: 1px solid var(--line); }
   .ways h3 { margin: 0; font: 500 24px/1.2 var(--sans); letter-spacing: -.025em; }
-  .ways p { margin: 8px 0 0; color: var(--ink2); max-width: 440px; }
-  .ways .cmd { margin-top: 28px; align-self: flex-start; font-size: 13px; }
+  .ways p { margin: 0; color: var(--ink2); max-width: 440px; }
+  .ways .note { margin-top: 16px; }
+  .ways .cmd { margin-top: 24px; align-self: flex-start; }
   .code { position: relative; margin-top: 16px; background: var(--code); border: 1px solid var(--line); }
   .code pre { margin: 0; padding: 16px 56px 16px 18px; overflow-x: auto; font: 400 13px/1.7 var(--mono); }
   .code .cm { color: var(--mute); }
@@ -242,13 +243,17 @@
   .code .k { color: var(--syn-k); } .code .s { color: var(--syn-s); } .code .f { color: var(--syn-f); }
   .code .cp { position: absolute; top: 9px; right: 7px; }
   .more { margin-top: 28px; }
-  .ways .ask { margin-top: 16px; }
+
   @media (min-width: 1000px) { .ways .ask { white-space: nowrap; } } .ways .ask b { color: var(--ink); font-weight: 500; }
   /* the agent apps: set up for you, or one step by hand */
-  .apps { margin-top: 28px; }
-  .ways .apps + .cmd { margin-top: 14px; }
-  .ways .apps + .more { margin-top: 18px; }
+  .apps { margin-top: 24px; }
+  .ways .more { margin-top: 32px; }
+  #start { min-height: 0; }
   .icons { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .icons.stack { gap: 0; flex-wrap: nowrap; --ring: var(--bg); }
+  .icons.stack .chip { outline: 2px solid var(--ring); transition: margin .25s cubic-bezier(.2,.7,.2,1), transform .2s ease; }
+  .icons.stack .chip + .chip { margin-left: -5px; }
+  .icons.stack:hover .chip + .chip, .icons.stack:focus-within .chip + .chip { margin-left: 6px; }
   /* each app as its own icon: its real mark and colours, on a small chip with a little depth */
   .chip { position: relative; width: 34px; height: 34px; border-radius: 9px; background: var(--bg); display: grid; place-items: center; overflow: hidden;
     box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), 0 1px 1px rgba(0,0,0,.14), 0 4px 10px -4px rgba(0,0,0,.35); transition: transform .15s ease; }
@@ -395,15 +400,15 @@
     <div class="split"><div class="ways wrap">
       <div>
         <h3>Install it yourself</h3>
-        <p>Node, Deno, Bun, Cloudflare, Vercel.</p>
         <div class="cmd rtext"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+        <p class="note">Works on Node, Deno, Bun, Cloudflare &amp; Vercel.</p>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#readme">Read the guide →</a></div>
       </div>
       <div>
         <h3>Or let your agent do it</h3>
-        <div class="apps"><div class="icons"><span class="chip full inv" style="--bg:#ffffff" tabindex="0" data-tip="Codex"><img src="logos/codex.png" alt="Codex" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Claude Code"><img src="logos/claude.svg" alt="Claude Code" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Cursor"><img src="logos/cursor.svg" alt="Cursor" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#FFFFFF" tabindex="0" data-tip="Hermes Agent"><img src="logos/hermes.png" alt="Hermes Agent" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="OpenCode"><img src="logos/opencode.svg" alt="OpenCode" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Devin (Cognition)"><img src="logos/devin.svg" alt="Devin" width="34" height="34" loading="lazy"></span><span class="chip vs" style="--bg:#ffffff" tabindex="0" data-tip="VS Code"><img src="logos/vscode.png" alt="VS Code" width="34" height="34" loading="lazy"></span><span class="chip etc" style="--bg:#ffffff" tabindex="0" data-tip="And most other agent apps"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.9"/><circle cx="10" cy="10" r="1.9"/><circle cx="15.5" cy="10" r="1.9"/></svg></span></div></div>
         <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <p class="ask">Then ask: <b>set up link previews for this project</b>.</p>
+        <p class="note ask">Then ask: <b>set up link previews for this project</b>.</p>
+        <div class="apps"><div class="icons stack"><span class="chip full inv" style="--bg:#ffffff" tabindex="0" data-tip="Codex"><img src="logos/codex.png" alt="Codex" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Claude Code"><img src="logos/claude.svg" alt="Claude Code" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Cursor"><img src="logos/cursor.svg" alt="Cursor" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#FFFFFF" tabindex="0" data-tip="Hermes Agent"><img src="logos/hermes.png" alt="Hermes Agent" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="OpenCode"><img src="logos/opencode.svg" alt="OpenCode" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Devin (Cognition)"><img src="logos/devin.svg" alt="Devin" width="34" height="34" loading="lazy"></span><span class="chip vs" style="--bg:#ffffff" tabindex="0" data-tip="VS Code"><img src="logos/vscode.png" alt="VS Code" width="34" height="34" loading="lazy"></span><span class="chip etc" style="--bg:#ffffff" tabindex="0" data-tip="And most other agent apps"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.9"/><circle cx="10" cy="10" r="1.9"/><circle cx="15.5" cy="10" r="1.9"/></svg></span></div></div>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#any-other-mcp-client">Using another MCP client? →</a></div>
       </div>
     </div></div>
