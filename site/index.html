@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script>try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch {}</script>
+<script>document.documentElement.classList.add('js'); try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch {}</script>
 <style>
   :root {
     --bg: #fafafa; --paper: #ffffff; --ink: #0a0a0a; --ink2: #444; --mute: #7a7a7a; --line: #e4e4e4; --soft: #c8c8c8;
@@ -44,13 +44,19 @@
   body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
   a { color: inherit; }
   button { font: inherit; color: inherit; }
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
   .label { font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
-  .frame { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); background: var(--paper); }
+  .frame { background: var(--paper); }
+  .wrap { max-width: 1200px; width: 100%; margin-inline: auto; }
+  .alt { background: var(--bg); }
+  .split { border-top: 1px solid var(--line); flex: 1; display: flex; }
+  .split > * { flex: 1; }
   .screen { min-height: calc(100svh - var(--head)); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; }
 
   /* top */
   header { position: sticky; top: 0; z-index: 5; height: var(--head); background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
-  .bar { max-width: 1200px; height: 100%; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 28px; }
+  .bar { max-width: 1248px; height: 100%; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 28px; }
   .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 600 22px/1 var(--sans); letter-spacing: -.04em; }
   .logo svg { height: 18px; width: auto; }
   .logo span { color: var(--mute); }
@@ -91,7 +97,8 @@
   h1 { margin: 28px 0 0; max-width: 820px; font: 500 clamp(40px, 6.6vw, 76px)/1.04 var(--sans); letter-spacing: -.045em; }
   .lede { margin: 22px 0 0; max-width: 520px; font-size: 19px; color: var(--ink2); }
   .ctas { margin-top: 36px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; max-width: 100%; }
-  .users { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: 48px; flex-wrap: wrap; padding: 28px 24px; border-top: 1px solid var(--line); background: var(--paper); }
+  .users { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: 48px; flex-wrap: wrap; padding: 28px 24px 34.5px; border-top: 1px solid var(--line); background: var(--paper); }
+  /* 6.5px more below: exploraVist's p hangs that far under the line the logos sit on */
   .logos { display: flex; align-items: flex-end; gap: 48px; }
   .users > .label { padding-bottom: 1px; }
   .logos a { display: block; }
@@ -99,19 +106,18 @@
   .logos svg.ev { height: 28px; margin-bottom: calc(-28px * 15 / 65); }
 
   /* examples */
-  .ex-head { padding: 56px 48px 40px; }
-  h2 { margin: 0; font: 500 clamp(30px, 4vw, 44px)/1.1 var(--sans); letter-spacing: -.035em; }
+  .ex-head { padding: 104px 48px 48px; }
+  h2 { margin: 0; font: 500 clamp(30px, 3.6vw, 42px)/1.1 var(--sans); letter-spacing: -.035em; }
   .ex-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; }
-  .ex-head h2 { font-size: clamp(30px, 3.6vw, 42px); }
   .seg { flex: none; }
   .seg { display: inline-flex; gap: 4px; padding: 4px; background: var(--code); border: 1px solid var(--line); border-radius: 999px; }
   .tab { position: relative; overflow: hidden; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--mute); cursor: pointer; font: 500 14px/1 var(--sans); }
   .tab:hover { color: var(--ink); }
   .tab svg { width: 16px; height: 16px; }
   .tab[aria-selected="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--line); }
-  .stage { flex: 1; display: grid; grid-template-columns: 1.1fr 1fr; border-top: 1px solid var(--line); }
-  .stage > div { padding: 48px; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-  .shot { position: relative; background: var(--bg); border-right: 1px solid var(--line); overflow: hidden; }
+  .stage { display: grid; grid-template-columns: 1.1fr 1fr; }
+  .stage > div { padding: 56px 48px 104px; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+  .shot { position: relative; border-right: 1px solid var(--line); overflow: hidden; }
   .shot::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 12px 12px; opacity: .7; }
   .chat { position: relative; max-width: 460px; width: 100%; margin: 0 auto; background: var(--paper); border: 1px solid var(--line); border-radius: 28px; padding: 22px 20px 24px;
     box-shadow: 0 24px 60px -30px rgba(0,0,0,.25); }
@@ -151,74 +157,105 @@
   .addr b.flash { animation: flash .8s ease-out; }
   @keyframes flash { from { background: var(--ink); color: var(--bg); } }
   .say .label.kind { display: inline-block; padding: 8px 12px; border: 1px solid var(--line); }
-  .say h3 { margin: 0; font: 500 clamp(26px, 3vw, 36px)/1.12 var(--sans); letter-spacing: -.03em; }
+  .say h3 { margin: 0; font: 500 clamp(24px, 2.6vw, 32px)/1.15 var(--sans); letter-spacing: -.03em; max-width: 440px; }
   .say p { margin: 14px 0 0; color: var(--ink2); max-width: 440px; }
 
-  /* why */
-  .why-grid { flex: 1; display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); }
-  .why-grid > div { padding: 40px 48px; display: flex; flex-direction: column; justify-content: center; }
-  .why-grid > div:nth-child(2n) { border-left: 1px solid var(--line); }
-  .why-grid > div:nth-child(n+3) { border-top: 1px solid var(--line); }
-  .why-grid svg { width: 22px; height: 22px; color: var(--ink); }
-  .why-grid h3 { margin: 18px 0 0; font: 500 24px/1.2 var(--sans); letter-spacing: -.025em; }
-  .why-grid p { margin: 8px 0 0; color: var(--ink2); max-width: 420px; }
+  /* why: four cards, each with a small picture of the point */
+  .why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 0 48px 104px; }
+  .card { border: 1px solid var(--line); border-radius: 20px; background: var(--paper); overflow: hidden; display: flex; flex-direction: column; }
+  .viz { position: relative; height: 196px; background: var(--bg); border-bottom: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; }
+  .viz::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 12px 12px; opacity: .6; }
+  .viz > * { position: relative; }
+  .card .txt { padding: 22px 24px 26px; }
+  .card h3 { margin: 0; font: 500 22px/1.2 var(--sans); letter-spacing: -.025em; }
+  .card p { margin: 6px 0 0; color: var(--ink2); font-size: 15.5px; line-height: 1.5; }
+  .mini { width: 210px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--code); font-size: 11px; box-shadow: 0 12px 30px -18px rgba(0,0,0,.35); }
+  .mini .cover { font-size: 0; }
+  .mini .cap { padding: 7px 10px 8px; }
+  .mini .cap b { display: block; font-size: 11.5px; }
+  .mini .cap span { color: var(--mute); font-size: 10.5px; }
+  .vs { display: flex; gap: 14px; align-items: center; }
+  .plain { width: 150px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--paper); font-size: 12px; color: var(--mute); }
+  .plain u { color: var(--ink2); }
+  .vs .arrow { color: var(--soft); font: 400 18px var(--mono); }
+  .browser { width: 250px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); overflow: hidden; box-shadow: 0 12px 30px -18px rgba(0,0,0,.35); }
+  .browser .top { display: flex; gap: 5px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  .browser .top i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+  .browser .pane { padding: 12px; }
+  .browser .cover { border-radius: 8px; }
+  .scan { position: absolute; inset: 0; background: var(--card); transform-origin: right; }
+  .shown .scan { animation: scan 1.6s .3s cubic-bezier(.6,0,.2,1) forwards; }
+  @keyframes scan { to { transform: scaleX(0); } }
+  .stamp { position: absolute; right: 14px; bottom: 12px; font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
+  .url { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); font: 400 14px var(--mono); box-shadow: 0 12px 30px -18px rgba(0,0,0,.35); }
+  .url svg { width: 16px; height: 16px; color: var(--mute); }
+  .url .tok { color: var(--ink); }
+  .seen { margin-top: 14px; font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); text-align: center; }
+  .brand-cycle .site { transition: opacity .4s ease; }
+
+  /* things that rise in once, when first seen */
+  /* hidden only once the script is there to show them again */
+  .js [data-rise] { opacity: 0; transform: translateY(14px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0s); }
+  .js [data-rise].shown { opacity: 1; transform: none; }
+  /* the opening rises on load, with no script */
+  .hero [data-rise] { opacity: 1; transform: none; animation: up .9s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0s); }
+  @keyframes up { from { opacity: 0; transform: translateY(14px); } }
 
   /* get started */
-  .ways { flex: 1; display: grid; grid-template-columns: 1fr 1fr; }
-  .ways > div { padding: 48px; min-width: 0; display: flex; flex-direction: column; }
+  .ways { display: grid; grid-template-columns: 1fr 1fr; }
+  .ways > div { padding: 56px 48px 104px; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
   .ways > div + div { border-left: 1px solid var(--line); }
-  .ways h3 { margin: 0; font: 500 28px/1.15 var(--sans); letter-spacing: -.03em; }
-  .ways p { margin: 12px 0 0; color: var(--ink2); max-width: 440px; }
+  .ways h3 { margin: 0; font: 500 24px/1.2 var(--sans); letter-spacing: -.025em; }
+  .ways p { margin: 8px 0 0; color: var(--ink2); max-width: 440px; }
   .ways .cmd { margin-top: 28px; align-self: flex-start; font-size: 13px; }
   .code { position: relative; margin-top: 16px; background: var(--code); border: 1px solid var(--line); }
   .code pre { margin: 0; padding: 16px 56px 16px 18px; overflow-x: auto; font: 400 13px/1.7 var(--mono); }
   .code .c { color: var(--mute); }
   .code .cp { position: absolute; top: 8px; right: 8px; }
-  .more { margin-top: auto; padding-top: 28px; }
+  .more { margin-top: 28px; }
   .more a { text-decoration: none; border-bottom: 1px solid var(--soft); }
   .more a:hover { border-color: var(--ink); }
-  .ways-head, .why-head { padding: 56px 48px 40px; }
-  .ways-head { border-bottom: 1px solid var(--line); }
+  .ways-head, .why-head { padding: 104px 48px 48px; }
 
   /* footer: the word drawn in as it comes into view; the dots light up near the pointer */
-  footer { position: relative; max-width: 1200px; margin: 0 auto; height: 340px; overflow: hidden; --mx: -999px; --my: -999px; }
+  footer { position: relative; height: 340px; overflow: hidden; --mx: -999px; --my: -999px; }
   footer::before, footer::after { content: ""; position: absolute; inset: 0; pointer-events: none; background-size: 12px 12px; }
   footer::before { background-image: radial-gradient(var(--dot) 1px, transparent 1.2px);
     -webkit-mask-image: linear-gradient(to top, #000, transparent 75%); mask-image: linear-gradient(to top, #000, transparent 75%); }
   footer::after { background-image: radial-gradient(var(--ink) 1.1px, transparent 1.3px); opacity: .5;
     -webkit-mask-image: radial-gradient(160px circle at var(--mx) var(--my), #000, transparent); mask-image: radial-gradient(160px circle at var(--mx) var(--my), #000, transparent); }
-  .word { position: absolute; left: 24px; bottom: 64px; width: clamp(340px, 78vw, 940px); height: auto; overflow: visible; user-select: none; }
-  /* fill over a doubled stroke: the letters' overlapping shapes leave no seams inside */
-  .word text { font: 700 300px var(--sans); letter-spacing: -.065em; fill: var(--bg); stroke: var(--soft); stroke-width: 2.4; paint-order: stroke fill;
-    stroke-dasharray: 2600; stroke-dashoffset: 2600; transition: stroke-dashoffset 2.6s cubic-bezier(.3,.1,.2,1); }
-  footer.on .word text { stroke-dashoffset: 0; }
-  .foot { position: absolute; left: 24px; right: 24px; bottom: 28px; display: flex; gap: 28px; flex-wrap: wrap; z-index: 1; }
+  .word { position: absolute; left: max(24px, calc((100% - 1200px) / 2 + 24px)); bottom: 72px; font: 700 clamp(110px, 24vw, 300px)/.8 var(--sans); letter-spacing: -.065em;
+    color: transparent; -webkit-text-stroke: 1px var(--soft); user-select: none; opacity: 0; transform: translateY(24px); transition: opacity 1.2s ease, transform 1.2s cubic-bezier(.2,.7,.2,1); }
+  footer.on .word { opacity: 1; transform: none; }
+  .foot { position: absolute; left: max(24px, calc((100% - 1200px) / 2 + 24px)); right: max(24px, calc((100% - 1200px) / 2 + 24px)); bottom: 28px; display: flex; gap: 28px; flex-wrap: wrap; z-index: 1; }
   .foot a { text-decoration: none; }
   .foot a:hover { color: var(--ink); }
   .foot .r { margin-left: auto; }
 
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } .word text { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } .word, .js [data-rise] { opacity: 1; transform: none; } .scan { display: none; } }
   @media (max-width: 900px) {
     nav a.label { display: none; }
     .bar { padding: 0 16px; gap: 16px; }
     .hero .in { padding: 56px 16px; }
-    .ex-head, .ways-head, .why-head { padding: 40px 16px 28px; }
+    .ex-head, .ways-head, .why-head { padding: 72px 16px 32px; }
     .ex-head { flex-direction: column; align-items: flex-start; gap: 20px; }
     .seg { padding: 0; gap: 22px; background: none; border: 0; border-radius: 0; }
     .tab { height: auto; padding: 4px 0; border-radius: 0; font-size: 15px; }
     .tab svg { display: none; }
     .tab[aria-selected="true"] { background: none; box-shadow: none; text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1.5px; }
     .stage, .ways { grid-template-columns: 1fr; }
-    .stage > div, .ways > div { padding: 32px 16px; }
+    .stage > div, .ways > div { padding: 32px 16px 56px; }
     .shot { border-right: 0; border-bottom: 1px solid var(--line); }
     .ways > div + div { border-left: 0; border-top: 1px solid var(--line); }
     .cmd { font-size: 12.5px; }
     footer { height: 240px; }
-    .word { left: 16px; bottom: 60px; }
-    .why-grid { grid-template-columns: 1fr; }
-    .why-grid > div { padding: 32px 16px; }
-    .why-grid > div:nth-child(2n) { border-left: 0; }
-    .why-grid > div + div { border-top: 1px solid var(--line); }
+    .word { left: 16px; bottom: 64px; }
+    .why-grid { grid-template-columns: 1fr; padding: 0 16px 72px; }
+    .plain { width: 104px; padding: 10px; font-size: 11px; }
+    .vs { gap: 8px; }
+    .vs .mini { width: 156px; }
+    .browser { width: 210px; }
+    .stamp { right: 10px; bottom: 8px; }
     .foot { left: 16px; right: 16px; }
   }
 </style>
@@ -251,12 +288,12 @@
 </div></header>
 
 <main class="frame">
-  <section class="screen hero" id="top">
+  <section class="screen hero alt" id="top">
     <div class="in">
       <div class="pill label">Open source · MCP</div>
-      <h1>Give your product a great first impression</h1>
-      <p class="lede">Link previews that stay current.</p>
-      <div class="ctas">
+      <h1 data-rise>Give your product a great first impression</h1>
+      <p class="lede" data-rise style="--d:.12s">Link previews that stay current.</p>
+      <div class="ctas" data-rise style="--d:.24s">
         <div class="cmd"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
         <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
       </div>
@@ -265,10 +302,10 @@
   </section>
 
   <section class="screen" id="examples">
-    <div class="ex-head"><h2>Links that look alive get shared</h2><div class="seg" role="tablist" id="tabs"></div></div>
-    <div class="stage">
+    <div class="ex-head wrap"><h2>Links that look alive get shared</h2><div class="seg" role="tablist" id="tabs"></div></div>
+    <div class="split"><div class="stage wrap">
       <div class="shot">
-        <div class="chat">
+        <div class="chat" data-rise>
           <div class="row">
             <div class="av" id="av"></div>
             <div class="bubbles">
@@ -286,22 +323,38 @@
         <h3 id="why"></h3>
         <p id="whyp"></p>
       </div>
-    </div>
+    </div></div>
   </section>
 
-  <section class="screen" id="why">
-    <div class="why-head"><h2>Why liveog</h2></div>
-    <div class="why-grid">
-      <div><svg><use href="#i-invite"/></svg><h3>More people tap</h3><p>A preview that shows what is happening now gets opened, and shared again.</p></div>
-      <div><svg><use href="#i-home"/></svg><h3>Your brand on every link</h3><p>Your logo, colours and type, on every link anyone sends.</p></div>
-      <div><svg><use href="#i-box"/></svg><h3>Drawn in the browser</h3><p>Covers are drawn by a browser that is already open. No image server to run or pay for.</p></div>
-      <div><svg><use href="#i-bid"/></svg><h3>Private where it counts</h3><p>Invite codes and share links never show in a preview, a search or a cache.</p></div>
+  <section class="screen alt" id="why">
+    <div class="why-head wrap"><h2>Why liveog</h2></div>
+    <div class="why-grid wrap">
+      <div class="card" data-rise>
+        <div class="viz"><div class="vs">
+          <div class="plain">yoursite.com/i/…<br><u>yoursite.com</u></div>
+          <span class="arrow">→</span>
+          <div class="mini"><div class="cover"><div class="site">Logo</div><div class="t">Dinner at Lucia's</div><div class="l"><strong>5 going</strong></div></div><div class="cap"><b>Dinner at Lucia's</b><span>yoursite.com</span></div></div>
+        </div></div>
+        <div class="txt"><h3>More people tap</h3><p>A link that shows what is happening gets opened, and shared again.</p></div>
+      </div>
+      <div class="card" data-rise style="--d:.08s">
+        <div class="viz"><div class="mini brand-cycle"><div class="cover" id="brandcover"></div><div class="cap"><b id="brandname"></b><span>yoursite.com</span></div></div></div>
+        <div class="txt"><h3>Your brand on every link</h3><p>Your logo, colours and type, on every link anyone sends.</p></div>
+      </div>
+      <div class="card" data-rise style="--d:.16s">
+        <div class="viz"><div class="browser"><div class="top"><i></i><i></i><i></i></div><div class="pane"><div class="cover" style="position:relative"><div class="site">Logo</div><div class="t">Ruby's surgery</div><div class="l"><strong>$4,600</strong> of $5,000</div><div class="scan"></div></div></div></div><span class="stamp">0 image servers</span></div>
+        <div class="txt"><h3>Drawn in the browser</h3><p>A browser that is already open draws each cover. Nothing to run or pay for.</p></div>
+      </div>
+      <div class="card" data-rise style="--d:.24s">
+        <div class="viz"><div><div class="url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>yoursite.com/i/<span class="tok" id="tok">x7Kq2mR9vT</span></span></div><div class="seen">Never in a preview, search or cache</div></div></div>
+        <div class="txt"><h3>Private where it counts</h3><p>Invite codes and share links stay out of every preview.</p></div>
+      </div>
     </div>
   </section>
 
   <section class="screen" id="start">
-    <div class="ways-head"><h2>Get started</h2></div>
-    <div class="ways">
+    <div class="ways-head wrap"><h2>Get started</h2></div>
+    <div class="split"><div class="ways wrap">
       <div>
         <h3>Install it yourself</h3>
         <p>Node, Deno, Bun, Cloudflare, Vercel.</p>
@@ -316,16 +369,16 @@ res.end(site.page(html, path, originOf(host)));</pre><button class="cp" aria-lab
         <h3>Or let your agent do it</h3>
         <p>Adds liveog to Claude Code, Cursor, Codex, VS Code and Windsurf.</p>
         <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <div class="code"><pre><span class="c">then ask your agent</span>
-Set up link previews for this project.</pre><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+        <div class="code"><pre><span class="c">then ask your agent to</span>
+set up link previews for this project</pre><button class="cp" data-copy="Set up link previews for this project." aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#with-your-agent">Any other MCP client →</a></div>
       </div>
-    </div>
+    </div></div>
   </section>
 </main>
 
-<footer id="foot">
-  <svg class="word" id="word" viewBox="0 0 960 250" aria-hidden="true"><text x="4" y="225">liveog</text></svg>
+<footer id="foot" class="alt">
+  <div class="word" aria-hidden="true">liveog</div>
   <div class="foot">
     <a class="label" href="https://github.com/bilal-abraham/liveog">GitHub</a>
     <a class="label" href="https://www.npmjs.com/package/liveog">npm</a>
@@ -439,9 +492,39 @@ Set up link previews for this project.</pre><button class="cp" aria-label="Copy"
   }
   pick(0);
 
-  // --- footer: the word fitted to its own shape, drawn in once it is seen; dots follow the pointer ---
-  const foot = $('foot'), word = $('word');
-  document.fonts.ready.then(() => { const b = word.querySelector('text').getBBox(); word.setAttribute('viewBox', `${b.x - 4} ${b.y - 4} ${b.width + 8} ${b.height + 8}`); });
+  // --- things rise in once, the first time they are seen -------------------------------------------
+  const rising = [...document.querySelectorAll('[data-rise]')].filter((el) => !el.closest('.hero'));
+  const show = (el) => el.classList.add('shown');
+  const rise = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting) { show(e.target); rise.unobserve(e.target); } }, { threshold: .15 });
+  for (const el of rising) rise.observe(el);
+  // a second way to see them, so nothing can stay hidden
+  let ticking = false;
+  const check = () => { ticking = false; for (const el of rising) if (el.getBoundingClientRect().top < innerHeight * .92) show(el); };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(check); } }, { passive: true });
+  addEventListener('load', check); check();
+
+  // --- why: one cover, three brands; a secret that turns to dots ------------------------------------
+  const BRANDS = [
+    ['Northgate Homes', '<path d="M5.5 10 10 6l4.5 4v4.5h-9z" fill="var(--card)"/>', '14 Maple Street', '$699,000 · 3 bd'],
+    ['Supper', '<circle cx="10" cy="10" r="4" fill="var(--card)"/>', "Dinner at Lucia's", '4 going'],
+    ['Fieldnote', '<path d="M6 6h8v2H6zM6 10h8v2H6zM6 14h5v2H6z" fill="var(--card)"/>', 'Q4 planning notes', 'Updated just now'],
+  ];
+  let bi = 0;
+  const brand = () => {
+    const [n, m, t, l] = BRANDS[bi++ % BRANDS.length];
+    $('brandcover').innerHTML = `<div class="site"><svg viewBox="0 0 20 20"><rect x="1" y="1" width="18" height="18" rx="5" fill="currentColor"/>${m}</svg>${n}</div><div class="t">${t}</div><div class="l"><strong>${l}</strong></div>`;
+    $('brandname').textContent = t;
+  };
+  brand(); setInterval(brand, 2600);
+  const tok = $('tok'), secret = tok.textContent;
+  new IntersectionObserver((es, io) => {
+    if (!es.some((e) => e.isIntersecting)) return;
+    io.disconnect();
+    [...secret].forEach((_, i) => setTimeout(() => { tok.textContent = '•'.repeat(i + 1) + secret.slice(i + 1); }, 700 + i * 70));
+  }, { threshold: .6 }).observe(tok);
+
+  // --- footer: the word rises in once it is seen; dots follow the pointer ---
+  const foot = $('foot');
   new IntersectionObserver((es, io) => { if (es.some((e) => e.isIntersecting)) { foot.classList.add('on'); io.disconnect(); } }, { threshold: .3 }).observe(foot);
   foot.addEventListener('pointermove', (e) => { const r = foot.getBoundingClientRect(); foot.style.setProperty('--mx', `${e.clientX - r.left}px`); foot.style.setProperty('--my', `${e.clientY - r.top}px`); });
   foot.addEventListener('pointerleave', () => { foot.style.setProperty('--mx', '-999px'); foot.style.setProperty('--my', '-999px'); });
