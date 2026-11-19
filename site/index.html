@@ -50,7 +50,7 @@
   .frame { background: var(--paper); }
   .wrap { max-width: 1200px; width: 100%; margin-inline: auto; }
   .alt { background: var(--bg); }
-  .split { border-top: 1px solid var(--line); flex: 1; display: flex; }
+  .split { border-top: 1px solid var(--line); flex: 1; display: flex; overflow: hidden; }
   .split > * { flex: 1; }
   .screen { min-height: calc(100svh - var(--head)); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; }
 
@@ -116,15 +116,16 @@
   .tab svg { width: 16px; height: 16px; }
   .tab[aria-selected="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--line); }
   .stage { display: grid; grid-template-columns: 1.1fr 1fr; }
-  .stage > div { padding: 56px 48px 104px; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-  .shot { position: relative; border-right: 1px solid var(--line); overflow: hidden; }
-  .shot::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 12px 12px; opacity: .7; }
+  .stage > div { padding: 64px 48px 104px; min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; }
+  .shot { position: relative; border-right: 1px solid var(--line); }
+  /* the dots run out to the screen's edge */
+  .shot::before { content: ""; position: absolute; inset: 0 0 0 -100vw; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 12px 12px; opacity: .7; }
   .chat { position: relative; max-width: 460px; width: 100%; margin: 0 auto; background: var(--paper); border: 1px solid var(--line); border-radius: 28px; padding: 22px 20px 24px;
     box-shadow: 0 24px 60px -30px rgba(0,0,0,.25); }
   .row { display: flex; align-items: flex-end; gap: 8px; }
   .av { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: var(--bg); display: grid; place-items: center; font: 600 11px/1 var(--sans); letter-spacing: .02em; }
   .bubbles { min-width: 0; flex: 1; }
-  .msg { display: inline-block; max-width: 85%; padding: 9px 14px; border-radius: 20px; background: var(--code); font-size: 15px; line-height: 1.35; color: var(--ink); }
+  .msg { display: inline-block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 9px 14px; border-radius: 20px; background: var(--code); font-size: 15px; line-height: 1.35; color: var(--ink); }
   .msg u { text-decoration-color: var(--mute); }
   .preview { margin-top: 6px; max-width: 360px; border-radius: 20px; overflow: hidden; background: var(--code); border: 1px solid var(--line); }
   .meta { padding: 10px 14px 12px; }
@@ -203,7 +204,7 @@
 
   /* get started */
   .ways { display: grid; grid-template-columns: 1fr 1fr; }
-  .ways > div { padding: 56px 48px 104px; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+  .ways > div { padding: 64px 48px 104px; min-width: 0; display: flex; flex-direction: column; }
   .ways > div + div { border-left: 1px solid var(--line); }
   .ways h3 { margin: 0; font: 500 24px/1.2 var(--sans); letter-spacing: -.025em; }
   .ways p { margin: 8px 0 0; color: var(--ink2); max-width: 440px; }
@@ -217,22 +218,30 @@
   .more a:hover { border-color: var(--ink); }
   .ways-head, .why-head { padding: 104px 48px 48px; }
 
-  /* footer: the word drawn in as it comes into view; the dots light up near the pointer */
-  footer { position: relative; height: 340px; overflow: hidden; --mx: -999px; --my: -999px; }
+  /* footer: the word and the mark in thin outline, on one baseline; under them the links, with a line between that fades out */
+  footer { position: relative; overflow: hidden; --mx: -999px; --my: -999px; --h: clamp(96px, calc((min(100vw, 1200px) - 160px) / 3.6), 290px); }
   footer::before, footer::after { content: ""; position: absolute; inset: 0; pointer-events: none; background-size: 12px 12px; }
   footer::before { background-image: radial-gradient(var(--dot) 1px, transparent 1.2px);
-    -webkit-mask-image: linear-gradient(to top, #000, transparent 75%); mask-image: linear-gradient(to top, #000, transparent 75%); }
+    -webkit-mask-image: linear-gradient(to top, #000, transparent 80%); mask-image: linear-gradient(to top, #000, transparent 80%); }
   footer::after { background-image: radial-gradient(var(--ink) 1.1px, transparent 1.3px); opacity: .5;
     -webkit-mask-image: radial-gradient(160px circle at var(--mx) var(--my), #000, transparent); mask-image: radial-gradient(160px circle at var(--mx) var(--my), #000, transparent); }
-  .word { position: absolute; left: max(24px, calc((100% - 1200px) / 2 + 24px)); bottom: 72px; font: 700 clamp(110px, 24vw, 300px)/.8 var(--sans); letter-spacing: -.065em;
-    color: transparent; -webkit-text-stroke: 1px var(--soft); user-select: none; opacity: 0; transform: translateY(24px); transition: opacity 1.2s ease, transform 1.2s cubic-bezier(.2,.7,.2,1); }
-  footer.on .word { opacity: 1; transform: none; }
-  .foot { position: absolute; left: max(24px, calc((100% - 1200px) / 2 + 24px)); right: max(24px, calc((100% - 1200px) / 2 + 24px)); bottom: 28px; display: flex; gap: 28px; flex-wrap: wrap; z-index: 1; }
+  .fin { position: relative; z-index: 1; padding: 96px 48px 36px; }
+  .big { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; opacity: 0; transform: translateY(24px);
+    transition: opacity 1.2s ease, transform 1.2s cubic-bezier(.2,.7,.2,1); user-select: none; }
+  footer.on .big { opacity: 1; transform: none; }
+  .big svg { display: block; height: var(--h); width: auto; overflow: visible; }
+  .big path, .big rect, .big circle { fill: none; stroke: var(--soft); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+  .eyes { transition: transform .25s ease-out; }
+  .foot { display: flex; align-items: center; gap: 28px; margin-top: 44px; }
   .foot a { text-decoration: none; }
   .foot a:hover { color: var(--ink); }
-  .foot .r { margin-left: auto; }
+  .foot .rule { flex: 1; height: 1px; margin: 0 8px; background: linear-gradient(90deg, transparent, var(--soft) 22%, var(--soft) 78%, transparent); opacity: .7; }
 
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } .word, .js [data-rise] { opacity: 1; transform: none; } .scan { display: none; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } .big, .js [data-rise] { opacity: 1; transform: none; } .scan { display: none; } }
+  @media (max-width: 560px) {
+    footer { --h: calc((100vw - 32px) / 2.575); }
+    .big .mark-o { display: none; }
+  }
   @media (max-width: 900px) {
     nav a.label { display: none; }
     .bar { padding: 0 16px; gap: 16px; }
@@ -248,15 +257,14 @@
     .shot { border-right: 0; border-bottom: 1px solid var(--line); }
     .ways > div + div { border-left: 0; border-top: 1px solid var(--line); }
     .cmd { font-size: 12.5px; }
-    footer { height: 240px; }
-    .word { left: 16px; bottom: 64px; }
+    .fin { padding: 72px 16px 28px; }
+    .foot { gap: 18px; margin-top: 32px; }
     .why-grid { grid-template-columns: 1fr; padding: 0 16px 72px; }
     .plain { width: 104px; padding: 10px; font-size: 11px; }
     .vs { gap: 8px; }
     .vs .mini { width: 156px; }
     .browser { width: 210px; }
     .stamp { right: 10px; bottom: 8px; }
-    .foot { left: 16px; right: 16px; }
   }
 </style>
 </head>
@@ -321,7 +329,6 @@
       </div>
       <div class="say">
         <h3 id="why"></h3>
-        <p id="whyp"></p>
       </div>
     </div></div>
   </section>
@@ -378,12 +385,20 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
 </main>
 
 <footer id="foot" class="alt">
-  <div class="word" aria-hidden="true">liveog</div>
-  <div class="foot">
-    <a class="label" href="https://github.com/bilal-abraham/liveog">GitHub</a>
-    <a class="label" href="https://www.npmjs.com/package/liveog">npm</a>
-    <a class="label" href="#start">MCP</a>
-    <a class="label r" href="https://github.com/bilal-abraham/liveog/blob/main/LICENSE">MIT licence</a>
+  <div class="fin wrap">
+    <div class="big">
+      <svg viewBox="18.8 -230.3 759.7 295" aria-hidden="true"><path d="M62.6953125 -218.26171875V0.0H18.75V-218.26171875ZM80.548828125 0.0V-163.76953125H124.494140625V0.0ZM102.521484375 -185.15625Q92.560546875 -185.15625 85.529296875 -191.748046875Q78.498046875 -198.33984375 78.498046875 -207.71484375Q78.498046875 -217.08984375 85.529296875 -223.681640625Q92.560546875 -230.2734375 102.521484375 -230.2734375Q112.482421875 -230.2734375 119.5869140625 -223.7548828125Q126.69140625 -217.236328125 126.69140625 -207.71484375Q126.69140625 -198.33984375 119.5869140625 -191.748046875Q112.482421875 -185.15625 102.521484375 -185.15625ZM188.490234375 0.0 128.138671875 -163.76953125H174.8671875L202.40625 -78.80859375Q207.38671875 -62.841796875 211.1953125 -46.58203125Q212.513671875 -40.283203125 213.978515625 -33.837890625Q215.443359375 -40.283203125 216.908203125 -46.58203125Q220.5703125 -62.841796875 225.55078125 -78.80859375L252.796875 -163.76953125H298.939453125L238.44140625 0.0ZM376.705078125 3.22265625Q351.65625 3.22265625 333.4921875 -7.03125Q315.328125 -17.28515625 305.5869140625 -36.181640625Q295.845703125 -55.078125 295.845703125 -81.005859375Q295.845703125 -106.34765625 305.513671875 -125.390625Q315.181640625 -144.43359375 332.90625 -155.126953125Q350.630859375 -165.8203125 374.5078125 -165.8203125Q390.62109375 -165.8203125 404.537109375 -160.693359375Q418.453125 -155.56640625 429.0 -145.2392578125Q439.546875 -134.912109375 445.4794921875 -119.384765625Q451.412109375 -103.857421875 451.412109375 -82.763671875V-70.458984375H339.3515625Q339.791015625 -58.0078125 344.185546875 -49.21875Q348.873046875 -39.55078125 357.4423828125 -34.716796875Q366.01171875 -29.8828125 377.4375 -29.8828125Q385.201171875 -29.8828125 391.5 -32.080078125Q397.798828125 -34.27734375 402.2666015625 -38.5986328125Q406.734375 -42.919921875 409.078125 -49.21875L448.921875 -41.748046875Q444.966796875 -28.271484375 435.15234375 -18.0908203125Q425.337890625 -7.91015625 410.6162109375 -2.34375Q395.89453125 3.22265625 376.705078125 3.22265625ZM339.64453125 -97.998046875H409.078125Q408.19921875 -106.201171875 405.5625 -112.939453125Q401.607421875 -122.314453125 393.9169921875 -127.5146484375Q386.2265625 -132.71484375 374.947265625 -132.71484375Q363.521484375 -132.71484375 355.5380859375 -127.44140625Q347.5546875 -122.16796875 343.453125 -113.232421875Q340.376953125 -106.34765625 339.64453125 -97.998046875ZM535.18359375 3.22265625Q510.57421875 3.22265625 492.556640625 -7.3974609375Q474.5390625 -18.017578125 464.7978515625 -36.9873046875Q455.056640625 -55.95703125 455.056640625 -81.15234375Q455.056640625 -106.640625 464.7978515625 -125.6103515625Q474.5390625 -144.580078125 492.556640625 -155.2001953125Q510.57421875 -165.8203125 535.18359375 -165.8203125Q559.939453125 -165.8203125 577.8837890625 -155.2001953125Q595.828125 -144.580078125 605.5693359375 -125.6103515625Q615.310546875 -106.640625 615.310546875 -81.15234375Q615.310546875 -55.95703125 605.5693359375 -36.9873046875Q595.828125 -18.017578125 577.8837890625 -7.3974609375Q559.939453125 3.22265625 535.18359375 3.22265625ZM535.18359375 -31.34765625Q546.90234375 -31.34765625 554.8125 -37.8662109375Q562.72265625 -44.384765625 566.677734375 -55.7373046875Q570.6328125 -67.08984375 570.6328125 -81.298828125Q570.6328125 -95.80078125 566.677734375 -107.080078125Q562.72265625 -118.359375 554.8125 -124.8046875Q546.90234375 -131.25 535.18359375 -131.25Q523.46484375 -131.25 515.6279296875 -124.8046875Q507.791015625 -118.359375 503.8359375 -107.080078125Q499.880859375 -95.80078125 499.880859375 -81.298828125Q499.880859375 -67.08984375 503.8359375 -55.7373046875Q507.791015625 -44.384765625 515.6279296875 -37.8662109375Q523.46484375 -31.34765625 535.18359375 -31.34765625ZM699.228515625 64.74609375Q678.720703125 64.74609375 663.486328125 59.5458984375Q648.251953125 54.345703125 638.73046875 45.263671875Q629.208984375 36.181640625 625.546875 24.609375L663.33984375 14.0625Q665.390625 18.603515625 669.7119140625 22.9248046875Q674.033203125 27.24609375 681.2109375 30.029296875Q688.388671875 32.8125 698.935546875 32.8125Q715.78125 32.8125 725.3759765625 25.1220703125Q734.970703125 17.431640625 734.970703125 1.171875V-29.00390625H731.6015625Q728.671875 -22.412109375 723.10546875 -16.259765625Q717.5390625 -10.107421875 708.5302734375 -6.2255859375Q699.521484375 -2.34375 686.19140625 -2.34375Q667.734375 -2.34375 652.646484375 -10.986328125Q637.55859375 -19.62890625 628.5498046875 -37.353515625Q619.541015625 -55.078125 619.541015625 -82.177734375Q619.541015625 -109.86328125 628.6962890625 -128.466796875Q637.8515625 -147.0703125 653.0126953125 -156.4453125Q668.173828125 -165.8203125 686.337890625 -165.8203125Q700.107421875 -165.8203125 709.482421875 -161.2060546875Q718.857421875 -156.591796875 724.6435546875 -149.6337890625Q730.4296875 -142.67578125 733.359375 -136.23046875H735.263671875V-163.76953125H778.4765625V-1.318359375Q778.4765625 20.80078125 768.2958984375 35.44921875Q758.115234375 50.09765625 740.244140625 57.421875Q722.373046875 64.74609375 699.228515625 64.74609375ZM699.9609375 -35.7421875Q711.240234375 -35.7421875 719.0771484375 -41.30859375Q726.9140625 -46.875 731.015625 -57.3486328125Q735.1171875 -67.822265625 735.1171875 -82.470703125Q735.1171875 -96.97265625 731.015625 -107.8125Q726.9140625 -118.65234375 719.0771484375 -124.658203125Q711.240234375 -130.6640625 699.9609375 -130.6640625Q688.388671875 -130.6640625 680.5517578125 -124.4384765625Q672.71484375 -118.212890625 668.6865234375 -107.373046875Q664.658203125 -96.533203125 664.658203125 -82.470703125Q664.658203125 -68.115234375 668.6865234375 -57.6416015625Q672.71484375 -47.16796875 680.625 -41.455078125Q688.53515625 -35.7421875 699.9609375 -35.7421875Z"/></svg>
+      <svg class="mark-o" viewBox="0 -230.3 292.9 295" aria-hidden="true"><g transform="translate(0 -164.0) scale(5.8571)">
+      <rect x=".5" y=".5" width="49" height="27" rx="7.5"/><rect x="3.5" y="3.5" width="43" height="21" rx="4.5"/>
+      <g class="eyes" id="eyes"><circle cx="30.5" cy="10.5" r="3"/><circle cx="39.5" cy="10.5" r="3"/></g></g></svg>
+    </div>
+    <div class="foot">
+      <a class="label" href="https://github.com/bilal-abraham/liveog">GitHub</a>
+      <a class="label" href="https://www.npmjs.com/package/liveog">npm</a>
+      <a class="label" href="#start">MCP</a>
+      <span class="rule" aria-hidden="true"></span>
+      <a class="label" href="https://github.com/bilal-abraham/liveog/blob/main/LICENSE">MIT licence</a>
+    </div>
   </div>
 </footer>
 
@@ -444,19 +459,19 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   const money = (n) => `$${n.toLocaleString('en-US')}`;
   const EX = [
     { key: 'Invites', icon: 'i-invite', av: 'MA', msg: 'dinner friday? <u>yoursite.com/i/…</u>',
-      why: 'An invite that shows who is going', whyp: 'People answer an invite when they can see their friends are in. The invite code never shows.',
+      why: 'An invite that shows who is going',
       states: [1, 2, 3, 4, 5].map((n) => ({ title: "Dinner at Lucia's",
         html: `${logo}<div class="tag"><i></i>Friday 8pm</div><div class="t">Dinner at Lucia's</div><div class="l">${faces(n)}<strong class="bump">${n} going</strong></div>` })) },
-    { key: 'Listings', icon: 'i-home', av: 'HE', msg: 'this is the one on maple <u>yoursite.com/h/…</u>',
-      why: 'A listing with your brand and the price now', whyp: 'Your logo on every home you send, and buyers see the open house, the new price, or that it sold.',
+    { key: 'Listings', icon: 'i-home', av: 'HE', msg: 'is this the one? <u>yoursite.com/h/…</u>',
+      why: 'A listing with your brand and its price now',
       states: [['Open house Sat', 725000, 1], ['New price', 699000, 0], ['Under contract', 699000, 0], ['Sold', 712000, 0]].map(([tag, p, live]) => ({ title: '14 Maple Street',
         html: `${agency}<div class="tag">${live ? '<i></i>' : ''}${tag}</div>${house}<div class="t narrow">14 Maple Street</div><div class="l"><strong class="bump">${money(p)}</strong> · 3 bd · 2 ba</div>` })) },
     { key: 'Auctions', icon: 'i-bid', av: 'BR', msg: 'look at this one <u>yoursite.com/l/…</u>',
-      why: 'A listing that shows the bid now', whyp: 'The price people see when they tap is the price on the page, then that it sold.',
+      why: 'An auction that shows the bid now',
       states: [[62, 3, 'Live auction'], [84, 7, 'Live auction'], [112, 12, 'Ends in 1h'], [140, 0, 'Sold']].map(([p, b, tag]) => ({ title: 'Vintage tee',
         html: `${logo}<div class="tag">${b ? '<i></i>' : ''}${tag}</div>${tee}<div class="t narrow">Vintage tee</div><div class="l">${b ? 'Top bid' : 'Sold for'} <strong class="bump">${money(p)}</strong>${b ? ` · ${b} bids` : ''}</div>` })) },
-    { key: 'Fundraisers', icon: 'i-goal', av: 'CI', msg: 'ruby is so close!! <u>yoursite.com/f/…</u>',
-      why: 'A goal that shows how close it is', whyp: 'A bar that moves gets shared again. A stale one does not.',
+    { key: 'Fundraisers', icon: 'i-goal', av: 'CI', msg: 'ruby is so close! <u>yoursite.com/f/…</u>',
+      why: 'A goal that shows how close it is',
       states: [[1200, 18], [2900, 41], [4600, 77], [5300, 96]].map(([n, d]) => ({ title: "Ruby's surgery",
         html: `${logo}<div class="tag">${n >= 5000 ? 'Goal reached' : '<i></i>Raising'}</div><div class="goal"><b style="width:${Math.min(100, n / 50)}%"></b></div><div class="t">Ruby's surgery</div><div class="l"><strong class="bump">${money(n)}</strong> of $5,000 · ${d} donors</div>` })) },
   ];
@@ -482,7 +497,7 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
     const e = EX[i];
     [...tabs.children].forEach((b, k) => b.setAttribute('aria-selected', String(k === i)));
     $('av').textContent = e.av; $('msg').innerHTML = e.msg; $('cid').textContent = ids[i];
-    $('why').textContent = e.why; $('whyp').textContent = e.whyp;
+    $('why').textContent = e.why;
     render();
     clearInterval(timer);
     timer = setInterval(() => {
@@ -526,8 +541,15 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   // --- footer: the word rises in once it is seen; dots follow the pointer ---
   const foot = $('foot');
   new IntersectionObserver((es, io) => { if (es.some((e) => e.isIntersecting)) { foot.classList.add('on'); io.disconnect(); } }, { threshold: .3 }).observe(foot);
-  foot.addEventListener('pointermove', (e) => { const r = foot.getBoundingClientRect(); foot.style.setProperty('--mx', `${e.clientX - r.left}px`); foot.style.setProperty('--my', `${e.clientY - r.top}px`); });
-  foot.addEventListener('pointerleave', () => { foot.style.setProperty('--mx', '-999px'); foot.style.setProperty('--my', '-999px'); });
+  const eyes = $('eyes');
+  foot.addEventListener('pointermove', (e) => {
+    const r = foot.getBoundingClientRect();
+    foot.style.setProperty('--mx', `${e.clientX - r.left}px`); foot.style.setProperty('--my', `${e.clientY - r.top}px`);
+    // the mark looks toward the pointer, a little
+    const m = eyes.getBoundingClientRect(), dx = e.clientX - (m.left + m.width / 2), dy = e.clientY - (m.top + m.height / 2), d = Math.hypot(dx, dy) || 1;
+    eyes.style.transform = `translate(${(dx / d) * 1.4}px, ${(dy / d) * 1.4}px)`;
+  });
+  foot.addEventListener('pointerleave', () => { foot.style.setProperty('--mx', '-999px'); foot.style.setProperty('--my', '-999px'); eyes.style.transform = ''; });
 </script>
 </body>
 </html>
