@@ -3,7 +3,7 @@ import { PassThrough } from 'node:stream';
 import { test } from 'node:test';
 import { isCover } from './cover.js';
 import { findChrome } from './draw.js';
-import { reply, serve } from './mcp.js';
+import { CSP, lockDown, reply, savePath, serve } from './mcp.js';
 
 test('initialize, list, call', async () => {
   const init = await reply({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18' } }, '0.0.0') as { result: { serverInfo: { name: string }; protocolVersion: string } };
@@ -43,4 +43,17 @@ test('draw_cover: the default cover, shown as a PNG', { skip: !findChrome() && '
   assert.equal(isCover(Buffer.from(img?.data ?? '', 'base64')), true);
   const bad = await reply({ jsonrpc: '2.0', id: 10, method: 'tools/call', params: { name: 'draw_cover', arguments: { title: 't', out: 'x.html' } } }, '0') as { result: { isError: boolean } };
   assert.equal(bad.result.isError, true);
+});
+
+test('draw_cover: saves only inside the project, and its pages reach no files or network', async () => {
+  assert.equal(savePath('public/og/home.png', '/p'), '/p/public/og/home.png');
+  assert.equal(savePath('../elsewhere.png', '/p'), null);
+  assert.equal(savePath('/etc/x.png', '/p'), null);
+  assert.equal(savePath('/p/og/a.png', '/p'), '/p/og/a.png');
+  assert.match(lockDown('<!doctype html><html><head><title>x</title></head></html>'), new RegExp(`^<!doctype html><html><head><meta http-equiv="Content-Security-Policy"`));
+  assert.match(lockDown('<!doctype html><p>x'), /^<!doctype html><meta http-equiv/);
+  assert.ok(lockDown('<p>x').startsWith('<meta http-equiv'));
+  assert.ok(!CSP.includes('file:') && CSP.includes("default-src 'none'"));
+  const r = await reply({ jsonrpc: '2.0', id: 9, method: 'tools/call', params: { name: 'draw_cover', arguments: { title: 'x', out: '../../x.png' } } }, '0') as { result: { isError?: boolean } };
+  assert.equal(r.result.isError, true);
 });

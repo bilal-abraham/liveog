@@ -2,7 +2,7 @@
 // what a good cover looks like is said once, in INSTRUCTIONS, which a client reads at the start.
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { isAbsolute, join, resolve } from 'node:path';
+import { isAbsolute, join, relative, resolve } from 'node:path';
 import { createInterface } from 'node:readline';
 import { check, describe } from './check.js';
 import { draw } from './draw.js';
@@ -105,20 +105,39 @@ type Msg = { jsonrpc: '2.0'; id?: number | string; method?: string; params?: Rec
 const text = (t: string, isError = false) => ({ content: [{ type: 'text', text: t }], ...(isError ? { isError } : {}) });
 const str = (x: unknown) => (typeof x === 'string' && x ? x : undefined);
 
+/** Pages drawn for an agent may not reach the network or this machine's files: inline styles and
+ * scripts, data: pictures and Google Fonts only. */
+export const CSP = "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src data: https://fonts.gstatic.com; img-src data: blob:; script-src 'unsafe-inline'";
+export function lockDown(html: string): string {
+  const meta = `<meta http-equiv="Content-Security-Policy" content="${CSP}">`;
+  if (/<head[^>]*>/i.test(html)) return html.replace(/<head[^>]*>/i, (h) => h + meta);
+  if (/^\s*<!doctype[^>]*>/i.test(html)) return html.replace(/^\s*<!doctype[^>]*>/i, (d) => d + meta);
+  return meta + html;
+}
+
+/** Where to save a cover: inside the project folder, never outside it. */
+export function savePath(out: string, root: string = process.cwd()): string | null {
+  const file = resolve(root, out);
+  const rel = relative(resolve(root), file);
+  return rel && !rel.startsWith('..') && !isAbsolute(rel) ? file : null;
+}
+
 function drawCover(args: Record<string, unknown>) {
   const title = str(args.title);
   const html = str(args.html);
   if (!html && !title) return text('Give a title for the default cover, or a whole html page.', true);
   const out = str(args.out);
   if (out && !/\.png$/i.test(out)) return text('out must end in .png.', true);
+  const saveAt = out ? savePath(out) : null;
+  if (out && !saveAt) return text('out must be a path inside the project, e.g. public/og/home.png.', true);
   const words: CoverWords = { title: title ?? '' };
   for (const k of ['site', 'line', 'tag', 'art'] as const) { const v = str(args[k]); if (v) words[k] = v; }
   const look = (args.look && typeof args.look === 'object' ? args.look : {}) as Look;
   const tmp = mkdtempSync(join(tmpdir(), 'liveog-mcp-'));
   try {
     const src = join(tmp, 'cover.html');
-    writeFileSync(src, html ?? coverHtml(words, look));
-    const file = out ? (isAbsolute(out) ? out : resolve(process.cwd(), out)) : join(tmp, 'cover.png');
+    writeFileSync(src, lockDown(html ?? coverHtml(words, look)));
+    const file = saveAt ?? join(tmp, 'cover.png');
     const s = draw(src, file);
     return {
       content: [
@@ -158,7 +177,8 @@ export async function reply(m: Msg, version: string): Promise<object | null> {
     }
     case 'ping': return ok({});
     case 'tools/list': return ok({ tools: TOOLS });
-    case 'tools/call': return ok(await call(m.params?.name, (m.params?.arguments ?? {}) as Record<string, unknown>));
+    case 'tools/call':
+      try { return ok(await call(m.params?.name, (m.params?.arguments ?? {}) as Record<string, unknown>)); } catch (e) { return ok(text((e as Error).message, true)); }
     default: return { jsonrpc: '2.0', id: m.id, error: { code: -32601, message: `No method ${m.method}` } };
   }
 }
