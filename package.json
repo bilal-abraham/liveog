@@ -1,6 +1,6 @@
 {
   "name": "liveog",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Link previews that stay current: Open Graph tags, covers drawn by a browser you already run, versioned cover addresses, privacy per link kind.",
   "keywords": [
     "open graph",

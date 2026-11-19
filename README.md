@@ -33,9 +33,9 @@ npx liveog mcp add
 ```
 
 This finds the agent apps on your machine and adds the liveog MCP server to each one: Hermes
-Agent, Claude Code, Codex, Cursor, VS Code, Amp, Windsurf (Devin Desktop), Claude Desktop, OpenCode,
-Kiro and LM Studio. Antigravity, Zed, JetBrains, Cline, Warp, Goose, Continue and Kilo Code work
-too, with one step by hand (see below). Restart the app, then ask:
+Agent, Claude Code, Codex, Kimi Code, Cursor, VS Code, Amp, Windsurf (Devin Desktop), Claude Desktop,
+OpenCode, Kiro and LM Studio. Muse Code, Factory, Antigravity, Zed, JetBrains, Cline, Warp, Goose,
+Continue and Kilo Code work too, with one step by hand (see below). Restart the app, then ask:
 
 > Set up link previews for this project.
 

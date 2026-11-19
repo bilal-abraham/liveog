@@ -30,13 +30,14 @@ test('addEverywhere: the apps found, by command or by file', () => {
     const ran: string[][] = [];
     const env: Env = {
       home, platform: 'linux',
-      has: (b) => b === 'claude' || b === 'codex',
+      has: (b) => b === 'claude' || b === 'codex' || b === 'kimi',
       run: (b, args) => { ran.push([b, ...args]); if (b === 'codex') throw Object.assign(new Error('x'), { stderr: 'liveog already exists' }); return ''; },
     };
     const found = addEverywhere(env);
-    assert.deepEqual(found, [{ app: 'Claude Code', result: 'added' }, { app: 'Codex', result: 'already' }, { app: 'Cursor', result: 'added' }, { app: 'OpenCode', result: 'added' }]);
+    assert.deepEqual(found, [{ app: 'Claude Code', result: 'added' }, { app: 'Codex', result: 'already' }, { app: 'Kimi Code', result: 'added' }, { app: 'Cursor', result: 'added' }, { app: 'OpenCode', result: 'added' }]);
     assert.deepEqual(JSON.parse(readFileSync(join(home, '.config', 'opencode', 'opencode.json'), 'utf8')), { mcp: { liveog: { type: 'local', command: ['npx', '-y', 'liveog', 'mcp'], enabled: true } } });
     assert.deepEqual(ran[0], ['claude', 'mcp', 'add', '--scope', 'user', 'liveog', '--', 'npx', '-y', 'liveog', 'mcp']);
+    assert.deepEqual(ran[2], ['kimi', 'mcp', 'add', '--transport', 'stdio', 'liveog', '--', 'npx', '-y', 'liveog', 'mcp']);
     assert.match(report(found), /Restart the app/);
     assert.match(report([]), /No agent app found/);
   } finally {
