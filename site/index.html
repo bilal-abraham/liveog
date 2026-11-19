@@ -27,7 +27,7 @@
 <style>
   :root {
     --bg: #fafafa; --paper: #ffffff; --ink: #0a0a0a; --ink2: #444; --mute: #7a7a7a; --line: #e4e4e4; --soft: #c8c8c8;
-    --dot: #d6d6d6; --card: #0a0a0a; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #2e2e2e; --code: #f3f3f3; --inb: #e9e9eb;
+    --dot: #d6d6d6; --card: #0a0a0a; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #2e2e2e; --code: #f3f3f3; --inb: #e9e9eb; --win-top: #ececec; --win-line: #d4d4d4; --win-field: #ffffff; --win-page: #ffffff;
     --sans: Inter, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
     --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
     --head: 64px;
@@ -35,10 +35,10 @@
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) { --bg: #0a0a0a; --paper: #0e0e0e; --ink: #f2f2f2; --ink2: #bdbdbd; --mute: #7a7a7a; --line: #232323; --soft: #3a3a3a;
-      --dot: #262626; --card: #171717; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #333; --code: #151515; --inb: #26252a; color-scheme: dark; }
+      --dot: #262626; --card: #171717; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #333; --code: #151515; --inb: #26252a; --win-top: #1c1c1c; --win-line: #2c2c2c; --win-field: #2a2a2a; --win-page: #f7f7f7; color-scheme: dark; }
   }
   :root[data-theme="dark"] { --bg: #0a0a0a; --paper: #0e0e0e; --ink: #f2f2f2; --ink2: #bdbdbd; --mute: #7a7a7a; --line: #232323; --soft: #3a3a3a;
-    --dot: #262626; --card: #171717; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #333; --code: #151515; --inb: #26252a; color-scheme: dark; }
+    --dot: #262626; --card: #171717; --card-ink: #f2f2f2; --card-mute: #8a8a8a; --card-line: #333; --code: #151515; --inb: #26252a; --win-top: #1c1c1c; --win-line: #2c2c2c; --win-field: #2a2a2a; --win-page: #f7f7f7; color-scheme: dark; }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: var(--head); }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
@@ -86,9 +86,9 @@
   .glow { border-color: transparent; background: linear-gradient(var(--code), var(--code)) padding-box,
     conic-gradient(from var(--a), #ff5f6d, #ffc371, #47e891, #3fa9f5, #a46bff, #ff5f6d) border-box; animation: spin 4s linear infinite; }
   .glow > svg { color: var(--ink); }
-  .glow code { background: linear-gradient(90deg, #ff5f6d, #ffc371, #47e891, #3fa9f5, #a46bff, #ff5f6d) 0 0 / 200% 100%;
+  .rtext code { background: linear-gradient(90deg, #ff5f6d, #ffc371, #47e891, #3fa9f5, #a46bff, #ff5f6d) 0 0 / 200% 100%;
     -webkit-background-clip: text; background-clip: text; color: transparent; animation: flow 6s linear infinite; }
-  .glow code .p { color: transparent; }
+  .rtext code .p { color: transparent; }
   @keyframes flow { to { background-position: -200% 0; } }
   @keyframes spin { to { --a: 360deg; } }
 
@@ -173,11 +173,11 @@
   .say p { margin: 14px 0 0; color: var(--ink2); max-width: 440px; }
 
   /* built to be shared: four cards, a title and a picture, the most important top left and widest */
-  .bento { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 420px; gap: 14px; padding: 0 48px 104px; }
-  .c { position: relative; border: 1px solid var(--line); border-radius: 22px; background: var(--paper); overflow: hidden; }
-  .c.w2 { grid-column: span 2; }
-  .c .ct { position: absolute; z-index: 3; margin: 0; font: 500 26px/1.12 var(--sans); letter-spacing: -.03em; max-width: 300px; }
-  .c .tl { left: 28px; top: 26px; } .c .bl { left: 28px; bottom: 26px; }
+  .bento { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 440px; gap: 1px; background: var(--line); border-block: 1px solid var(--line); margin-bottom: 104px; }
+  .tile { position: relative; background: var(--paper); overflow: hidden; }
+  .tile.w2 { grid-column: span 2; }
+  .tile .ct { position: absolute; z-index: 3; margin: 0; font: 500 26px/1.12 var(--sans); letter-spacing: -.03em; max-width: 300px; }
+  .tile .tl { left: 48px; top: 34px; } .tile .bl { left: 48px; bottom: 34px; }
 
   /* 1 · before and after, as a phone shows each */
   .ba { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; }
@@ -196,32 +196,38 @@
     box-shadow: 0 0 0 1px #3a3a3a, 0 10px 30px -10px rgba(0,0,0,.6); display: grid; place-items: center; }
   .arrow svg { width: 18px; height: 18px; }
 
-  /* 2 · a browser draws the cover itself, coarse to sharp */
-  .win { position: absolute; left: 28px; right: 28px; bottom: 28px; top: 112px; border: 1px solid var(--soft); border-radius: 14px; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; }
-  .win .bar { flex: none; height: 30px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 6px; padding: 0 12px; }
-  .win .bar i { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--soft); }
-  .win .bar span { margin-left: 10px; font: 400 11px var(--mono); color: var(--mute); }
-  .win .body { flex: 1; min-height: 0; display: flex; padding: 14px 14px 30px; position: relative; }
-  .win canvas { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; image-rendering: pixelated; }
-  .bill { position: absolute; right: 14px; bottom: 10px; font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
+  /* window chrome shared by the browser and the terminal: real proportions, a small real radius */
+  .chrome { flex: none; height: 34px; display: flex; align-items: center; gap: 12px; padding: 0 12px; border-bottom: 1px solid var(--win-line); background: var(--win-top); }
+  .lights { display: flex; gap: 7px; } .lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; } .lights i + i { background: #febc2e; } .lights i + i + i { background: #28c840; }
+  .omni { flex: 1; max-width: 260px; margin: 0 auto; height: 22px; border-radius: 6px; background: var(--win-field); display: flex; align-items: center; justify-content: center; gap: 6px;
+    font: 400 11.5px/1 var(--sans); color: var(--ink2); min-width: 0; }
+  .omni svg { width: 11px; height: 11px; color: var(--mute); }
+  .wtitle { flex: 1; text-align: center; font: 500 11.5px/1 var(--sans); color: #9a9a9a; padding-right: 45px; }
+
+  /* 2 · the browser on your user's screen draws the page itself: blank, characters, the cover */
+  .win { position: absolute; left: 48px; right: 48px; top: 108px; bottom: 68px; border: 1px solid var(--win-line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;
+    background: var(--win-page); box-shadow: 0 24px 60px -36px rgba(0,0,0,.5); }
+  .win canvas { flex: 1; min-height: 0; width: 100%; display: block; }
+  .bill { position: absolute; left: 48px; bottom: 30px; font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
   .bill b { color: var(--ink); font-weight: 500; }
 
-  /* 3 · a link preview drawn as a wireframe; its picture fills with sand */
-  .wf { position: absolute; left: 28px; right: 28px; top: 96px; bottom: 28px; border: 1px solid var(--soft); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
-  .wf canvas { flex: 1; min-height: 0; width: 100%; display: block; border-bottom: 1px solid var(--soft); background: var(--bg); }
-  .wf .m { flex: none; padding: 12px 16px 14px; } .wf .m b { display: block; font-weight: 600; font-size: 15.5px; } .wf .m span { color: var(--mute); font: 400 12.5px var(--mono); }
+  /* 3 · a link preview as a wireframe; a bucket pours sand into its picture until the picture is a picture */
+  .wf { position: absolute; left: 48px; right: 48px; top: 108px; bottom: 34px; border: 1px solid var(--soft); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .wf canvas { flex: 1; min-height: 0; width: 100%; display: block; border-bottom: 1px solid var(--soft); }
+  .wf .m { flex: none; padding: 12px 16px 14px; } .wf .m b { display: block; font-weight: 600; font-size: 15px; } .wf .m span { color: var(--mute); font: 400 12px var(--mono); }
 
-  /* 4 · the mark watches the agent set it up, then smiles */
-  .agent { position: absolute; inset: 0; display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 24px; padding: 88px 32px 32px; }
-  .face { width: 100%; max-width: 300px; justify-self: center; overflow: visible; }
-  .face rect, .face circle, .face path { fill: none; stroke: var(--ink2); stroke-width: 1px; vector-effect: non-scaling-stroke; }
-  .face .eyes { transition: transform .45s cubic-bezier(.3,.7,.3,1); }
-  .face .smile { stroke-dasharray: 30; stroke-dashoffset: 30; transition: stroke-dashoffset .9s ease; }
-  .face.happy .smile { stroke-dashoffset: 0; }
-  .term { align-self: stretch; border: 1px solid var(--soft); border-radius: 14px; background: var(--bg); padding: 18px 20px; font: 400 13px/1.8 var(--mono); color: var(--ink2); overflow: hidden; }
-  .term .p { color: var(--mute); } .term .ok { color: var(--ink); }
-  .term .cur { display: inline-block; width: 7px; height: 14px; background: var(--ink2); vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+  /* 4 · a terminal, typed exactly; the mark beside it watches */
+  .agent { position: absolute; left: 48px; right: 48px; top: 108px; bottom: 34px; display: grid; grid-template-columns: 1fr 220px; gap: 40px; align-items: center; }
+  .term { height: 100%; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #0c0c0c; box-shadow: 0 24px 60px -36px rgba(0,0,0,.6); --win-top: #161616; --win-line: #2a2a2a; }
+  .tty { flex: 1; margin: 0; padding: 14px 16px; font: 400 13px/1.75 var(--mono); color: #d6d6d6; white-space: pre; overflow: hidden; }
+  .tty .pr { color: #7a7a7a; } .tty .ok { color: #3ddc84; } .tty .dim { color: #7a7a7a; }
+  .tty .cur { display: inline-block; width: .6em; height: 1.15em; background: #d6d6d6; vertical-align: -.2em; animation: blink 1.05s steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
+  .face { width: 100%; overflow: visible; }
+  .face rect, .face circle, .face path { fill: none; stroke: var(--ink2); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+  .face .eyes { transition: transform .5s cubic-bezier(.3,.7,.3,1); }
+  .face .smile { stroke-dasharray: 30; stroke-dashoffset: 30; transition: stroke-dashoffset .8s ease; }
+  .face.happy .smile { stroke-dashoffset: 0; }
 
   /* things that rise in once, when first seen */
   /* hidden only once the script is there to show them again */
@@ -245,7 +251,6 @@
   .more { margin-top: 28px; }
   /* the agent apps: set up for you, or one step by hand */
   .apps { margin-top: 24px; }
-  .apps .label { display: flex; align-items: center; gap: 8px; } .apps .label b { font-weight: 400; color: var(--mute); } .apps .label b.on { color: #3ddc84; }
   .icons { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 12px; color: var(--ink); }
   .icons svg { width: 22px; height: 22px; display: block; }
   .icons .mono { display: grid; place-items: center; min-width: 22px; height: 22px; padding: 0 4px; border-radius: 6px; border: 1.5px solid currentColor; font: 600 10px/1 var(--sans); letter-spacing: -.02em; }
@@ -295,15 +300,17 @@
     .cmd { font-size: 12.5px; }
     .fin { padding: 72px 16px 28px; }
     .foot { gap: 18px; margin-top: 32px; }
-    .bento { grid-template-columns: 1fr; grid-auto-rows: 380px; padding: 0 16px 72px; }
-    .c.w2 { grid-column: auto; }
-    .c .ct { font-size: 23px; }
+    .bento { grid-template-columns: 1fr; grid-auto-rows: 400px; margin-bottom: 72px; }
+    .tile.w2 { grid-column: auto; }
+    .tile .ct { font-size: 22px; } .tile .tl { left: 16px; top: 24px; }
     .ba > div { padding: 0 6%; }
     .ba .msg-l, .ba .msg-d { font-size: 12.5px; padding: 7px 11px; }
     .arrow { width: 38px; height: 38px; }
-    .agent { grid-template-columns: 1fr; padding: 76px 20px 20px; gap: 14px; }
-    .face { max-width: 150px; }
-    .term { font-size: 11.5px; padding: 12px 14px; }
+    .win, .wf, .agent { left: 16px; right: 16px; top: 80px; }
+    .win { bottom: 54px; } .bill { left: 16px; bottom: 22px; }
+    .agent { grid-template-columns: 1fr; bottom: 20px; }
+    .face { position: absolute; width: 64px; right: 0; top: -62px; }
+    .tty { font-size: 11px; padding: 12px; }
             }
 </style>
 </head>
@@ -341,7 +348,7 @@
       <h1 data-rise>Give your product a great first impression</h1>
       <p class="lede" data-rise style="--d:.12s">Link previews that stay current.</p>
       <div class="ctas" data-rise style="--d:.24s">
-        <div class="cmd"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+        <div class="cmd rtext"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
         <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
       </div>
     </div>
@@ -371,7 +378,7 @@
   <section class="screen alt" id="why">
     <div class="why-head wrap"><h2>Built to be shared</h2></div>
     <div class="bento wrap">
-      <div class="c w2" data-rise>
+      <div class="tile w2" data-rise>
         <div class="ba">
           <div class="light"><div class="msg-l">dinner friday? <u>abc.xyz/i/8f2k</u><svg class="tl2" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div><span class="cap">Without</span></div>
           <div class="dark">
@@ -383,20 +390,21 @@
         <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
         <h3 class="ct tl" style="color:#0a0a0a">Links people want to open</h3>
       </div>
-      <div class="c" data-rise style="--d:.08s">
+      <div class="tile" data-rise style="--d:.08s">
         <h3 class="ct tl">Nothing to run or pay for</h3>
-        <div class="win"><div class="bar"><i></i><i></i><i></i><span>your user's browser</span></div><div class="body"><canvas id="paint" width="600" height="315"></canvas><div class="bill">Server bill <b>$0.00</b></div></div></div>
+        <div class="win"><div class="chrome"><span class="lights"><i></i><i></i><i></i></span><span class="omni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>abc.xyz/f/ruby</span></div><canvas id="paint" aria-hidden="true"></canvas></div>
+        <div class="bill">Server bill <b>$0.00</b></div>
       </div>
-      <div class="c" data-rise style="--d:.04s">
+      <div class="tile" data-rise style="--d:.04s">
         <h3 class="ct tl">Make every link yours</h3>
         <div class="wf"><canvas id="sand" aria-hidden="true"></canvas><div class="m"><b>Get creative</b><span>abc.xyz</span></div></div>
       </div>
-      <div class="c w2" data-rise style="--d:.12s">
+      <div class="tile w2" data-rise style="--d:.12s">
         <h3 class="ct tl">Your agent does the setup</h3>
         <div class="agent">
+          <div class="term"><div class="chrome"><span class="lights"><i></i><i></i><i></i></span><span class="wtitle">abc — zsh</span></div><pre class="tty" id="tty" aria-hidden="true"></pre></div>
           <svg class="face" id="face" viewBox="-2 -2 54 36" aria-hidden="true"><rect x=".5" y=".5" width="49" height="27" rx="7.5"/><rect x="3.5" y="3.5" width="43" height="21" rx="4.5"/>
             <g class="eyes" id="feyes"><circle cx="30.5" cy="10.5" r="3"/><circle cx="39.5" cy="10.5" r="3"/></g><path class="smile" d="M19.5 17c3.2 3 7.8 3 11 0"/></svg>
-          <div class="term" id="term"></div>
         </div>
       </div>
     </div>
@@ -408,7 +416,7 @@
       <div>
         <h3>Install it yourself</h3>
         <p>Node, Deno, Bun, Cloudflare, Vercel.</p>
-        <div class="cmd"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+        <div class="cmd rtext"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
         <div class="code"><pre><span class="cm">// put the tags in each page</span>
 import { links, originOf } from 'liveog';
 const site = links('yoursite', kinds, home);
@@ -421,8 +429,8 @@ res.end(site.page(html, path, originOf(host)));</pre><button class="cp" aria-lab
         <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
         <div class="code"><pre><span class="cm">then ask your agent to</span>
 set up link previews for this project</pre><button class="cp" data-copy="Set up link previews for this project." aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <div class="apps"><span class="label"><b class="on">●</b> Sets itself up in</span><div class="icons"><svg viewBox="0 0 24 24" role="img" aria-label="Claude Code"><title>Claude Code</title><path fill="currentColor" d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="Codex"><title>Codex</title><path fill="currentColor" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="Cursor"><title>Cursor</title><path fill="currentColor" d="M11.503.131 1.891 5.678a.84.84 0 0 0-.42.726v11.188c0 .3.162.575.42.724l9.609 5.55a1 1 0 0 0 .998 0l9.61-5.55a.84.84 0 0 0 .42-.724V6.404a.84.84 0 0 0-.42-.726L12.497.131a1.01 1.01 0 0 0-.996 0M2.657 6.338h18.55c.263 0 .43.287.297.515L12.23 22.918c-.062.107-.229.064-.229-.06V12.335a.59.59 0 0 0-.295-.51l-9.11-5.257c-.109-.063-.064-.23.061-.23"/></svg><span class="mono" role="img" aria-label="VS Code" title="VS Code">VS</span><svg viewBox="0 0 24 24" role="img" aria-label="Windsurf"><title>Windsurf</title><path fill="currentColor" d="M23.55 5.067c-1.2038-.002-2.1806.973-2.1806 2.1765v4.8676c0 .972-.8035 1.7594-1.7597 1.7594-.568 0-1.1352-.286-1.4718-.7659l-4.9713-7.1003c-.4125-.5896-1.0837-.941-1.8103-.941-1.1334 0-2.1533.9635-2.1533 2.153v4.8957c0 .972-.7969 1.7594-1.7596 1.7594-.57 0-1.1363-.286-1.4728-.7658L.4076 5.1598C.2822 4.9798 0 5.0688 0 5.2882v4.2452c0 .2147.0656.4228.1884.599l5.4748 7.8183c.3234.462.8006.8052 1.3509.9298 1.3771.313 2.6446-.747 2.6446-2.0977v-4.893c0-.972.7875-1.7593 1.7596-1.7593h.003a1.798 1.798 0 0 1 1.4718.7658l4.9723 7.0994c.4135.5905 1.05.941 1.8093.941 1.1587 0 2.1515-.9645 2.1515-2.153v-4.8948c0-.972.7875-1.7594 1.7596-1.7594h.194a.22.22 0 0 0 .2204-.2202v-4.622a.22.22 0 0 0-.2203-.2203Z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="Gemini CLI"><title>Gemini CLI</title><path fill="currentColor" d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg><span class="mono" role="img" aria-label="Kiro" title="Kiro">K</span><svg viewBox="0 0 24 24" role="img" aria-label="LM Studio"><title>LM Studio</title><path fill="currentColor" d="M14.025 0c3.492 0 5.237 0 6.571.68a6.24 6.24 0 0 1 2.725 2.724C24 4.738 24 6.484 24 9.975v4.05c0 3.492 0 5.237-.68 6.571a6.24 6.24 0 0 1-2.724 2.725c-1.334.679-3.08.679-6.571.679h-4.05c-3.492 0-5.237 0-6.571-.68A6.24 6.24 0 0 1 .68 20.597C0 19.262 0 17.516 0 14.025v-4.05c0-3.492 0-5.237.68-6.571A6.23 6.23 0 0 1 3.404.68C4.738 0 6.484 0 9.975 0zM7.688 16.313a1.313 1.313 0 0 0 0 2.625h11.625a1.313 1.313 0 0 0 0-2.625zm-3-3.75a1.313 1.313 0 0 0 0 2.624h11.625a1.313 1.313 0 0 0 0-2.624zm3-3.75a1.313 1.313 0 0 0 0 2.624h11.625a1.313 1.313 0 0 0 0-2.624zm-3-3.75a1.313 1.313 0 0 0 0 2.625h11.625a1.313 1.313 0 0 0 0-2.625z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="OpenCode"><title>OpenCode</title><path fill="currentColor" d="M22 24H2V0h20zM17 4.8H7v14.4h10z"/></svg></div></div>
-        <div class="apps"><span class="label"><b>○</b> One step by hand in</span><div class="icons dim"><svg viewBox="0 0 24 24" role="img" aria-label="Zed"><title>Zed</title><path fill="currentColor" d="M2.25 1.5a.75.75 0 0 0-.75.75v16.5H0V2.25A2.25 2.25 0 0 1 2.25 0h20.095c1.002 0 1.504 1.212.795 1.92L10.764 14.298h3.486V12.75h1.5v1.922a1.125 1.125 0 0 1-1.125 1.125H9.264l-2.578 2.578h11.689V9h1.5v9.375a1.5 1.5 0 0 1-1.5 1.5H5.185L2.562 22.5H21.75a.75.75 0 0 0 .75-.75V5.25H24v16.5A2.25 2.25 0 0 1 21.75 24H1.655C.653 24 .151 22.788.86 22.08L13.19 9.75H9.75v1.5h-1.5V9.375A1.125 1.125 0 0 1 9.375 8.25h5.314l2.625-2.625H5.625V15h-1.5V5.625a1.5 1.5 0 0 1 1.5-1.5h13.19L21.438 1.5z"/></svg><span class="mono" role="img" aria-label="Hermes" title="Hermes">H</span><span class="mono etc" title="Any MCP client">…</span></div></div>
+        <div class="apps"><span class="label">Sets itself up in</span><div class="icons"><svg viewBox="0 0 24 24" role="img" aria-label="Claude Code"><title>Claude Code</title><path fill="currentColor" d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="Codex"><title>Codex</title><path fill="currentColor" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="Cursor"><title>Cursor</title><path fill="currentColor" d="M11.503.131 1.891 5.678a.84.84 0 0 0-.42.726v11.188c0 .3.162.575.42.724l9.609 5.55a1 1 0 0 0 .998 0l9.61-5.55a.84.84 0 0 0 .42-.724V6.404a.84.84 0 0 0-.42-.726L12.497.131a1.01 1.01 0 0 0-.996 0M2.657 6.338h18.55c.263 0 .43.287.297.515L12.23 22.918c-.062.107-.229.064-.229-.06V12.335a.59.59 0 0 0-.295-.51l-9.11-5.257c-.109-.063-.064-.23.061-.23"/></svg><span class="mono" role="img" aria-label="VS Code" title="VS Code">VS</span><svg viewBox="0 0 24 24" role="img" aria-label="Windsurf"><title>Windsurf</title><path fill="currentColor" d="M23.55 5.067c-1.2038-.002-2.1806.973-2.1806 2.1765v4.8676c0 .972-.8035 1.7594-1.7597 1.7594-.568 0-1.1352-.286-1.4718-.7659l-4.9713-7.1003c-.4125-.5896-1.0837-.941-1.8103-.941-1.1334 0-2.1533.9635-2.1533 2.153v4.8957c0 .972-.7969 1.7594-1.7596 1.7594-.57 0-1.1363-.286-1.4728-.7658L.4076 5.1598C.2822 4.9798 0 5.0688 0 5.2882v4.2452c0 .2147.0656.4228.1884.599l5.4748 7.8183c.3234.462.8006.8052 1.3509.9298 1.3771.313 2.6446-.747 2.6446-2.0977v-4.893c0-.972.7875-1.7593 1.7596-1.7593h.003a1.798 1.798 0 0 1 1.4718.7658l4.9723 7.0994c.4135.5905 1.05.941 1.8093.941 1.1587 0 2.1515-.9645 2.1515-2.153v-4.8948c0-.972.7875-1.7594 1.7596-1.7594h.194a.22.22 0 0 0 .2204-.2202v-4.622a.22.22 0 0 0-.2203-.2203Z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="Gemini CLI"><title>Gemini CLI</title><path fill="currentColor" d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg><span class="mono" role="img" aria-label="Kiro" title="Kiro">K</span><svg viewBox="0 0 24 24" role="img" aria-label="LM Studio"><title>LM Studio</title><path fill="currentColor" d="M14.025 0c3.492 0 5.237 0 6.571.68a6.24 6.24 0 0 1 2.725 2.724C24 4.738 24 6.484 24 9.975v4.05c0 3.492 0 5.237-.68 6.571a6.24 6.24 0 0 1-2.724 2.725c-1.334.679-3.08.679-6.571.679h-4.05c-3.492 0-5.237 0-6.571-.68A6.24 6.24 0 0 1 .68 20.597C0 19.262 0 17.516 0 14.025v-4.05c0-3.492 0-5.237.68-6.571A6.23 6.23 0 0 1 3.404.68C4.738 0 6.484 0 9.975 0zM7.688 16.313a1.313 1.313 0 0 0 0 2.625h11.625a1.313 1.313 0 0 0 0-2.625zm-3-3.75a1.313 1.313 0 0 0 0 2.624h11.625a1.313 1.313 0 0 0 0-2.624zm3-3.75a1.313 1.313 0 0 0 0 2.624h11.625a1.313 1.313 0 0 0 0-2.624zm-3-3.75a1.313 1.313 0 0 0 0 2.625h11.625a1.313 1.313 0 0 0 0-2.625z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="OpenCode"><title>OpenCode</title><path fill="currentColor" d="M22 24H2V0h20zM17 4.8H7v14.4h10z"/></svg></div></div>
+        <div class="apps"><span class="label">One step by hand in</span><div class="icons dim"><svg viewBox="0 0 24 24" role="img" aria-label="Zed"><title>Zed</title><path fill="currentColor" d="M2.25 1.5a.75.75 0 0 0-.75.75v16.5H0V2.25A2.25 2.25 0 0 1 2.25 0h20.095c1.002 0 1.504 1.212.795 1.92L10.764 14.298h3.486V12.75h1.5v1.922a1.125 1.125 0 0 1-1.125 1.125H9.264l-2.578 2.578h11.689V9h1.5v9.375a1.5 1.5 0 0 1-1.5 1.5H5.185L2.562 22.5H21.75a.75.75 0 0 0 .75-.75V5.25H24v16.5A2.25 2.25 0 0 1 21.75 24H1.655C.653 24 .151 22.788.86 22.08L13.19 9.75H9.75v1.5h-1.5V9.375A1.125 1.125 0 0 1 9.375 8.25h5.314l2.625-2.625H5.625V15h-1.5V5.625a1.5 1.5 0 0 1 1.5-1.5h13.19L21.438 1.5z"/></svg><span class="mono" role="img" aria-label="Hermes" title="Hermes">H</span><span class="mono etc" title="Any MCP client">…</span></div></div>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#any-other-mcp-client">Using another MCP client? →</a></div>
       </div>
     </div></div>
@@ -562,41 +570,70 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(check); } }, { passive: true });
   addEventListener('load', check); check();
 
-  // --- 2 · a cover drawn by the browser itself: coarse blocks to sharp ---------------------------------
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const ease = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
+  const htm = (t) => t.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
+
+  // --- 2 · the browser draws the page itself: blank, then characters, then the cover ---------------
   const paint = $('paint'), pc = paint.getContext('2d');
-  const full = Object.assign(document.createElement('canvas'), { width: 600, height: 315 }), fc = full.getContext('2d');
-  const small = document.createElement('canvas'), sc = small.getContext('2d');
-  function drawFull() {
-    const css = getComputedStyle(root);
-    fc.fillStyle = '#0b0b0b'; fc.fillRect(0, 0, 600, 315);
-    fc.fillStyle = '#f2f2f2'; fc.font = '600 25px Inter, sans-serif'; fc.fillText('Logo', 48, 70);
-    fc.font = '500 46px Inter, sans-serif'; fc.fillText("Ruby's surgery", 48, 205);
-    fc.fillStyle = '#2e2e2e'; fc.fillRect(48, 228, 504, 9); fc.fillStyle = '#f2f2f2'; fc.fillRect(48, 228, 464, 9);
-    fc.fillStyle = '#a8a8a8'; fc.font = '22px Inter, sans-serif'; fc.fillText('$4,600 of $5,000 · 77 donors', 48, 277);
-    void css;
+  const full = document.createElement('canvas'), fc = full.getContext('2d', { willReadFrequently: true });
+  const RAMP = ' .:-=+*#%@';
+  let pdpr = 1, pcells = [], pT = 0;
+  function coverOn(c, w, h) {
+    c.fillStyle = '#0b0b0b'; c.fillRect(0, 0, w, h);
+    // type sized to fit both ways, so a wide, short window still holds the page
+    const u = Math.min(w, h * 1.9), p = Math.max(w * .08, 16), bar = Math.max(2, u * .012);
+    c.textBaseline = 'alphabetic'; c.fillStyle = '#f2f2f2';
+    c.font = `600 ${u * .042}px Inter, sans-serif`; c.fillText('Logo', p, h * .2);
+    c.font = `500 ${u * .078}px Inter, sans-serif`; c.fillText("Ruby's surgery", p, h * .62);
+    c.fillStyle = '#2e2e2e'; c.fillRect(p, h * .69, w - 2 * p, bar);
+    c.fillStyle = '#f2f2f2'; c.fillRect(p, h * .69, (w - 2 * p) * .92, bar);
+    c.fillStyle = '#a8a8a8'; c.font = `${u * .036}px Inter, sans-serif`; c.fillText('$4,600 of $5,000 · 77 donors', p, h * .82);
   }
-  let paintT = 0;
-  function paintFrame(t) {
-    if (!paintT) paintT = t;
-    const k = ((t - paintT) / 1000) % 7;          // 0–2.4 s: coarse to sharp; then rest
-    const steps = [40, 24, 14, 8, 4, 2, 1];
-    const block = k < 2.4 ? steps[Math.min(steps.length - 1, Math.floor(k / (2.4 / steps.length)))] : 1;
-    if (block === 1) pc.drawImage(full, 0, 0);
-    else {
-      small.width = Math.ceil(600 / block); small.height = Math.ceil(315 / block);
-      sc.imageSmoothingEnabled = true; sc.drawImage(full, 0, 0, small.width, small.height);
-      pc.imageSmoothingEnabled = false; pc.drawImage(small, 0, 0, small.width, small.height, 0, 0, 600, 315);
+  function paintSize() {
+    const r = paint.getBoundingClientRect();
+    pdpr = Math.min(2, devicePixelRatio || 1);
+    paint.width = full.width = Math.max(1, Math.round(r.width * pdpr));
+    paint.height = full.height = Math.max(1, Math.round(r.height * pdpr));
+    coverOn(fc, full.width, full.height);
+    // the same page as characters: one per 7 x 14 cell, as bright as that patch of the page
+    const cw = 7 * pdpr, chh = 14 * pdpr, cols = Math.floor(full.width / cw), rows = Math.floor(full.height / chh);
+    const d = fc.getImageData(0, 0, full.width, full.height).data;
+    pcells = [];
+    for (let r0 = 0; r0 < rows; r0++) for (let c0 = 0; c0 < cols; c0++) {
+      let sum = 0, n = 0;
+      for (let y = 0; y < chh; y += 2) for (let x = 0; x < cw; x += 2) { sum += d[(((r0 * chh + y) | 0) * full.width + ((c0 * cw + x) | 0)) * 4]; n++; }
+      const l = sum / n / 255, ch = RAMP[Math.min(9, Math.round(l * 9))];
+      if (ch !== ' ') pcells.push({ x: c0 * cw + cw / 2, y: r0 * chh + chh / 2, ch, l, at: Math.random() });
     }
+    pT = performance.now();
+  }
+  function paintFrame(now) {
+    const k = ((now - pT) / 1000) % 9, W = paint.width, H = paint.height;
+    const chars = ease((k - .6) / 1.6), dark = ease((k - 2.4) / .9), sharp = ease((k - 3.4) / .8);
+    pc.globalAlpha = 1; pc.fillStyle = '#ffffff'; pc.fillRect(0, 0, W, H);
+    if (dark > 0) { pc.globalAlpha = dark; pc.fillStyle = '#0b0b0b'; pc.fillRect(0, 0, W, H); pc.globalAlpha = 1; }
+    if (chars > 0 && sharp < 1) {
+      pc.font = `${12 * pdpr}px JetBrains Mono, monospace`; pc.textAlign = 'center'; pc.textBaseline = 'middle';
+      // on the white page the characters are dark; as the black comes in they turn light
+      const v = Math.round(30 + 200 * dark);
+      for (const c of pcells) {
+        if (c.at > chars) continue;
+        pc.fillStyle = `rgba(${v},${v},${v},${(.4 + .6 * c.l) * (1 - sharp)})`;
+        pc.fillText(c.ch, c.x, c.y);
+      }
+    }
+    if (sharp > 0) { pc.globalAlpha = sharp; pc.drawImage(full, 0, 0); pc.globalAlpha = 1; }
     requestAnimationFrame(paintFrame);
   }
-  document.fonts.ready.then(() => { drawFull(); requestAnimationFrame(paintFrame); });
 
-  // --- 3 · sand pours into the picture and piles up, drawn in characters ------------------------
-  // As limn draws its plate: grains are counted into a 2 x 3 grid inside each character cell, and
-  // each cell takes the glyph whose own ink over those six parts is nearest.
+  // --- 3 · a bucket crosses the top and pours; the sand fills the picture, then becomes the mark ---
+  // Drawn as limn draws its sand plate: grains are counted into a 2 x 3 grid inside each character
+  // cell, and each cell takes the glyph whose own ink over those six parts is nearest.
   const sand = $('sand'), sx = sand.getContext('2d');
-  const GL = " .,'`-_:;~^\"=+*<>/\\|()[]{}!#";
-  let shapes = [], CW = 7, CH = 14, cols = 0, rows = 0, SX = 0, SY = 0, hgt, grains = [], t0 = 0, spout = 0, ink = '#bdbdbd';
+  const GL = " .,'`-_:;~^\"=+*<>/\\|()[]{}!#", GRAIN = ".:,'.`:.'";
+  const CW = 7, CH = 14;
+  let shapes = [], cols = 0, rows = 0, SX = 0, SY = 0, hgt, grains = [], bx = 0, phase = 'pour', phaseT = 0, mark = [], flip = [], ink = '#bdbdbd', quiet = '#7a7a7a';
   function glyphs() {
     const S = 4, w = CW * S, h = CH * S, c = Object.assign(document.createElement('canvas'), { width: w, height: h }), x = c.getContext('2d', { willReadFrequently: true });
     x.font = `${(CW / 0.6) * S}px JetBrains Mono, monospace`; x.textAlign = 'center'; x.textBaseline = 'middle';
@@ -611,75 +648,109 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
     for (const v of shapes) for (let k = 0; k < 6; k++) v[k] /= mx[k] || 1;
   }
   const best = (o) => { let b = 0, bd = 1e9; for (let i = 0; i < shapes.length; i++) { let d = 0; for (let k = 0; k < 6; k++) { const q = o[k] - shapes[i][k]; d += q * q; } if (d < bd) { bd = d; b = i; } } return b; };
-  function sandSize() {
+  // the mark, as # on . : drawn into a grid one pixel per cell (a cell is twice as tall as wide)
+  function markGrid() {
+    const c = Object.assign(document.createElement('canvas'), { width: cols, height: rows }), x = c.getContext('2d', { willReadFrequently: true });
+    const w = Math.min(cols * .74, rows * 2 * (50 / 28) * .74), h = w * (28 / 50) / 2;
+    x.setTransform(w / 50, 0, 0, h / 28, (cols - w) / 2, (rows - h) / 2);
+    x.strokeStyle = '#fff'; x.lineWidth = (28 / h) * 1.05;
+    const ring = (X, Y, W, H, R) => { x.beginPath(); x.roundRect(X, Y, W, H, R); x.stroke(); };
+    // in characters the mark reads best simplest: one outline, two solid eyes
+    ring(1.5, 1.5, 47, 25, 7);
+    x.fillStyle = '#fff'; for (const ex of [30.5, 39.5]) { x.beginPath(); x.ellipse(ex, 10.5, 3.2, 3.2, 0, 0, Math.PI * 2); x.fill(); }
+    const d = x.getImageData(0, 0, cols, rows).data;
+    return Array.from({ length: cols * rows }, (_, i) => d[i * 4 + 3] > 60);
+  }
+  function sandReset() {
     const r = sand.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
-    cols = Math.max(10, Math.floor(r.width / CW)); rows = Math.max(6, Math.floor(r.height / CH));
+    cols = Math.max(12, Math.floor(r.width / CW)); rows = Math.max(6, Math.floor(r.height / CH));
     sand.width = Math.round(r.width * dpr); sand.height = Math.round(r.height * dpr); sx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    SX = cols * 2; SY = rows * 3; hgt = new Float32Array(SX); grains = []; t0 = performance.now();
-    ink = getComputedStyle(root).getPropertyValue('--ink2').trim() || '#bdbdbd';
+    SX = cols * 2; SY = rows * 3; hgt = new Float32Array(SX); grains = []; bx = -8; phase = 'pour'; phaseT = performance.now();
+    mark = markGrid(); flip = Array.from({ length: cols * rows }, () => Math.random());
+    const css = getComputedStyle(root); ink = css.getPropertyValue('--ink2').trim() || ink; quiet = css.getPropertyValue('--mute').trim() || quiet;
   }
   function sandFrame(now) {
-    const el = (now - t0) / 1000;
-    const level = hgt.reduce((a, b) => a + b, 0) / (SX * SY);
-    // a calm spout drifts back and forth and pours until the picture is a little over half full
-    if (level < .58) { spout = SX * (.5 + .42 * Math.sin(el * .45)); for (let k = 0; k < 3; k++) grains.push({ x: Math.max(0, Math.min(SX - 1, (spout + (Math.random() - .5) * 3) | 0)), y: 0, v: .4 + Math.random() * .3 }); }
-    else if (level >= .58 && !grains.length && el > 4) { if (!sandFrame.hold) sandFrame.hold = now; if (now - sandFrame.hold > 3500) { sandFrame.hold = 0; sandSize(); } }
+    const el = (now - phaseT) / 1000;
+    if (phase === 'pour') {
+      // one slow pass, left to right; it pours a little ahead of where it is
+      bx = -8 + (SX + 16) * Math.min(1, el / 7.5);
+      const per = Math.ceil((SX * SY) / (7.5 * 60) * 1.15);
+      if (bx > 0 && bx < SX) for (let k = 0; k < per; k++) grains.push({ x: Math.max(0, Math.min(SX - 1, (bx + 3 + Math.random() * 3) | 0)), y: 3, v: .5 + Math.random() * .4 });
+      if (el >= 7.5 && !grains.length) { phase = 'level'; phaseT = now; }
+    } else if (phase === 'level') {
+      // what is left settles flat to the brim
+      for (let x = 0; x < SX; x++) hgt[x] = Math.min(SY, hgt[x] + SY * .02);
+      if (hgt.every((v) => v >= SY)) { phase = 'mark'; phaseT = now; }
+    } else if (phase === 'mark' && el > 6.2) { sandReset(); phaseT = now; }
     for (const g of grains) {
-      g.y += g.v; g.v = Math.min(1.6, g.v + .05);
-      const top = SY - hgt[g.x];
-      if (g.y >= top - 1) {
-        // slide down the pile while a neighbour is lower
+      g.y += g.v; g.v = Math.min(2, g.v + .06);
+      if (g.y >= SY - hgt[g.x] - 1) {
         let x = g.x;
-        for (let s = 0; s < 6; s++) { const l = x > 0 ? hgt[x - 1] : 1e9, r = x < SX - 1 ? hgt[x + 1] : 1e9; if (hgt[x] - l > 1.2 && l <= r) x--; else if (hgt[x] - r > 1.2) x++; else break; }
+        for (let s = 0; s < 8; s++) { const l = x > 0 ? hgt[x - 1] : 1e9, r = x < SX - 1 ? hgt[x + 1] : 1e9; if (hgt[x] - l > 1.4 && l <= r) x--; else if (hgt[x] - r > 1.4) x++; else break; }
         hgt[x] = Math.min(SY, hgt[x] + 1); g.done = true;
       }
     }
     grains = grains.filter((g) => !g.done);
-    const occ = new Float32Array(SX * SY);
-    for (let x = 0; x < SX; x++) for (let y = Math.floor(SY - hgt[x]); y < SY; y++) if (y >= 0) occ[y * SX + x] = 1;
-    for (const g of grains) { const y = g.y | 0; if (y >= 0 && y < SY) occ[y * SX + g.x] = Math.max(occ[y * SX + g.x], .7); }
     sx.clearRect(0, 0, cols * CW, rows * CH);
     sx.font = `${CW / 0.6}px JetBrains Mono, monospace`; sx.textAlign = 'center'; sx.textBaseline = 'middle';
+    const toMark = phase === 'mark' ? ease(((now - phaseT) / 1000) / 1.8) : 0;
+    const occ = new Float32Array(SX * SY);
+    for (let x = 0; x < SX; x++) for (let y = Math.max(0, Math.floor(SY - hgt[x])); y < SY; y++) occ[y * SX + x] = 1;
+    for (const g of grains) { const y = g.y | 0; if (y >= 0 && y < SY) occ[y * SX + g.x] = Math.max(occ[y * SX + g.x], .7); }
     for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const i = r * cols + c, X = c * CW + CW / 2, Y = r * CH + CH / 2 + .5;
+      if (toMark > flip[i]) {   // this cell has turned: part of the mark, or the ground around it
+        sx.globalAlpha = mark[i] ? 1 : .32; sx.fillStyle = mark[i] ? ink : quiet; sx.fillText(mark[i] ? '#' : '.', X, Y); continue;
+      }
       const b = r * 3 * SX + c * 2, o = [occ[b], occ[b + 1], occ[b + SX], occ[b + SX + 1], occ[b + 2 * SX], occ[b + 2 * SX + 1]];
       const tot = o[0] + o[1] + o[2] + o[3] + o[4] + o[5]; if (tot < .5) continue;
-      const full = tot > 5.5;
-      // inside the pile, a quiet grain; at the surface, the glyph whose shape fits
-      const g = full ? -1 : best(o); if (g === 0) continue;
-      // the surface is brightest; the sand deeper down is quieter
-      const depth = (r * 3 - (SY - hgt[c * 2])) / 9;
-      sx.globalAlpha = Math.max(.22, Math.min(1, 1 - depth * .18)); sx.fillStyle = ink;
-      const ch = g < 0 ? '.:,\'.`:.'[(r * 7 + c * 13 + (r * c) % 5) % 9] || '.' : GL[g];
-      if (g < 0) sx.globalAlpha *= .55;
-      sx.fillText(ch, c * CW + CW / 2, r * CH + CH / 2 + .5);
+      if (tot > 5.5) { sx.globalAlpha = .38; sx.fillStyle = quiet; sx.fillText(GRAIN[(r * 7 + c * 13 + ((r * c) % 5)) % GRAIN.length], X, Y); continue; }
+      const g = best(o); if (!g) continue;
+      sx.globalAlpha = .95; sx.fillStyle = ink; sx.fillText(GL[g], X, Y);
     }
+    // the bucket, tipped a little, crossing the top
+    if (phase === 'pour' && bx > -8 && bx < SX + 8) { sx.globalAlpha = 1; sx.fillStyle = ink; sx.textAlign = 'left'; sx.fillText('\\___/', (bx / 2 - 3) * CW, CH * .5); sx.textAlign = 'center'; }
     sx.globalAlpha = 1;
     requestAnimationFrame(sandFrame);
   }
-  document.fonts.ready.then(() => { glyphs(); sandSize(); requestAnimationFrame(sandFrame); });
-  addEventListener('resize', () => { clearTimeout(sandSize.t); sandSize.t = setTimeout(sandSize, 200); });
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { ink = getComputedStyle(root).getPropertyValue('--ink2').trim(); });
-  themeBtn.addEventListener('click', () => { ink = getComputedStyle(root).getPropertyValue('--ink2').trim(); });
 
-  // --- 4 · the mark watches the agent work, then smiles --------------------------------------------
-  const term = $('term'), face = $('face'), feyes = $('feyes');
-  const LINES = [['<span class="p">$</span> npx liveog mcp add', 1100, [2.5, 1]], ['Claude Code   <span class="ok">added</span>', 300, [2.5, 2]], ['Cursor        <span class="ok">added</span>', 300, [2.5, 2.5]], ['Codex         <span class="ok">added</span>', 600, [2.5, 3]],
-    ['', 300], ['<span class="p">&gt;</span> set up link previews for this project', 1300, [2.5, 1.5]], ['studied 4 routes, your colours and logo', 700, [2.5, 2.5]], ['drew 3 covers · you picked one', 700, [2.5, 3]], ['checked abc.xyz  <span class="ok">1200 × 630 ✓</span>', 400, [2.5, 3.5]]];
-  async function run() {
-    face.classList.remove('happy'); term.innerHTML = '<span class="cur"></span>';
-    for (const [l, ms, look] of LINES) {
-      term.querySelector('.cur')?.remove();
-      term.insertAdjacentHTML('beforeend', `<div>${l || '&nbsp;'}</div><span class="cur"></span>`);
-      if (look) feyes.style.transform = `translate(${look[0]}px, ${look[1] - 2}px)`;
-      await new Promise((r) => setTimeout(r, ms));
+  // --- 4 · a terminal, typed one key at a time; the mark beside it watches ------------------------
+  const tty = $('tty'), face = $('face'), feyes = $('feyes');
+  const PROMPT = '<span class="pr">~/abc ❯</span> ';
+  let lines = [];
+  const tshow = (cursor = true) => { tty.innerHTML = lines.join('\n') + (cursor ? '<span class="cur"></span>' : ''); };
+  const look = (x, y) => { feyes.style.transform = `translate(${x}px, ${y}px)`; };
+  async function type(prefix, text, speed) {
+    lines.push(prefix); tshow();
+    for (let i = 1; i <= text.length; i++) {
+      lines[lines.length - 1] = prefix + htm(text.slice(0, i)); tshow();
+      look(-3.2 + (i % 4) * .25, 1.6);                      // the eyes follow the letters
+      await wait(speed * (.6 + Math.random() * .9) + (text[i - 1] === ' ' ? speed * .6 : 0));
     }
-    feyes.style.transform = 'translate(-10px, 0)';                      // looks up at you, eyes in the middle
-    await new Promise((r) => setTimeout(r, 450));
-    face.classList.add('happy');
-    await new Promise((r) => setTimeout(r, 4200));
-    run();
   }
-  run();
+  async function session() {
+    lines = []; face.classList.remove('happy'); look(-1.5, .5); tshow(); await wait(1100);
+    await type(PROMPT, 'npx liveog mcp add', 62); await wait(500);
+    lines.push('<span class="dim">Adding liveog to your agent apps</span>'); tshow(); await wait(650);
+    for (const a of ['Claude Code', 'Cursor', 'Codex']) { lines.push(`  <span class="ok">✓</span> ${a}`); tshow(); look(-3.2, 3); await wait(330); }
+    look(-10, 0); face.classList.add('happy'); await wait(1500); face.classList.remove('happy');
+    await type(PROMPT, 'claude', 85); await wait(650);
+    await type('<span class="pr">&gt;</span> ', 'set up link previews for this project', 46); await wait(550);
+    lines.push('');
+    for (let i = 0; i < 14; i++) { lines[lines.length - 1] = `<span class="dim">  Working${'.'.repeat(i % 4)}</span>`; tshow(false); look(i % 2 ? -2.2 : -3.8, i % 3 ? .4 : 1.4); await wait(360); }
+    await wait(400); session();
+  }
+
+  document.fonts.ready.then(() => {
+    paintSize(); requestAnimationFrame(paintFrame);
+    glyphs(); sandReset(); requestAnimationFrame(sandFrame);
+    session();
+  });
+  let rsz;
+  addEventListener('resize', () => { clearTimeout(rsz); rsz = setTimeout(() => { paintSize(); sandReset(); }, 200); });
+  const recolor = () => { const css = getComputedStyle(root); ink = css.getPropertyValue('--ink2').trim(); quiet = css.getPropertyValue('--mute').trim(); };
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', recolor);
+  themeBtn.addEventListener('click', recolor);
 
   // --- footer: the word rises in once it is seen; dots follow the pointer ---
   const foot = $('foot');
