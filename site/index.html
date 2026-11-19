@@ -185,6 +185,10 @@
   .ba .light { background: #f4f4f5; } .ba .dark { background: #000; }
   .ba .cap { position: absolute; top: 34px; padding: 7px 12px 8px; border-radius: 999px; font: 600 12.5px/1 var(--sans); letter-spacing: .02em; }
   .ba .light .cap { right: 28px; color: #0a0a0a; background: #e2e2e5; } .ba .dark .cap { left: 28px; color: #fff; background: #1f1f22; box-shadow: inset 0 0 0 1px #2e2e32; }
+  /* what iMessage shows for a page with no preview tags: a title, the domain, a compass */
+  .ba .bare { width: 100%; max-width: 320px; display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-radius: 17px; background: #e5e5ea; color: #0a0a0a; }
+  .ba .bare div { flex: 1; min-width: 0; } .ba .bare b { display: block; font-size: 15px; font-weight: 600; } .ba .bare span { font-size: 13.5px; color: #6e6e73; }
+  .ba .bare svg { width: 34px; height: 34px; flex: none; }
   .ba .msg-l, .ba .msg-d { position: relative; padding: 9px 14px; border-radius: 19px; font-size: 15px; line-height: 1.35; max-width: 100%; }
   .ba .msg-l { background: #0a84ff; color: #fff; } .ba .msg-l u { text-decoration-color: rgba(255,255,255,.6); }
   .ba .msg-d { background: #0a84ff; color: #fff; margin-top: 4px; }
@@ -320,7 +324,11 @@
     .tile.w2 { grid-column: auto; }
     .tile .ct { font-size: 22px; } .tile .tl { left: 16px; top: 24px; }
     .ba > div { padding: 0 6%; }
-    .ba .msg-l, .ba .msg-d { font-size: 12.5px; padding: 7px 11px; }
+    /* what iMessage shows for a page with no preview tags: a title, the domain, a compass */
+  .ba .bare { width: 100%; max-width: 320px; display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-radius: 17px; background: #e5e5ea; color: #0a0a0a; }
+  .ba .bare div { flex: 1; min-width: 0; } .ba .bare b { display: block; font-size: 15px; font-weight: 600; } .ba .bare span { font-size: 13.5px; color: #6e6e73; }
+  .ba .bare svg { width: 34px; height: 34px; flex: none; }
+  .ba .msg-l, .ba .msg-d { font-size: 12.5px; padding: 7px 11px; }
     .arrow { width: 38px; height: 38px; }
     .win, .wf, .agent { left: 16px; right: 16px; top: 80px; }
     .win { bottom: 20px; }
@@ -396,7 +404,7 @@
     <div class="bento wrap">
       <div class="tile w2" data-rise>
         <div class="ba">
-          <div class="light"><div class="msg-l">dinner friday? <u>abc.xyz/i/8f2k</u><svg class="tl2" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div><span class="cap">Before</span></div>
+          <div class="light"><div class="bare"><div><b>abc</b><span>abc.xyz</span></div><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#8e8e93"/><path fill="#f2f2f7" d="m16.6 7.4-2.1 6.2a1.6 1.6 0 0 1-.9.9l-6.2 2.1 2.1-6.2a1.6 1.6 0 0 1 .9-.9z"/><circle cx="12" cy="12" r="1.3" fill="#8e8e93"/></svg></div><div class="msg-d">dinner friday?<svg class="tl2" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div><span class="cap">Before</span></div>
           <div class="dark">
             <div class="rich"><div class="cover"><div class="site">abc</div><div class="tag"><i></i>Friday 8pm</div><div class="t">Dinner at Lucia's</div><div class="l"><span class="faces"><b>M</b><b>J</b><b>S</b><b>L</b><b>P</b></span><strong>5 going</strong></div></div><div class="m"><b>Dinner at Lucia's</b><span>abc.xyz</span></div></div>
             <div class="msg-d">dinner friday?<svg class="tl2" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div>
