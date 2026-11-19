@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>liveog · Links that look alive</title>
+<title>liveog</title>
 <meta name="description" content="Give your product a great first impression: links that look alive. Open source, with an MCP server for your agent.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="liveog">
@@ -235,6 +235,7 @@
   .ways h3 { margin: 0; font: 500 24px/1.2 var(--sans); letter-spacing: -.025em; }
   .ways p { margin: 0; color: var(--ink2); max-width: 440px; }
   .ways .note { margin-top: 16px; }
+  .ask .short { display: none; }
   .ways .cmd { margin-top: 24px; align-self: flex-start; }
   .code { position: relative; margin-top: 16px; background: var(--code); border: 1px solid var(--line); }
   .code pre { margin: 0; padding: 16px 56px 16px 18px; overflow-x: auto; font: 400 13px/1.7 var(--mono); }
@@ -305,6 +306,7 @@
     .stage, .ways { grid-template-columns: 1fr; }
     .stage > div, .ways > div { padding: 32px 16px 56px; }
     .icons { gap: 8px; }
+    .ways .ask { font-size: 16px; white-space: nowrap; } .ask .long { display: none; } .ask .short { display: inline; }
     .ways > div + div, .half + .half { border-left: 0; border-top: 1px solid var(--line); }
     .lbl { top: 20px; left: 16px; }
     .stage > div { padding-top: 64px; }
@@ -401,13 +403,12 @@
       <div>
         <h3>Install it yourself</h3>
         <div class="cmd rtext"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <p class="note">Works on Node, Deno, Bun, Cloudflare &amp; Vercel.</p>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#readme">Read the guide →</a></div>
       </div>
       <div>
         <h3>Or let your agent do it</h3>
         <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <p class="note ask">Then ask: <b>set up link previews for this project</b>.</p>
+        <p class="note ask"><span class="long">Then ask</span><span class="short">Ask</span>: <b>set up link previews for this project</b>.</p>
         <div class="apps"><div class="icons stack"><span class="chip full inv" style="--bg:#ffffff" tabindex="0" data-tip="Codex"><img src="logos/codex.png" alt="Codex" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Claude Code"><img src="logos/claude.svg" alt="Claude Code" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Cursor"><img src="logos/cursor.svg" alt="Cursor" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#FFFFFF" tabindex="0" data-tip="Hermes Agent"><img src="logos/hermes.png" alt="Hermes Agent" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="OpenCode"><img src="logos/opencode.svg" alt="OpenCode" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Devin (Cognition)"><img src="logos/devin.svg" alt="Devin" width="34" height="34" loading="lazy"></span><span class="chip vs" style="--bg:#ffffff" tabindex="0" data-tip="VS Code"><img src="logos/vscode.png" alt="VS Code" width="34" height="34" loading="lazy"></span><span class="chip etc" style="--bg:#ffffff" tabindex="0" data-tip="And most other agent apps"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.9"/><circle cx="10" cy="10" r="1.9"/><circle cx="15.5" cy="10" r="1.9"/></svg></span></div></div>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#any-other-mcp-client">Using another MCP client? →</a></div>
       </div>
