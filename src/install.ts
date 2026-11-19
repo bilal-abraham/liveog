@@ -1,5 +1,5 @@
-// `liveog mcp add`: the MCP server added to every agent app on this machine (Claude Code, Codex,
-// VS Code, Cursor, Windsurf, Gemini CLI, Kiro, LM Studio, OpenCode, Claude Desktop). Apps with their own
+// `liveog mcp add`: the MCP server added to every agent app on this machine (Hermes Agent, Claude
+// Code, Codex, Cursor, VS Code, Amp, Windsurf, Kiro, LM Studio, OpenCode, Claude Desktop). Apps with their own
 // command are asked through it; apps that keep a JSON file get one key added, nothing else changed.
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -36,7 +36,7 @@ export const realEnv = (): Env => ({
   home: homedir(),
   platform: process.platform,
   has: (bin) => { try { execFileSync(process.platform === 'win32' ? 'where' : 'which', [bin], { stdio: 'ignore' }); return true; } catch { return false; } },
-  run: (bin, args) => execFileSync(bin, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }),
+  run: (bin, args) => execFileSync(bin, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 30_000 }),
 });
 
 const viaCommand = (env: Env, bin: string, args: string[]): Result => {
@@ -50,14 +50,15 @@ const viaCommand = (env: Env, bin: string, args: string[]): Result => {
 export function addEverywhere(env: Env = realEnv()): { app: string; result: Result }[] {
   const out: { app: string; result: Result }[] = [];
   const tail = ['--', SERVER.command, ...SERVER.args];
+  if (env.has('hermes')) out.push({ app: 'Hermes Agent', result: viaCommand(env, 'hermes', ['mcp', 'add', 'liveog', '--command', SERVER.command, '--args', ...SERVER.args]) });
   if (env.has('claude')) out.push({ app: 'Claude Code', result: viaCommand(env, 'claude', ['mcp', 'add', '--scope', 'user', 'liveog', ...tail]) });
   if (env.has('codex')) out.push({ app: 'Codex', result: viaCommand(env, 'codex', ['mcp', 'add', 'liveog', ...tail]) });
+  if (env.has('amp')) out.push({ app: 'Amp', result: viaCommand(env, 'amp', ['mcp', 'add', 'liveog', ...tail]) });
   if (env.has('code')) out.push({ app: 'VS Code', result: viaCommand(env, 'code', ['--add-mcp', JSON.stringify({ name: 'liveog', ...SERVER })]) });
   // apps that keep a JSON file: [name, file, key, entry]; found when the file's folder is there
   const files: [string, string, string?, object?][] = [
     ['Cursor', join(env.home, '.cursor', 'mcp.json')],
     ['Windsurf', join(env.home, '.codeium', 'windsurf', 'mcp_config.json')],
-    ['Gemini CLI', join(env.home, '.gemini', 'settings.json')],
     ['Kiro', join(env.home, '.kiro', 'settings', 'mcp.json')],
     ['LM Studio', join(env.home, '.lmstudio', 'mcp.json')],
     ['OpenCode', join(env.home, '.config', 'opencode', 'opencode.json'), 'mcp', { type: 'local', command: [SERVER.command, ...SERVER.args], enabled: true }],

@@ -119,11 +119,11 @@
   .tab:hover { color: var(--ink); }
   .tab svg { width: 16px; height: 16px; }
   .tab[aria-selected="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--line); }
-  .stage { display: grid; grid-template-columns: 1.1fr 1fr; }
-  .stage > div { padding: 64px 48px 104px; min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; }
-  .shot { position: relative; border-right: 1px solid var(--line); }
+  .stage { display: grid; grid-template-columns: 1fr; }
+  .stage > div { padding: 40px 48px 88px; min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; }
+  .shot { position: relative; }
   /* the dots run out to the screen's edge */
-  .shot::before { content: ""; position: absolute; inset: 0 0 0 -100vw; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 12px 12px; opacity: .7; }
+  .shot::before { content: ""; position: absolute; inset: 0 -100vw; background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 12px 12px; opacity: .7; }
   /* a sent message, as a phone shows it: the link's preview, then the blue bubble with its tail */
   .chat { position: relative; max-width: 400px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
   .bub { position: relative; max-width: 100%; }
@@ -169,7 +169,7 @@
   .addr b.flash { animation: flash .8s ease-out; }
   @keyframes flash { from { background: var(--ink); color: var(--bg); } }
   .say .label.kind { display: inline-block; padding: 8px 12px; border: 1px solid var(--line); }
-  .say h3 { margin: 0; font: 500 clamp(24px, 2.6vw, 32px)/1.15 var(--sans); letter-spacing: -.03em; max-width: 480px; text-wrap: pretty; }
+  .shot .say { position: relative; z-index: 1; margin: 0 0 40px; font: 500 clamp(22px, 2.4vw, 28px)/1.15 var(--sans); letter-spacing: -.03em; max-width: 520px; text-wrap: pretty; }
   .say p { margin: 14px 0 0; color: var(--ink2); max-width: 440px; }
 
   /* built to be shared: four cards, a title and a picture, the most important top left and widest */
@@ -183,7 +183,7 @@
   .ba { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; }
   .ba > div { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; padding: 0 9%; }
   .ba .light { background: #f4f4f5; } .ba .dark { background: #000; }
-  .ba .cap { position: absolute; bottom: 24px; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+  .ba .cap { position: absolute; top: 38px; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
   .ba .light .cap { right: 28px; color: #8a8a8e; } .ba .dark .cap { left: 28px; color: #8a8a8e; }
   .ba .msg-l, .ba .msg-d { position: relative; padding: 9px 14px; border-radius: 19px; font-size: 15px; line-height: 1.35; max-width: 100%; }
   .ba .msg-l { background: #0a84ff; color: #fff; } .ba .msg-l u { text-decoration-color: rgba(255,255,255,.6); }
@@ -205,11 +205,9 @@
   .wtitle { flex: 1; text-align: center; font: 500 11.5px/1 var(--sans); color: #9a9a9a; padding-right: 45px; }
 
   /* 2 · the browser on your user's screen draws the page itself: blank, characters, the cover */
-  .win { position: absolute; left: 48px; right: 48px; top: 108px; bottom: 68px; border: 1px solid var(--win-line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;
+  .win { position: absolute; left: 48px; right: 48px; top: 108px; bottom: 34px; border: 1px solid var(--win-line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;
     background: var(--win-page); box-shadow: 0 24px 60px -36px rgba(0,0,0,.5); }
   .win canvas { flex: 1; min-height: 0; width: 100%; display: block; }
-  .bill { position: absolute; left: 48px; bottom: 30px; font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
-  .bill b { color: var(--ink); font-weight: 500; }
 
   /* 3 · a link preview as a wireframe; a bucket pours sand into its picture until the picture is a picture */
   .wf { position: absolute; left: 48px; right: 48px; top: 108px; bottom: 34px; border: 1px solid var(--soft); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
@@ -226,8 +224,6 @@
   .face { width: 100%; overflow: visible; }
   .face rect, .face circle, .face path { fill: none; stroke: var(--ink2); stroke-width: 1px; vector-effect: non-scaling-stroke; }
   .face .eyes { transition: transform .5s cubic-bezier(.3,.7,.3,1); }
-  .face .smile { stroke-dasharray: 30; stroke-dashoffset: 30; transition: stroke-dashoffset .8s ease; }
-  .face.happy .smile { stroke-dashoffset: 0; }
 
   /* things that rise in once, when first seen */
   /* hidden only once the script is there to show them again */
@@ -251,11 +247,19 @@
   .more { margin-top: 28px; }
   /* the agent apps: set up for you, or one step by hand */
   .apps { margin-top: 24px; }
-  .icons { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 12px; color: var(--ink); }
-  .icons svg { width: 22px; height: 22px; display: block; }
-  .icons .mono { display: grid; place-items: center; min-width: 22px; height: 22px; padding: 0 4px; border-radius: 6px; border: 1.5px solid currentColor; font: 600 10px/1 var(--sans); letter-spacing: -.02em; }
-  .icons .etc { border-style: dashed; font-size: 13px; }
-  .icons.dim { color: var(--mute); }
+  .ways .apps + .cmd { margin-top: 14px; }
+  .ways .more + .apps { margin-top: 12px; }
+  .icons { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
+  /* each app as its own icon: its real mark and colours, on a small chip with a little depth */
+  .chip { position: relative; width: 34px; height: 34px; border-radius: 9px; background: var(--bg); display: grid; place-items: center; overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), 0 1px 1px rgba(0,0,0,.14), 0 4px 10px -4px rgba(0,0,0,.35); transition: transform .15s ease; }
+  .chip::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,0) 45%, rgba(0,0,0,.06)); box-shadow: inset 0 1px 0 rgba(255,255,255,.45), inset 0 -1px 0 rgba(0,0,0,.1); }
+  .chip:hover { transform: translateY(-1px); }
+  .chip img { width: 20px; height: 20px; object-fit: contain; display: block; }
+  .chip.full img { width: 100%; height: 100%; object-fit: cover; }
+  .chip.etc { --bg: transparent; box-shadow: inset 0 0 0 1.5px var(--soft); color: var(--mute); font: 600 13px/1 var(--sans); }
+  .chip.etc::after { display: none; }
   .more a { text-decoration: none; border-bottom: 1px solid var(--soft); }
   .more a:hover { border-color: var(--ink); }
   .ways-head, .why-head { padding: 104px 48px 48px; }
@@ -295,7 +299,6 @@
     .tab[aria-selected="true"] { background: none; box-shadow: none; text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1.5px; }
     .stage, .ways { grid-template-columns: 1fr; }
     .stage > div, .ways > div { padding: 32px 16px 56px; }
-    .shot { border-right: 0; border-bottom: 1px solid var(--line); }
     .ways > div + div { border-left: 0; border-top: 1px solid var(--line); }
     .cmd { font-size: 12.5px; }
     .fin { padding: 72px 16px 28px; }
@@ -307,7 +310,7 @@
     .ba .msg-l, .ba .msg-d { font-size: 12.5px; padding: 7px 11px; }
     .arrow { width: 38px; height: 38px; }
     .win, .wf, .agent { left: 16px; right: 16px; top: 80px; }
-    .win { bottom: 54px; } .bill { left: 16px; bottom: 22px; }
+    .win { bottom: 20px; }
     .agent { grid-template-columns: 1fr; bottom: 20px; }
     .face { position: absolute; width: 64px; right: 0; top: -62px; }
     .tty { font-size: 11px; padding: 12px; }
@@ -359,6 +362,7 @@
     <div class="ex-head wrap"><h2>Links that look alive get shared</h2><div class="seg" role="tablist" id="tabs"></div></div>
     <div class="split"><div class="stage wrap">
       <div class="shot">
+        <h3 class="say" id="why"></h3>
         <div class="chat" data-rise>
           <div class="preview">
             <div class="cover" id="cover"></div>
@@ -369,9 +373,6 @@
         </div>
         <div class="addr">og:image → /c/<span id="cid"></span>/<b id="v">1</b>.png</div>
       </div>
-      <div class="say">
-        <h3 id="why"></h3>
-      </div>
     </div></div>
   </section>
 
@@ -380,11 +381,11 @@
     <div class="bento wrap">
       <div class="tile w2" data-rise>
         <div class="ba">
-          <div class="light"><div class="msg-l">dinner friday? <u>abc.xyz/i/8f2k</u><svg class="tl2" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div><span class="cap">Without</span></div>
+          <div class="light"><div class="msg-l">dinner friday? <u>abc.xyz/i/8f2k</u><svg class="tl2" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div><span class="cap">Before</span></div>
           <div class="dark">
             <div class="rich"><div class="cover"><div class="site">abc</div><div class="tag"><i></i>Friday 8pm</div><div class="t">Dinner at Lucia's</div><div class="l"><span class="faces"><b>M</b><b>J</b><b>S</b><b>L</b><b>P</b></span><strong>5 going</strong></div></div><div class="m"><b>Dinner at Lucia's</b><span>abc.xyz</span></div></div>
             <div class="msg-d">dinner friday?<svg class="tl2" viewBox="0 0 17 21" aria-hidden="true"><path fill="currentColor" d="M0 0h5c0 8 3.5 14 11.5 19.6C10 21.4 3.6 19.4 0 15.4z"/></svg></div>
-            <span class="cap">With liveog</span>
+            <span class="cap">After</span>
           </div>
         </div>
         <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
@@ -393,7 +394,6 @@
       <div class="tile" data-rise style="--d:.08s">
         <h3 class="ct tl">Nothing to run or pay for</h3>
         <div class="win"><div class="chrome"><span class="lights"><i></i><i></i><i></i></span><span class="omni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>abc.xyz/f/ruby</span></div><canvas id="paint" aria-hidden="true"></canvas></div>
-        <div class="bill">Server bill <b>$0.00</b></div>
       </div>
       <div class="tile" data-rise style="--d:.04s">
         <h3 class="ct tl">Make every link yours</h3>
@@ -404,7 +404,7 @@
         <div class="agent">
           <div class="term"><div class="chrome"><span class="lights"><i></i><i></i><i></i></span><span class="wtitle">abc — zsh</span></div><pre class="tty" id="tty" aria-hidden="true"></pre></div>
           <svg class="face" id="face" viewBox="-2 -2 54 36" aria-hidden="true"><rect x=".5" y=".5" width="49" height="27" rx="7.5"/><rect x="3.5" y="3.5" width="43" height="21" rx="4.5"/>
-            <g class="eyes" id="feyes"><circle cx="30.5" cy="10.5" r="3"/><circle cx="39.5" cy="10.5" r="3"/></g><path class="smile" d="M19.5 17c3.2 3 7.8 3 11 0"/></svg>
+            <g class="eyes" id="feyes"><circle cx="30.5" cy="10.5" r="3"/><circle cx="39.5" cy="10.5" r="3"/></g></svg>
         </div>
       </div>
     </div>
@@ -426,12 +426,12 @@ res.end(site.page(html, path, originOf(host)));</pre><button class="cp" aria-lab
       <div>
         <h3>Or let your agent do it</h3>
         <p>Finds the agent apps on your machine and adds liveog to each one.</p>
+        <div class="apps"><span class="label">Sets itself up in</span><div class="icons"><span class="chip full" style="--bg:#FFFFFF" title="Hermes Agent"><img src="logos/hermes.png" alt="Hermes Agent" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="Claude Code"><img src="logos/claude-code.svg" alt="Claude Code" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#000000" title="Codex"><img src="logos/codex.png" alt="Codex" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="Cursor"><img src="logos/cursor.svg" alt="Cursor" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#ffffff" title="VS Code"><img src="logos/vscode.png" alt="VS Code" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#15261D" title="Amp"><img src="logos/amp.png" alt="Amp" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="Windsurf (Devin Desktop)"><img src="logos/devin.svg" alt="Windsurf (Devin Desktop)" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="Claude Desktop"><img src="logos/claude.svg" alt="Claude Desktop" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="OpenCode"><img src="logos/opencode.svg" alt="OpenCode" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#9046FF" title="Kiro"><img src="logos/kiro.svg" alt="Kiro" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#6357DF" title="LM Studio"><img src="logos/lmstudio.png" alt="LM Studio" width="34" height="34" loading="lazy"></span></div></div>
         <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
         <div class="code"><pre><span class="cm">then ask your agent to</span>
 set up link previews for this project</pre><button class="cp" data-copy="Set up link previews for this project." aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <div class="apps"><span class="label">Sets itself up in</span><div class="icons"><svg viewBox="0 0 24 24" role="img" aria-label="Claude Code"><title>Claude Code</title><path fill="currentColor" d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="Codex"><title>Codex</title><path fill="currentColor" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="Cursor"><title>Cursor</title><path fill="currentColor" d="M11.503.131 1.891 5.678a.84.84 0 0 0-.42.726v11.188c0 .3.162.575.42.724l9.609 5.55a1 1 0 0 0 .998 0l9.61-5.55a.84.84 0 0 0 .42-.724V6.404a.84.84 0 0 0-.42-.726L12.497.131a1.01 1.01 0 0 0-.996 0M2.657 6.338h18.55c.263 0 .43.287.297.515L12.23 22.918c-.062.107-.229.064-.229-.06V12.335a.59.59 0 0 0-.295-.51l-9.11-5.257c-.109-.063-.064-.23.061-.23"/></svg><span class="mono" role="img" aria-label="VS Code" title="VS Code">VS</span><svg viewBox="0 0 24 24" role="img" aria-label="Windsurf"><title>Windsurf</title><path fill="currentColor" d="M23.55 5.067c-1.2038-.002-2.1806.973-2.1806 2.1765v4.8676c0 .972-.8035 1.7594-1.7597 1.7594-.568 0-1.1352-.286-1.4718-.7659l-4.9713-7.1003c-.4125-.5896-1.0837-.941-1.8103-.941-1.1334 0-2.1533.9635-2.1533 2.153v4.8957c0 .972-.7969 1.7594-1.7596 1.7594-.57 0-1.1363-.286-1.4728-.7658L.4076 5.1598C.2822 4.9798 0 5.0688 0 5.2882v4.2452c0 .2147.0656.4228.1884.599l5.4748 7.8183c.3234.462.8006.8052 1.3509.9298 1.3771.313 2.6446-.747 2.6446-2.0977v-4.893c0-.972.7875-1.7593 1.7596-1.7593h.003a1.798 1.798 0 0 1 1.4718.7658l4.9723 7.0994c.4135.5905 1.05.941 1.8093.941 1.1587 0 2.1515-.9645 2.1515-2.153v-4.8948c0-.972.7875-1.7594 1.7596-1.7594h.194a.22.22 0 0 0 .2204-.2202v-4.622a.22.22 0 0 0-.2203-.2203Z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="Gemini CLI"><title>Gemini CLI</title><path fill="currentColor" d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg><span class="mono" role="img" aria-label="Kiro" title="Kiro">K</span><svg viewBox="0 0 24 24" role="img" aria-label="LM Studio"><title>LM Studio</title><path fill="currentColor" d="M14.025 0c3.492 0 5.237 0 6.571.68a6.24 6.24 0 0 1 2.725 2.724C24 4.738 24 6.484 24 9.975v4.05c0 3.492 0 5.237-.68 6.571a6.24 6.24 0 0 1-2.724 2.725c-1.334.679-3.08.679-6.571.679h-4.05c-3.492 0-5.237 0-6.571-.68A6.24 6.24 0 0 1 .68 20.597C0 19.262 0 17.516 0 14.025v-4.05c0-3.492 0-5.237.68-6.571A6.23 6.23 0 0 1 3.404.68C4.738 0 6.484 0 9.975 0zM7.688 16.313a1.313 1.313 0 0 0 0 2.625h11.625a1.313 1.313 0 0 0 0-2.625zm-3-3.75a1.313 1.313 0 0 0 0 2.624h11.625a1.313 1.313 0 0 0 0-2.624zm3-3.75a1.313 1.313 0 0 0 0 2.624h11.625a1.313 1.313 0 0 0 0-2.624zm-3-3.75a1.313 1.313 0 0 0 0 2.625h11.625a1.313 1.313 0 0 0 0-2.625z"/></svg><svg viewBox="0 0 24 24" role="img" aria-label="OpenCode"><title>OpenCode</title><path fill="currentColor" d="M22 24H2V0h20zM17 4.8H7v14.4h10z"/></svg></div></div>
-        <div class="apps"><span class="label">One step by hand in</span><div class="icons dim"><svg viewBox="0 0 24 24" role="img" aria-label="Zed"><title>Zed</title><path fill="currentColor" d="M2.25 1.5a.75.75 0 0 0-.75.75v16.5H0V2.25A2.25 2.25 0 0 1 2.25 0h20.095c1.002 0 1.504 1.212.795 1.92L10.764 14.298h3.486V12.75h1.5v1.922a1.125 1.125 0 0 1-1.125 1.125H9.264l-2.578 2.578h11.689V9h1.5v9.375a1.5 1.5 0 0 1-1.5 1.5H5.185L2.562 22.5H21.75a.75.75 0 0 0 .75-.75V5.25H24v16.5A2.25 2.25 0 0 1 21.75 24H1.655C.653 24 .151 22.788.86 22.08L13.19 9.75H9.75v1.5h-1.5V9.375A1.125 1.125 0 0 1 9.375 8.25h5.314l2.625-2.625H5.625V15h-1.5V5.625a1.5 1.5 0 0 1 1.5-1.5h13.19L21.438 1.5z"/></svg><span class="mono" role="img" aria-label="Hermes" title="Hermes">H</span><span class="mono etc" title="Any MCP client">…</span></div></div>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#any-other-mcp-client">Using another MCP client? →</a></div>
+        <div class="apps"><span class="label">One step by hand in</span><div class="icons dim"><span class="chip full" style="--bg:#ffffff" title="Antigravity (Gemini)"><img src="logos/antigravity.png" alt="Antigravity (Gemini)" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="Zed"><img src="logos/zed.svg" alt="Zed" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="JetBrains"><img src="logos/jetbrains.svg" alt="JetBrains" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="Cline"><img src="logos/cline.svg" alt="Cline" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="Warp"><img src="logos/warp.svg" alt="Warp" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#ffffff" title="Goose"><img src="logos/goose.png" alt="Goose" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#F3F3F3" title="Continue"><img src="logos/continue.png" alt="Continue" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#FFDD00" title="Kilo Code"><img src="logos/kilo-code.svg" alt="Kilo Code" width="34" height="34" loading="lazy"></span><span class="chip etc" title="Any MCP client">…</span></div></div>
       </div>
     </div></div>
   </section>
@@ -574,56 +574,52 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   const ease = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
   const htm = (t) => t.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
 
-  // --- 2 · the browser draws the page itself: blank, then characters, then the cover ---------------
+  // --- 2 · the browser draws the page itself: a blank page, then blocks of colour, then the cover ---
   const paint = $('paint'), pc = paint.getContext('2d');
-  const full = document.createElement('canvas'), fc = full.getContext('2d', { willReadFrequently: true });
-  const RAMP = ' .:-=+*#%@';
-  let pdpr = 1, pcells = [], pT = 0;
+  const full = document.createElement('canvas'), fc = full.getContext('2d');
+  const tiny = document.createElement('canvas'), tc = tiny.getContext('2d');
+  let blocks = [], pT = 0;
   function coverOn(c, w, h) {
     c.fillStyle = '#0b0b0b'; c.fillRect(0, 0, w, h);
     // type sized to fit both ways, so a wide, short window still holds the page
-    const u = Math.min(w, h * 1.9), p = Math.max(w * .08, 16), bar = Math.max(2, u * .012);
+    const u = Math.min(w, h * 1.9), p = Math.max(w * .08, 16);
     c.textBaseline = 'alphabetic'; c.fillStyle = '#f2f2f2';
-    c.font = `600 ${u * .042}px Inter, sans-serif`; c.fillText('Logo', p, h * .2);
-    c.font = `500 ${u * .078}px Inter, sans-serif`; c.fillText("Ruby's surgery", p, h * .62);
-    c.fillStyle = '#2e2e2e'; c.fillRect(p, h * .69, w - 2 * p, bar);
-    c.fillStyle = '#f2f2f2'; c.fillRect(p, h * .69, (w - 2 * p) * .92, bar);
-    c.fillStyle = '#a8a8a8'; c.font = `${u * .036}px Inter, sans-serif`; c.fillText('$4,600 of $5,000 · 77 donors', p, h * .82);
+    c.font = `600 ${u * .042}px Inter, sans-serif`; c.fillText('Logo', p, h * .22);
+    c.font = `500 ${u * .08}px Inter, sans-serif`; c.fillText("Ruby's surgery", p, h * .66);
+    c.fillStyle = '#a8a8a8'; c.font = `${u * .038}px Inter, sans-serif`; c.fillText('$4,600 of $5,000 · 77 donors', p, h * .8);
   }
   function paintSize() {
-    const r = paint.getBoundingClientRect();
-    pdpr = Math.min(2, devicePixelRatio || 1);
-    paint.width = full.width = Math.max(1, Math.round(r.width * pdpr));
-    paint.height = full.height = Math.max(1, Math.round(r.height * pdpr));
+    const r = paint.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+    paint.width = full.width = Math.max(1, Math.round(r.width * dpr));
+    paint.height = full.height = Math.max(1, Math.round(r.height * dpr));
     coverOn(fc, full.width, full.height);
-    // the same page as characters: one per 7 x 14 cell, as bright as that patch of the page
-    const cw = 7 * pdpr, chh = 14 * pdpr, cols = Math.floor(full.width / cw), rows = Math.floor(full.height / chh);
-    const d = fc.getImageData(0, 0, full.width, full.height).data;
-    pcells = [];
-    for (let r0 = 0; r0 < rows; r0++) for (let c0 = 0; c0 < cols; c0++) {
-      let sum = 0, n = 0;
-      for (let y = 0; y < chh; y += 2) for (let x = 0; x < cw; x += 2) { sum += d[(((r0 * chh + y) | 0) * full.width + ((c0 * cw + x) | 0)) * 4]; n++; }
-      const l = sum / n / 255, ch = RAMP[Math.min(9, Math.round(l * 9))];
-      if (ch !== ' ') pcells.push({ x: c0 * cw + cw / 2, y: r0 * chh + chh / 2, ch, l, at: Math.random() });
-    }
+    // the first, coarse pass: square blocks that arrive in no order, as a page comes in over a slow line
+    const B = Math.max(8, Math.round(paint.width / 16));
+    blocks = [];
+    for (let y = 0; y < paint.height; y += B) for (let x = 0; x < paint.width; x += B) blocks.push({ x, y, at: Math.random() });
+    paintSize.B = B;
     pT = performance.now();
   }
+  function pixelate(px) {
+    tiny.width = Math.max(1, Math.ceil(paint.width / px)); tiny.height = Math.max(1, Math.ceil(paint.height / px));
+    tc.imageSmoothingEnabled = true; tc.drawImage(full, 0, 0, tiny.width, tiny.height);
+    pc.imageSmoothingEnabled = false; pc.drawImage(tiny, 0, 0, tiny.width, tiny.height, 0, 0, tiny.width * px, tiny.height * px);
+  }
   function paintFrame(now) {
-    const k = ((now - pT) / 1000) % 9, W = paint.width, H = paint.height;
-    const chars = ease((k - .6) / 1.6), dark = ease((k - 2.4) / .9), sharp = ease((k - 3.4) / .8);
+    const k = ((now - pT) / 1000) % 8, W = paint.width, H = paint.height, B = paintSize.B;
     pc.globalAlpha = 1; pc.fillStyle = '#ffffff'; pc.fillRect(0, 0, W, H);
-    if (dark > 0) { pc.globalAlpha = dark; pc.fillStyle = '#0b0b0b'; pc.fillRect(0, 0, W, H); pc.globalAlpha = 1; }
-    if (chars > 0 && sharp < 1) {
-      pc.font = `${12 * pdpr}px JetBrains Mono, monospace`; pc.textAlign = 'center'; pc.textBaseline = 'middle';
-      // on the white page the characters are dark; as the black comes in they turn light
-      const v = Math.round(30 + 200 * dark);
-      for (const c of pcells) {
-        if (c.at > chars) continue;
-        pc.fillStyle = `rgba(${v},${v},${v},${(.4 + .6 * c.l) * (1 - sharp)})`;
-        pc.fillText(c.ch, c.x, c.y);
-      }
-    }
-    if (sharp > 0) { pc.globalAlpha = sharp; pc.drawImage(full, 0, 0); pc.globalAlpha = 1; }
+    if (k >= .7 && k < 2) {
+      // blocks pop in at the coarse size
+      const shown = (k - .7) / 1.3;
+      tiny.width = Math.ceil(W / B); tiny.height = Math.ceil(H / B); tc.imageSmoothingEnabled = true; tc.drawImage(full, 0, 0, tiny.width, tiny.height);
+      pc.imageSmoothingEnabled = false;
+      for (const b of blocks) if (b.at < shown) pc.drawImage(tiny, b.x / B, b.y / B, 1, 1, b.x, b.y, B, B);
+    } else if (k >= 2 && k < 3.2) {
+      // then each pass halves the blocks, until they are pixels
+      const steps = []; for (let s = B; s > 1; s = Math.floor(s / 2)) steps.push(s); steps.push(1);
+      pixelate(steps[Math.min(steps.length - 1, Math.floor((k - 2) / 1.2 * steps.length))]);
+    } else if (k >= 3.2 && k < 7.4) pc.drawImage(full, 0, 0);
+    else if (k >= 7.4) { pc.drawImage(full, 0, 0); pc.globalAlpha = (k - 7.4) / .6; pc.fillStyle = '#ffffff'; pc.fillRect(0, 0, W, H); pc.globalAlpha = 1; }
     requestAnimationFrame(paintFrame);
   }
 
@@ -720,24 +716,35 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   let lines = [];
   const tshow = (cursor = true) => { tty.innerHTML = lines.join('\n') + (cursor ? '<span class="cur"></span>' : ''); };
   const look = (x, y) => { feyes.style.transform = `translate(${x}px, ${y}px)`; };
+  const lookAtLast = () => { const l = tty.getBoundingClientRect(), f = face.getBoundingClientRect(); if (!f.width) return;
+    const tx = l.left + 120, ty = l.top + 14 + lines.length * parseFloat(getComputedStyle(tty).lineHeight), ex = f.left + f.width * (37 / 54), ey = f.top + f.height * (12.5 / 36);
+    const dx = tx - ex, dy = ty - ey, d = Math.hypot(dx, dy) || 1; look((dx / d) * 3.2, (dy / d) * 2.4); };
+  // turn the eyes toward the cursor: left on a wide screen, down and left on a phone
+  function lookAtCursor() {
+    const cur = tty.querySelector('.cur'), f = face.getBoundingClientRect();
+    if (!cur || !f.width) return;
+    const c = cur.getBoundingClientRect(), ex = f.left + f.width * (37 / 54), ey = f.top + f.height * (12.5 / 36);
+    const dx = c.left - ex, dy = c.top + c.height / 2 - ey, d = Math.hypot(dx, dy) || 1;
+    look((dx / d) * 3.2, (dy / d) * 2.4);
+  }
   async function type(prefix, text, speed) {
     lines.push(prefix); tshow();
     for (let i = 1; i <= text.length; i++) {
       lines[lines.length - 1] = prefix + htm(text.slice(0, i)); tshow();
-      look(-3.2 + (i % 4) * .25, 1.6);                      // the eyes follow the letters
+      lookAtCursor();                                        // the eyes follow the letters
       await wait(speed * (.6 + Math.random() * .9) + (text[i - 1] === ' ' ? speed * .6 : 0));
     }
   }
   async function session() {
-    lines = []; face.classList.remove('happy'); look(-1.5, .5); tshow(); await wait(1100);
+    lines = []; tshow(); lookAtCursor(); await wait(1100);
     await type(PROMPT, 'npx liveog mcp add', 62); await wait(500);
     lines.push('<span class="dim">Adding liveog to your agent apps</span>'); tshow(); await wait(650);
-    for (const a of ['Claude Code', 'Cursor', 'Codex']) { lines.push(`  <span class="ok">✓</span> ${a}`); tshow(); look(-3.2, 3); await wait(330); }
-    look(-10, 0); face.classList.add('happy'); await wait(1500); face.classList.remove('happy');
+    for (const a of ['Claude Code', 'Cursor', 'Codex']) { lines.push(`  <span class="ok">✓</span> ${a}`); tshow(); lookAtCursor(); await wait(330); }
+    lookAtCursor(); await wait(1200);
     await type(PROMPT, 'claude', 85); await wait(650);
     await type('<span class="pr">&gt;</span> ', 'set up link previews for this project', 46); await wait(550);
     lines.push('');
-    for (let i = 0; i < 14; i++) { lines[lines.length - 1] = `<span class="dim">  Working${'.'.repeat(i % 4)}</span>`; tshow(false); look(i % 2 ? -2.2 : -3.8, i % 3 ? .4 : 1.4); await wait(360); }
+    for (let i = 0; i < 14; i++) { lines[lines.length - 1] = `<span class="dim">  Working${'.'.repeat(i % 4)}</span>`; tshow(false); lookAtLast(); await wait(360); }
     await wait(400); session();
   }
 
