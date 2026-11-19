@@ -173,7 +173,7 @@
   .say p { margin: 14px 0 0; color: var(--ink2); max-width: 440px; }
 
   /* built to be shared: four cards, a title and a picture, the most important top left and widest */
-  .bento { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 440px; gap: 1px; background: var(--line); border-block: 1px solid var(--line); margin-bottom: 104px; }
+  .bento { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 520px; gap: 1px; background: var(--line); border-block: 1px solid var(--line); margin-bottom: 104px; }
   .tile { position: relative; background: var(--paper); overflow: hidden; }
   .tile.w2 { grid-column: span 2; }
   .tile .ct { position: absolute; z-index: 3; margin: 0; font: 500 26px/1.12 var(--sans); letter-spacing: -.03em; max-width: 300px; }
@@ -181,7 +181,7 @@
 
   /* 1 · before and after, as a phone shows each */
   .ba { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; }
-  .ba > div { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; padding: 0 9%; }
+  .ba > div { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; padding: 72px 12% 48px; }
   .ba .light { background: #f4f4f5; } .ba .dark { background: #000; }
   .ba .cap { position: absolute; top: 38px; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
   .ba .light .cap { right: 28px; color: #8a8a8e; } .ba .dark .cap { left: 28px; color: #8a8a8e; }
@@ -189,7 +189,7 @@
   .ba .msg-l { background: #0a84ff; color: #fff; } .ba .msg-l u { text-decoration-color: rgba(255,255,255,.6); }
   .ba .msg-d { background: #0a84ff; color: #fff; margin-top: 4px; }
   .ba .tl2 { position: absolute; right: -5px; bottom: 0; width: 17px; height: 21px; color: #0a84ff; }
-  .ba .rich { width: 100%; max-width: 280px; border-radius: 17px; overflow: hidden; background: #1c1c1e; }
+  .ba .rich { width: 100%; max-width: 320px; border-radius: 17px; overflow: hidden; background: #1c1c1e; }
   .ba .rich .cover { font-size: 0; }
   .ba .rich .m { padding: 9px 12px 11px; color: #f2f2f2; } .ba .rich .m b { display: block; font-size: 13.5px; } .ba .rich .m span { color: #8e8e93; font-size: 12px; }
   .arrow { position: absolute; z-index: 2; left: 50%; top: 50%; translate: -50% -50%; width: 46px; height: 46px; border-radius: 50%; background: #000; color: #fff;
@@ -205,17 +205,17 @@
   .wtitle { flex: 1; text-align: center; font: 500 11.5px/1 var(--sans); color: #9a9a9a; padding-right: 45px; }
 
   /* 2 · the browser on your user's screen draws the page itself: blank, characters, the cover */
-  .win { position: absolute; left: 48px; right: 48px; top: 108px; bottom: 34px; border: 1px solid var(--win-line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;
+  .win { position: absolute; left: 48px; right: 48px; top: 120px; bottom: 48px; border: 1px solid var(--win-line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;
     background: var(--win-page); box-shadow: 0 24px 60px -36px rgba(0,0,0,.5); }
   .win canvas { flex: 1; min-height: 0; width: 100%; display: block; }
 
   /* 3 · a link preview as a wireframe; a bucket pours sand into its picture until the picture is a picture */
-  .wf { position: absolute; left: 48px; right: 48px; top: 108px; bottom: 34px; border: 1px solid var(--soft); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .wf { position: absolute; left: 48px; right: 48px; top: 120px; bottom: 48px; border: 1px solid var(--soft); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
   .wf canvas { flex: 1; min-height: 0; width: 100%; display: block; border-bottom: 1px solid var(--soft); }
   .wf .m { flex: none; padding: 12px 16px 14px; } .wf .m b { display: block; font-weight: 600; font-size: 15px; } .wf .m span { color: var(--mute); font: 400 12px var(--mono); }
 
   /* 4 · a terminal, typed exactly; the mark beside it watches */
-  .agent { position: absolute; left: 48px; right: 48px; top: 108px; bottom: 34px; display: grid; grid-template-columns: 1fr 220px; gap: 40px; align-items: center; }
+  .agent { position: absolute; left: 48px; right: 48px; top: 120px; bottom: 48px; display: grid; grid-template-columns: minmax(0, 720px) 200px; justify-content: space-between; gap: 56px; align-items: center; }
   .term { height: 100%; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #0c0c0c; box-shadow: 0 24px 60px -36px rgba(0,0,0,.6); --win-top: #161616; --win-line: #2a2a2a; }
   .tty { flex: 1; margin: 0; padding: 14px 16px; font: 400 13px/1.75 var(--mono); color: #d6d6d6; white-space: pre; overflow: hidden; }
   .tty .pr { color: #7a7a7a; } .tty .ok { color: #3ddc84; } .tty .dim { color: #7a7a7a; }
@@ -352,8 +352,8 @@
       <h1 data-rise>Give your product a great first impression</h1>
       <p class="lede" data-rise style="--d:.12s">Link previews that stay current.</p>
       <div class="ctas" data-rise style="--d:.24s">
-        <div class="cmd rtext"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+        <div class="cmd"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+        <div class="cmd"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
       </div>
     </div>
     <!-- "Working with" comes back with more names -->
@@ -398,7 +398,7 @@
       </div>
       <div class="tile" data-rise style="--d:.04s">
         <h3 class="ct tl">Make every link yours</h3>
-        <div class="wf"><canvas id="sand" aria-hidden="true"></canvas><div class="m"><b>Get creative</b><span>abc.xyz</span></div></div>
+        <div class="wf"><canvas id="sand" aria-hidden="true"></canvas><div class="m"><b>Get creative!</b><span>abc.xyz</span></div></div>
       </div>
       <div class="tile w2" data-rise style="--d:.12s">
         <h3 class="ct tl">Your agent does the setup</h3>
@@ -417,7 +417,7 @@
       <div>
         <h3>Install it yourself</h3>
         <p>Node, Deno, Bun, Cloudflare, Vercel.</p>
-        <div class="cmd rtext"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+        <div class="cmd"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
         <div class="code"><pre><span class="cm">// put the tags in each page</span>
 import { links, originOf } from 'liveog';
 const site = links('yoursite', kinds, home);
@@ -428,7 +428,7 @@ res.end(site.page(html, path, originOf(host)));</pre><button class="cp" aria-lab
         <h3>Or let your agent do it</h3>
         <p>Finds the agent apps on your machine and adds liveog to each one.</p>
         <div class="apps"><span class="label">Sets itself up in</span><div class="icons"><span class="chip full" style="--bg:#FFFFFF" title="Hermes Agent"><img src="logos/hermes.png" alt="Hermes Agent" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="Claude Code"><img src="logos/claude-code.svg" alt="Claude Code" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#000000" title="Codex"><img src="logos/codex.png" alt="Codex" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="Cursor"><img src="logos/cursor.svg" alt="Cursor" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#ffffff" title="VS Code"><img src="logos/vscode.png" alt="VS Code" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#15261D" title="Amp"><img src="logos/amp.png" alt="Amp" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="Windsurf (Devin Desktop)"><img src="logos/devin.svg" alt="Windsurf (Devin Desktop)" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="Claude Desktop"><img src="logos/claude.svg" alt="Claude Desktop" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" title="OpenCode"><img src="logos/opencode.svg" alt="OpenCode" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#9046FF" title="Kiro"><img src="logos/kiro.svg" alt="Kiro" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#6357DF" title="LM Studio"><img src="logos/lmstudio.png" alt="LM Studio" width="34" height="34" loading="lazy"></span></div></div>
-        <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+        <div class="cmd rtext"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
         <div class="code"><pre><span class="cm">then ask your agent to</span>
 set up link previews for this project</pre><button class="cp" data-copy="Set up link previews for this project." aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#any-other-mcp-client">Using another MCP client? →</a></div>
@@ -633,10 +633,11 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   const tty = $('tty'), face = $('face'), feyes = $('feyes');
   const PROMPT = '<span class="pr">~/abc ❯</span> ';
   let lines = [];
-  const tshow = (cursor = true) => { tty.innerHTML = lines.join('\n') + (cursor ? '<span class="cur"></span>' : ''); };
+  const fits = () => Math.max(4, Math.floor((tty.clientHeight - 28) / (parseFloat(getComputedStyle(tty).lineHeight) || 22)));
+  const tshow = (cursor = true) => { tty.innerHTML = lines.slice(-fits()).join('\n') + (cursor ? '<span class="cur"></span>' : ''); };
   const look = (x, y) => { feyes.style.transform = `translate(${x}px, ${y}px)`; };
   const lookAtLast = () => { const l = tty.getBoundingClientRect(), f = face.getBoundingClientRect(); if (!f.width) return;
-    const tx = l.left + 120, ty = l.top + 14 + lines.length * parseFloat(getComputedStyle(tty).lineHeight), ex = f.left + f.width * (37 / 54), ey = f.top + f.height * (12.5 / 36);
+    const tx = l.left + 120, ty = l.top + 14 + Math.min(lines.length, fits()) * parseFloat(getComputedStyle(tty).lineHeight), ex = f.left + f.width * (37 / 54), ey = f.top + f.height * (12.5 / 36);
     const dx = tx - ex, dy = ty - ey, d = Math.hypot(dx, dy) || 1; look((dx / d) * 3.2, (dy / d) * 2.4); };
   // turn the eyes toward the cursor: left on a wide screen, down and left on a phone
   function lookAtCursor() {
@@ -662,8 +663,23 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
     lookAtCursor(); await wait(1200);
     await type(PROMPT, 'claude', 85); await wait(650);
     await type('<span class="pr">&gt;</span> ', 'set up link previews for this project', 46); await wait(550);
-    lines.push('');
-    for (let i = 0; i < 14; i++) { lines[lines.length - 1] = `<span class="dim">  Working${'.'.repeat(i % 4)}</span>`; tshow(false); lookAtLast(); await wait(360); }
+    // what the agent does next, with liveog's tools
+    const think = async (n) => { lines.push(''); for (let i = 0; i < n; i++) { lines[lines.length - 1] = `<span class="dim">  Working${'.'.repeat(i % 4)}</span>`; tshow(false); lookAtLast(); await wait(340); } lines.pop(); };
+    const say = async (l, ms = 420) => { lines.push(l); tshow(false); lookAtLast(); await wait(ms); };
+    const tool = (n, d = '') => `<span class="ok">⏺</span> liveog · ${n}${d ? ` <span class="dim">${d}</span>` : ''}`;
+    await think(5);
+    await say(tool('study_project'), 500);
+    await say('<span class="dim">  ⎿ 3 routes · #0B0B0B, #F2F2F2 · Inter · logo.svg</span>', 900);
+    await say('<span class="ok">⏺</span> People share /i/ invites and /h/ listings. Covers for both?', 1200);
+    await type('<span class="pr">&gt;</span> ', 'yes', 90); await wait(400);
+    await think(4);
+    await say(tool('draw_cover', '×3'), 500);
+    await say('<span class="dim">  ⎿ public/og/invite.png · public/og/listing.png</span>', 800);
+    await say(tool('setup_project'), 450);
+    await say('<span class="dim">  ⎿ tags on 2 routes · invite codes kept private</span>', 800);
+    await say(tool('check_link', 'abc.xyz/i/8f2k'), 500);
+    await say('<span class="dim">  ⎿ </span><span class="ok">✓</span> 1200 × 630 · title · image', 1400);
+    await say('<span class="ok">⏺</span> Done. Your links now show who is going.', 2600);
     await wait(400); session();
   }
 
