@@ -219,15 +219,12 @@
   .wf .m { flex: none; padding: 12px 16px 14px; } .wf .m b { display: block; font-weight: 600; font-size: 15px; } .wf .m span { color: var(--mute); font: 400 12px var(--mono); }
 
   /* 4 · a terminal, typed exactly; the mark beside it watches */
-  .agent { position: absolute; left: 48px; right: 48px; top: 120px; bottom: 48px; display: grid; grid-template-columns: minmax(0, 720px) 200px; justify-content: space-between; gap: 56px; align-items: center; }
+  .agent { position: absolute; left: 48px; right: 48px; top: 120px; bottom: 48px; display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; }
   .term { height: 100%; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #0c0c0c; box-shadow: 0 24px 60px -36px rgba(0,0,0,.6); --win-top: #161616; --win-line: #2a2a2a; }
   .tty { flex: 1; margin: 0; padding: 14px 16px; font: 400 13px/1.75 var(--mono); color: #d6d6d6; white-space: pre; overflow: hidden; }
   .tty .pr { color: #7a7a7a; } .tty .ok { color: #3ddc84; } .tty .dim { color: #7a7a7a; }
   .tty .cur { display: inline-block; width: .6em; height: 1.15em; background: #d6d6d6; vertical-align: -.2em; animation: blink 1.05s steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
-  .face { width: 100%; overflow: visible; }
-  .face rect, .face circle, .face path { fill: none; stroke: var(--ink2); stroke-width: 1px; vector-effect: non-scaling-stroke; }
-  .face .eyes { transition: transform .5s cubic-bezier(.3,.7,.3,1); }
 
   /* hover notes: dotted words you can hover, focus or tap */
   .tipped { cursor: help; outline: none; border-radius: 3px; text-decoration: underline dotted var(--soft); text-underline-offset: 4px; text-decoration-thickness: 1px; }
@@ -334,8 +331,6 @@
     .win, .wf, .agent { left: 16px; right: 16px; top: 80px; }
     .win { bottom: 20px; }
     .agent { grid-template-columns: 1fr; bottom: 20px; }
-    .face { position: absolute; width: 56px; right: 0; top: -58px; }
-    .tile:has(.agent) .ct { max-width: calc(100% - 104px); }
     .tty { font-size: 11px; padding: 12px; }
             }
 </style>
@@ -427,8 +422,6 @@
         <h3 class="ct tl">Your agent does the setup</h3>
         <div class="agent">
           <div class="term"><div class="chrome"><span class="lights"><i></i><i></i><i></i></span><span class="wtitle">abc — zsh</span></div><pre class="tty" id="tty" aria-hidden="true"></pre></div>
-          <svg class="face" id="face" viewBox="-2 -2 54 36" aria-hidden="true"><rect x=".5" y=".5" width="49" height="27" rx="7.5"/><rect x="3.5" y="3.5" width="43" height="21" rx="4.5"/>
-            <g class="eyes" id="feyes"><circle cx="30.5" cy="10.5" r="3"/><circle cx="39.5" cy="10.5" r="3"/></g></svg>
         </div>
       </div>
     </div>
@@ -674,23 +667,13 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   const inkNow = () => { const css = getComputedStyle(root); return [css.getPropertyValue('--ink2').trim(), css.getPropertyValue('--mute').trim()]; };
 
   // --- 4 · a terminal, typed one key at a time; the mark beside it watches ------------------------
-  const tty = $('tty'), face = $('face'), feyes = $('feyes');
+  const tty = $('tty');
   const PROMPT = '<span class="pr">~/abc ❯</span> ';
   let lines = [];
   const fits = () => Math.max(4, Math.floor((tty.clientHeight - 28) / (parseFloat(getComputedStyle(tty).lineHeight) || 22)));
   const tshow = (cursor = true) => { tty.innerHTML = lines.slice(-fits()).join('\n') + (cursor ? '<span class="cur"></span>' : ''); };
-  const look = (x, y) => { feyes.style.transform = `translate(${x}px, ${y}px)`; };
-  const lookAtLast = () => { const l = tty.getBoundingClientRect(), f = face.getBoundingClientRect(); if (!f.width) return;
-    const tx = l.left + 120, ty = l.top + 14 + Math.min(lines.length, fits()) * parseFloat(getComputedStyle(tty).lineHeight), ex = f.left + f.width * (37 / 54), ey = f.top + f.height * (12.5 / 36);
-    const dx = tx - ex, dy = ty - ey, d = Math.hypot(dx, dy) || 1; look((dx / d) * 3.2, (dy / d) * 2.4); };
-  // turn the eyes toward the cursor: left on a wide screen, down and left on a phone
-  function lookAtCursor() {
-    const cur = tty.querySelector('.cur'), f = face.getBoundingClientRect();
-    if (!cur || !f.width) return;
-    const c = cur.getBoundingClientRect(), ex = f.left + f.width * (37 / 54), ey = f.top + f.height * (12.5 / 36);
-    const dx = c.left - ex, dy = c.top + c.height / 2 - ey, d = Math.hypot(dx, dy) || 1;
-    look((dx / d) * 3.2, (dy / d) * 2.4);
-  }
+  const lookAtLast = () => {};
+  const lookAtCursor = () => {};
   async function type(prefix, text, speed) {
     lines.push(prefix); tshow();
     for (let i = 1; i <= text.length; i++) {
