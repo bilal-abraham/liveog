@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { check, describe } from './check.js';
 import { draw } from './draw.js';
+import { addEverywhere, report } from './install.js';
 import { serve } from './mcp.js';
 import { coverHtml } from './template.js';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -12,6 +13,7 @@ const USAGE = `liveog ${version}
   liveog draw <page.html|url> <out.png>   draw a 1200 x 630 cover with this machine's Chrome
   liveog cover <title> <out.png> [site]   the default cover, black, white and grey
   liveog check <url>                      what a link's preview shows, and what is wrong
+  liveog mcp add                          add the MCP server to every agent app here
   liveog mcp                              the MCP server, on stdio`;
 
 const [cmd, a, b, c] = process.argv.slice(2);
@@ -32,7 +34,9 @@ try {
     const r = await check(a);
     console.log(describe(r));
     process.exitCode = r.problems.length ? 1 : 0;
-  } else if (cmd === 'mcp') {
+  } else if (cmd === 'mcp' && a === 'add') {
+    console.log(report(addEverywhere()));
+  } else if (cmd === 'mcp' && !a) {
     serve(version);
   } else {
     console.log(USAGE);

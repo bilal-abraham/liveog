@@ -24,11 +24,12 @@ a 1200 x 630 cover, and nothing it should not show.
 ## With your agent
 
 ```sh
-claude mcp add liveog -- npx -y liveog mcp
+npx liveog mcp add
 ```
 
-Any MCP client runs `npx -y liveog mcp`. Then ask: *"Set up link previews for this project."* Your
-agent is the designer; liveog gives it the tools:
+That adds the MCP server to every agent app it finds: Claude Code, Codex, Cursor, VS Code,
+Windsurf and Claude Desktop. Any other MCP client runs `npx -y liveog mcp` over stdio. Then ask:
+*"Set up link previews for this project."* Your agent is the designer; liveog gives it the tools:
 
 | Tool | |
 |---|---|
