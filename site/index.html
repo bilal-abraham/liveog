@@ -251,7 +251,8 @@
   .code .k { color: var(--syn-k); } .code .s { color: var(--syn-s); } .code .f { color: var(--syn-f); }
   .code .cp { position: absolute; top: 9px; right: 7px; }
   .more { margin-top: 28px; }
-  .ways .ask { margin-top: 16px; } .ways .ask b { color: var(--ink); font-weight: 500; }
+  .ways .ask { margin-top: 16px; }
+  @media (min-width: 1000px) { .ways .ask { white-space: nowrap; } } .ways .ask b { color: var(--ink); font-weight: 500; }
   /* the agent apps: set up for you, or one step by hand */
   .apps { margin-top: 28px; }
   .ways .apps + .cmd { margin-top: 14px; }
@@ -415,9 +416,9 @@
       </div>
       <div>
         <h3>Or let your agent do it</h3>
-        <div class="apps"><div class="icons"><span class="chip full inv" style="--bg:#ffffff" tabindex="0" data-tip="Codex"><img src="logos/codex.png" alt="Codex" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Claude Code"><img src="logos/claude-code.svg" alt="Claude Code" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Cursor"><img src="logos/cursor.svg" alt="Cursor" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#FFFFFF" tabindex="0" data-tip="Hermes Agent"><img src="logos/hermes.png" alt="Hermes Agent" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="OpenCode"><img src="logos/opencode.svg" alt="OpenCode" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Devin (Cognition)"><img src="logos/devin.svg" alt="Devin" width="34" height="34" loading="lazy"></span><span class="chip vs" style="--bg:#ffffff" tabindex="0" data-tip="VS Code"><img src="logos/vscode.png" alt="VS Code" width="34" height="34" loading="lazy"></span><span class="chip etc" tabindex="0" data-tip="And most other agent apps">…</span></div></div>
+        <div class="apps"><div class="icons"><span class="chip full inv" style="--bg:#ffffff" tabindex="0" data-tip="Codex"><img src="logos/codex.png" alt="Codex" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Claude Code"><img src="logos/claude.svg" alt="Claude Code" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Cursor"><img src="logos/cursor.svg" alt="Cursor" width="34" height="34" loading="lazy"></span><span class="chip full" style="--bg:#FFFFFF" tabindex="0" data-tip="Hermes Agent"><img src="logos/hermes.png" alt="Hermes Agent" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="OpenCode"><img src="logos/opencode.svg" alt="OpenCode" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Devin (Cognition)"><img src="logos/devin.svg" alt="Devin" width="34" height="34" loading="lazy"></span><span class="chip vs" style="--bg:#ffffff" tabindex="0" data-tip="VS Code"><img src="logos/vscode.png" alt="VS Code" width="34" height="34" loading="lazy"></span><span class="chip etc" tabindex="0" data-tip="And most other agent apps">…</span></div></div>
         <div class="cmd rtext"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <p class="ask">Then ask your agent to <b>set up link previews for this project</b>.</p>
+        <p class="ask">Then ask: <b>set up link previews for this project</b>.</p>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#any-other-mcp-client">Using another MCP client? →</a></div>
       </div>
     </div></div>
@@ -436,7 +437,7 @@
       <a class="label" href="https://github.com/bilal-abraham/liveog">GitHub</a>
       <a class="label" href="https://www.npmjs.com/package/liveog">npm</a>
       <a class="label" href="#start">MCP</a>
-      <a class="label" style="margin-left:auto" href="https://github.com/bilal-abraham/liveog/blob/main/LICENSE">MIT licence</a>
+      <a class="label" style="margin-left:auto; text-transform:none" href="https://github.com/bilal-abraham/liveog/blob/main/LICENSE">MIT License</a>
     </div>
   </div>
 </footer>
