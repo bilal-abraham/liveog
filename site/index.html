@@ -540,7 +540,7 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
     { key: 'Fundraisers', dir: 'in', icon: 'i-goal', av: 'CI', msg: 'ruby is so close! <u>yoursite.com/f/…</u>',
       why: 'A goal that shows how close it is',
       states: [[1200, 18], [2900, 41], [4600, 77], [5300, 96]].map(([n, d]) => ({ title: "Ruby's surgery",
-        html: `${logo}<div class="tag">${n >= 5000 ? 'Goal reached' : '<i></i>Raising'}</div><div class="goal"><b style="width:${Math.min(100, n / 50)}%"></b></div><div class="t">Ruby's surgery</div><div class="l"><strong class="bump">${money(n)}</strong> of $5,000 · ${d} donors</div>` })) },
+        html: `${logo}${n >= 5000 ? '<div class="tag">Goal reached</div>' : ''}<div class="goal"><b style="width:${Math.min(100, n / 50)}%"></b></div><div class="t">Ruby's surgery</div><div class="l"><strong class="bump">${money(n)}</strong> of $5,000 · ${d} donors</div>` })) },
   ];
   const ids = ['x7Kq2mR9vTzL4pWn8bYc0A', 'Rk8vYp2QmT0xLw5nZc7HbA', 'Hc3pQ8wLr1ZtVy6mN0kBsE', 'Tn5Gv0aYq7LcW2mXp9RdUf'];
   const STEP = 2200;
