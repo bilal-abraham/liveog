@@ -126,10 +126,6 @@
   .stage { display: grid; grid-template-columns: 1fr 1fr; }
   .half { position: relative; overflow: hidden; }
   .half + .half { border-left: 1px solid var(--line); }
-  /* Before takes the opposite colours to the page, so the two read as black and white */
-  .half.inv { --bg: #000; --ink: #f2f2f2; --ink2: #bdbdbd; --mute: #8a8a8e; --line: #232323; --dot: #262626; --inb: #26252a; background: var(--bg); color: var(--ink); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .half.inv { --bg: #f4f4f5; --ink: #0a0a0a; --ink2: #444; --mute: #6e6e73; --line: #e4e4e4; --dot: #d6d6da; --inb: #e5e5ea; } }
-  :root[data-theme="dark"] .half.inv { --bg: #f4f4f5; --ink: #0a0a0a; --ink2: #444; --mute: #6e6e73; --line: #e4e4e4; --dot: #d6d6da; --inb: #e5e5ea; }
   .lbl { position: absolute; top: 24px; left: 24px; z-index: 1; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
   /* what iMessage shows for a page with no preview: a title, the address, a compass */
   .bare { width: 100%; max-width: 340px; display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-radius: 18px; background: var(--inb); color: var(--ink); }
@@ -357,9 +353,9 @@
   </section>
 
   <section class="screen" id="examples">
-    <div class="ex-head wrap"><h2>Every link shows what’s happening now</h2><div class="seg" role="tablist" id="tabs"></div></div>
+    <div class="ex-head wrap"><h2>Links that look alive get shared &amp; clicked</h2><div class="seg" role="tablist" id="tabs"></div></div>
     <div class="split"><div class="stage">
-      <div class="half inv">
+      <div class="half">
         <span class="lbl">[ Before ]</span>
         <div class="shot">
         <div class="chat" id="bchat" data-rise>
@@ -395,7 +391,7 @@
   </section>
 
   <section class="screen" id="start">
-    <div class="ways-head wrap"><h2>Two ways to start</h2></div>
+    <div class="ways-head wrap"><h2>Get started</h2></div>
     <div class="split"><div class="ways wrap">
       <div>
         <h3>Install it yourself</h3>
