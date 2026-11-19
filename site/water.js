@@ -4,27 +4,27 @@
  * method behind most "water in a box" toys): every step each particle measures how crowded it is
  * within a small radius and pushes its neighbours apart or pulls them in toward a rest density,
  * with a near-density term that keeps particles from clumping and gives the surface its tension.
- * A little viscosity smooths the flow. Water arrives as a thin stream from above the top edge;
- * the stream's drops do not push anything while they fall, so it stays thin. Where a drop meets
- * the settled surface it plunges in a little and takes on the motion of the water there (an
- * inelastic merge): the water piles and dips under the stream, waves run to the walls, reflect
- * and die away. One drop in six arriving fast is thrown back up in an arc instead, the crown.
+ * A little viscosity smooths the flow. Water arrives from above the top edge as separate drops,
+ * a few particles held together, falling in a slightly wobbling column; they push nothing while
+ * they fall. Where a drop meets the settled surface it punches the water down and aside (a
+ * crater, with waves running out to the walls and back) and now and then throws a droplet up;
+ * its water is let in along the floor, so the level rises evenly across the tank.
  *
  * Drawing (as limn draws its sand plate). Particles are counted into a 2 x 3 sub-grid inside each
- * character cell. Cells on the surface take the glyph whose ink over those six regions is nearest
- * to the surface line there (shape vectors, after Alex Harri's "ASCII characters are not pixels",
- * with the same contrast lift), bright. Falling water and spray take upright and dotted glyphs
- * matched the same way. The body below is quiet: dots that dim with depth, with dashes and tildes
- * where it is moving, and speckles of foam (now and then a bubble) where the stream goes in.
- * The surface itself is read as a height per half character, so its line is always whole.
- * A cell that changes glyph rolls through the ink ramp on the way, like a split-flap board.
+ * character cell. The surface is read as a height per half character, so its line is always
+ * whole, and each cell on it takes the glyph whose ink over those six regions is nearest to the
+ * line there (shape vectors, after Alex Harri's "ASCII characters are not pixels", with the same
+ * contrast lift): bright, '~' where it moves, '-' and '_' where it is still. Below the line the
+ * body is a solid mass of '#', darker with depth, with light speckles of foam and bubbles where
+ * the drops go in. Drops are drawn round by their size (o O @), spray by its shape. A cell that
+ * changes glyph while the mark forms rolls through the ink ramp, like a split-flap board.
  *
  * Cycle. Pour until full, settle to stillness, resolve cell by cell into the liveog mark
  * ('#' on '.'), hold, turn back into water, drain through the floor, rest, pour again.
  */
 (function () {
   'use strict';
-  const CHARS = " .,'`-_:;~^\"=+*o<>/\\|()!#";
+  const CHARS = " .,'`-_:;~^\"=+*oO@<>/\\|()!#";
   // Which glyphs may draw what: the surface only flat and sloping strokes, falling water only
   // dots and upright strokes; a turning cell rolls only through the soft glyphs of the ramp.
   const SURFACE = " -_~/\\", FALL = " .,'`:;|!", FLAP = " .,'`-_:;~=+*|!#";
@@ -45,7 +45,7 @@
     let shapes = [], rank = [], ramp = [], atlas = null, GW = 7, GH = 14, dpr = 1;
     const LUTS = [new Uint8Array(1 << 18), new Uint8Array(1 << 18)];
     const G = (ch) => CHARS.indexOf(ch);
-    const DOT = G('.'), HASH = G('#'), TILDE = G('~'), DASH = G('-'), COLON = G(':'), OH = G('o');
+    const DOT = G('.'), HASH = G('#'), EQ = G('='), BIGO = G('O'), AT = G('@'), DASH = G('-'), COLON = G(':'), OH = G('o');
     function buildGlyphs() {
       const S = 4, w = cellCSS[0] * S, h = cellCSS[1] * S;
       const c = document.createElement('canvas'); c.width = w; c.height = h;
@@ -94,8 +94,9 @@
     // --- sizes -------------------------------------------------------------------------------
     let cols = 0, rows = 0, offX = 0, offY = 0, CW = 7, CH = 14, W = 0, H = 0, SX = 0, SY = 0;
     let boxW = 0, boxH = 0, S = 6, Hr = 12, NMAX = 0, gw = 0, gh = 0, head, next;
-    let px, py, ox, oy, vx, vy, fall, foam, dens, lid, n = 0;
-    let occ, drop, line, level, fizz, flow, shown, alpha, tone, mark, turn;
+    let px, py, ox, oy, vx, vy, fall, foam, dens, lid, n = 0, hits = 0;
+    const HITS = 64, hitX = new Float32Array(HITS), hitY = new Float32Array(HITS), hitV = new Float32Array(HITS);
+    let occ, drop, drops, BLOB = 20, line, level, fizz, flow, shown, alpha, tone, mark, turn;
     function size() {
       const r = canvas.getBoundingClientRect();
       boxW = Math.round(r.width); boxH = Math.round(r.height);
@@ -114,7 +115,7 @@
       px = new Float32Array(NMAX); py = new Float32Array(NMAX); ox = new Float32Array(NMAX); oy = new Float32Array(NMAX);
       vx = new Float32Array(NMAX); vy = new Float32Array(NMAX); fall = new Uint8Array(NMAX); foam = new Float32Array(NMAX); dens = new Float32Array(NMAX); lid = new Float32Array(Math.ceil(W / S) + 1);
       occ = new Float32Array(SX * SY); drop = new Float32Array(SX * SY); line = new Float32Array(SX * SY); level = new Float32Array(SX).fill(SY + 1); fizz = new Float32Array(SX * SY); flow = new Float32Array(SX * SY);
-      shown = new Uint8Array(cols * rows); alpha = new Float32Array(cols * rows); tone = new Uint8Array(cols * rows);
+      shown = new Uint8Array(cols * rows); drops = new Uint16Array(cols * rows); BLOB = NMAX / (FILL * BLOB_RATE); alpha = new Float32Array(cols * rows); tone = new Uint8Array(cols * rows);
       buildMark(); buildGlyphs();
     }
 
@@ -144,12 +145,12 @@
     }
 
     // --- the fluid (lengths in px, one step = 1/180 s) -------------------------------------
-    const GRAV = 0.04, REST = 1.9, STIFF = 0.035, NEAR = 0.12, VISC = 0.03, STEPS = 3;
+    const GRAV = 0.04, REST = 1.9, STIFF = 0.035, NEAR = 0.12, VISC = 0.015, STEPS = 3;
     let phase = 'pour', pt = 0, t = 0, due = 0, closed = 0, calm = 0;
     let seed = (Math.random() * 1e9) | 0;
     const rnd = () => { seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5; return (seed >>> 0) / 4294967296; };
     const ease = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
-    const FILL = 9;                                       // seconds of pouring
+    const FILL = 13, BLOB_RATE = 8;   // seconds of pouring at full flow; drops a second
     function restart() { n = 0; closed = 0; due = 0; lid.fill(H); phase = 'pour'; pt = 0; calm = 0; }
     // where the stream comes in: a slow wander, never near the walls, with a small wobble
     const streamX = () => W * (0.5 + 0.2 * Math.sin(t * 0.21 + 1.3) + 0.07 * Math.sin(t * 0.57)) + Math.sin(t * 9) * 0.6;
@@ -164,13 +165,19 @@
       if (pour) {
         // it opens over half a second and closes as the water nears the brim
         let top = 0; for (let c = 0; c < lid.length; c++) top += lid[c]; top /= lid.length;
-        const left = (top - CH * 2.2) / H;
+        const left = (top - CH * 3.4) / H;
         if (left <= 0 && !closed) closed = pt;
         due += (NMAX / (FILL * 60 * STEPS)) * Math.min(1, pt / 0.6) * (closed ? 0 : Math.min(1, 0.25 + left * 6));
-        for (; due >= 1 && n < NMAX; due--) {
-          const i = n++;
-          px[i] = streamX() + (rnd() - 0.5) * 1.5; py[i] = -2 - rnd() * 3;
-          vx[i] = (rnd() - 0.5) * 0.03; vy[i] = 1.6; fall[i] = 1; foam[i] = 0;
+        // the water leaves the top in separate drops, a few particles held close together, each
+        // with its own small sideways drift so the column of drops wobbles
+        const blob = Math.max(3, Math.round(BLOB * (0.7 + rnd() * 0.6)));
+        if (due >= blob) {
+          const x0 = (Math.floor(streamX() / CW) + 0.5) * CW + (rnd() - 0.5) * 2, dv = (rnd() - 0.5) * 0.05, r0 = 1 + rnd();
+          for (let k = 0; k < blob && n < NMAX; k++, due--) {
+            const i = n++, th = rnd() * 6.283, rr = r0 * Math.sqrt(rnd());
+            px[i] = x0 + Math.cos(th) * rr; py[i] = -4 + Math.sin(th) * rr * 1.3;
+            vx[i] = dv; vy[i] = 1.6; fall[i] = 1; foam[i] = 0;
+          }
         }
       }
       // gravity, then move
@@ -195,21 +202,25 @@
             rho += q * q; near += q * q * q; mvx += q * vx[j]; mvy += q * vy[j]; mw += q;
           }
         }
-        // a falling drop joins the body once it reaches it; arriving fast, it may be thrown back up
+        // A falling drop that reaches the settled surface lands: it punches the water there down
+        // and aside (a crater, and waves running out from it), now and then throws a droplet back
+        // up, and its water joins the body. The water is let in along the floor across the whole
+        // tank, so the level rises evenly instead of piling up under the stream.
         dens[i] = rho;
-        if (fall[i] && vy[i] > 0 && py[i] >= lid[Math.min(lid.length - 1, Math.max(0, (px[i] / S) | 0))] - S * 0.3) {
-          fall[i] = 0; foam[i] = 1;
-          if (vy[i] > 2 && rnd() < 0.16) { const side = rnd() < 0.5 ? -1 : 1; vx[i] = side * (0.25 + rnd() * 0.75); vy[i] = -(0.9 + rnd() * 1.1); fall[i] = 1; px[i] = ox[i]; py[i] = oy[i] - 1; continue; }
-          // it plunges in a little way and takes on the motion of the water it lands in (an
-          // inelastic merge), so the stream above is not left standing on it
-          py[i] += S * 0.5; px[i] += (rnd() - 0.5) * S; vx[i] = (mw ? mvx / mw : 0) + vx[i] * 0.2; vy[i] = Math.max(0, mw ? mvy / mw : 0) + 0.8;
-          ox[i] = px[i] - vx[i]; oy[i] = py[i] - vy[i];
+        const lidHere = lid[Math.min(lid.length - 1, Math.max(0, (px[i] / S) | 0))];
+        if (fall[i] && vy[i] > 0 && py[i] >= lidHere - S * 0.3) {
+          if (hits < HITS) { hitX[hits] = px[i]; hitY[hits] = Math.max(py[i], lidHere); hitV[hits++] = vy[i]; }
+          if (vy[i] > 2 && rnd() < 0.05) { const side = rnd() < 0.5 ? -1 : 1; vx[i] = side * (0.25 + rnd() * 0.75); vy[i] = -(0.9 + rnd() * 1.1); px[i] = ox[i]; py[i] = oy[i] - 1; continue; }
+          fall[i] = 0; foam[i] = 0;
+          px[i] = S * 0.5 + rnd() * (W - S); py[i] = H - S * (0.3 + rnd() * 0.6); vx[i] = vy[i] = 0;
+          ox[i] = px[i]; oy[i] = py[i];
+          continue;
         }
         if (fall[i] || !mw) continue;
         // viscosity: drift toward the neighbours' motion
         const vk = VISC * k; px[i] += (mvx / mw - vx[i]) * vk; py[i] += (mvy / mw - vy[i]) * vk;
         // second pass: push apart (or pull together) toward the rest density
-        const P = STIFF * (rho - REST), PN = NEAR * near;
+        const P = STIFF * Math.max(rho - REST, -0.3), PN = NEAR * near;   // only a little pull, or water holds up like jelly
         for (let y = Math.max(0, gy - 1); y <= Math.min(gh - 1, gy + 1); y++) for (let x = Math.max(0, gx - 1); x <= Math.min(gw - 1, gx + 1); x++) {
           for (let j = head[y * gw + x]; j >= 0; j = next[j]) {
             if (j === i || fall[j]) continue;
@@ -220,13 +231,27 @@
           }
         }
       }
+      // each landing pushes the water near it down and outward, and stirs up foam there
+      for (let h = 0; h < hits; h++) {
+        const gx = Math.min(gw - 1, Math.max(0, (hitX[h] / Hr) | 0)), gy = Math.min(gh - 1, Math.max(0, ((hitY[h] + 3 * Hr) / Hr) | 0)), kick = Math.min(1, hitV[h] / 4) * 0.6;
+        for (let y = Math.max(0, gy - 1); y <= Math.min(gh - 1, gy + 1); y++) for (let x = Math.max(0, gx - 1); x <= Math.min(gw - 1, gx + 1); x++) {
+          for (let j = head[y * gw + x]; j >= 0; j = next[j]) {
+            if (fall[j]) continue;
+            const dx = px[j] - hitX[h], dy = py[j] - hitY[h], d = Math.hypot(dx, dy);
+            if (d >= Hr * 1.5) continue;
+            const q = 1 - d / (Hr * 1.5);
+            px[j] += (dx / (d + 1)) * kick * q; py[j] += kick * q * 1.2; foam[j] = Math.max(foam[j], q);
+          }
+        }
+      }
+      hits = 0;
       // walls and floor (in the drain the floor lets water out through the middle)
       const m = S * 0.35;
       for (let i = 0; i < n; i++) {
         if (px[i] < m) px[i] = m + rnd() * 0.01; else if (px[i] > W - m) px[i] = W - m - rnd() * 0.01;
-        if (py[i] > H - m && !(drain && Math.abs(px[i] - W / 2) < W * 0.09 * Math.min(1, pt / 1.5))) { py[i] = H - m - rnd() * 0.01; if (fall[i]) { fall[i] = 0; foam[i] = 1; vy[i] *= 0.3; } }
+        if (py[i] > H - m && !(drain && Math.abs(px[i] - W / 2) < W * 0.09 * Math.min(1, pt / 1.5))) { py[i] = H - m - rnd() * 0.01; if (fall[i]) { fall[i] = 0; foam[i] = 1; vx[i] = (rnd() < 0.5 ? -1 : 1) * (0.5 + rnd()); ox[i] = px[i] - vx[i]; } }
         vx[i] = px[i] - ox[i]; vy[i] = py[i] - oy[i];
-        if (!fall[i]) { const v = Math.hypot(vx[i], vy[i]), cap = S * 0.18; if (v > cap) { vx[i] *= cap / v; vy[i] *= cap / v; } }
+        if (!fall[i]) { const v = Math.hypot(vx[i], vy[i]), cap = S * 0.2; if (v > cap) { vx[i] *= cap / v; vy[i] *= cap / v; } }
         if (phase !== 'pour') { vx[i] *= 1 - 0.012 * calm; vy[i] *= 1 - 0.012 * calm; }
         foam[i] *= 0.975;
       }
@@ -252,15 +277,17 @@
     // --- drawing -----------------------------------------------------------------------------
     // Each particle is spread over the sub-cells near it with a small tent, so the field is smooth.
     function field() {
+      drops.fill(0);
       const sw = CW / 2, sh = CH / 3, full = (sw * sh) / (0.87 * S * S), R = S * 0.9;
       const nOcc = new Float32Array(SX * SY), nDrop = new Float32Array(SX * SY), nFizz = new Float32Array(SX * SY), nFlow = new Float32Array(SX * SY);
       for (let i = 0; i < n; i++) {
         // a falling drop is drawn small, so the stream stays one character wide
-        const x = px[i] / sw - 0.5, y = py[i] / sh - 0.5, rx = fall[i] ? 0.6 : R / sw, ry = fall[i] ? 0.9 : R / sh;
+        const x = px[i] / sw - 0.5, y = py[i] / sh - 0.5, rx = fall[i] ? 0.8 : R / sw, ry = fall[i] ? 0.9 : R / sh;
         const x0 = Math.max(0, Math.ceil(x - rx)), x1 = Math.min(SX - 1, Math.floor(x + rx)), y0 = Math.max(0, Math.ceil(y - ry)), y1 = Math.min(SY - 1, Math.floor(y + ry));
         if (x0 > x1 || y0 > y1) continue;
         let tw = 0;
         for (let b = y0; b <= y1; b++) for (let a = x0; a <= x1; a++) tw += (1 - Math.abs(a - x) / (rx + 0.5)) * (1 - Math.abs(b - y) / (ry + 0.5));
+        if (fall[i] && px[i] >= 0 && px[i] < W && py[i] >= 0 && py[i] < H) drops[((py[i] / CH) | 0) * cols + ((px[i] / CW) | 0)]++;
         const sp = Math.hypot(vx[i], vy[i]), into = fall[i] ? nDrop : nOcc;   // the body and the drops apart
         for (let b = y0; b <= y1; b++) for (let a = x0; a <= x1; a++) {
           const w = (1 - Math.abs(a - x) / (rx + 0.5)) * (1 - Math.abs(b - y) / (ry + 0.5)) / tw, j = b * SX + a;
@@ -271,7 +298,7 @@
       // as the water comes to rest, so still water draws a still line)
       const keep = 0.45 + 0.4 * calm;
       for (let j = 0; j < occ.length; j++) {
-        occ[j] = occ[j] * keep + Math.min(1.2, nOcc[j]) * (1 - keep); drop[j] = drop[j] * 0.3 + Math.min(1.5, nDrop[j] * 1.6) * 0.7;
+        occ[j] = occ[j] * keep + Math.min(1.2, nOcc[j]) * (1 - keep); drop[j] = Math.min(1.5, nDrop[j] * 1.6);
         fizz[j] = fizz[j] * 0.6 + nFizz[j] * 0.4; flow[j] = flow[j] * 0.7 + nFlow[j] * 0.3;
       }
       // The surface, sub-column by sub-column: the first place from the top where the water
@@ -308,6 +335,13 @@
       }
       return key;
     }
+    const spray = new Float32Array(6);
+    function keyOf6(f, scale) {
+      const mx = Math.max(...f);
+      let key = 0;
+      for (let k = 0; k < 6; k++) key |= Math.min(7, Math.round((mx ? Math.pow(f[k] / mx, 1.8) * Math.min(1, mx * scale) : 0) * 7)) << (3 * k);
+      return key;
+    }
     const hash = (a, b, c) => { let h = (a * 374761393 + b * 668265263 + c * 2246822519) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
     const sum6 = (f, b) => f[b] + f[b + 1] + f[b + SX] + f[b + SX + 1] + f[b + 2 * SX] + f[b + 2 * SX + 1];
     const min6 = (f, b) => Math.min(f[b], f[b + 1], f[b + SX], f[b + SX + 1], f[b + 2 * SX], f[b + 2 * SX + 1]);
@@ -329,21 +363,27 @@
           g = mark[i] ? HASH : DOT; col = mark[i] ? 0 : 1; a = mark[i] ? 1 : 0.34;
         } else {
           const o = sum6(occ, b) / 6, ln = sum6(line, b), od = sum6(drop, b) / 6, fz = sum6(fizz, b) + od * 3, fl = sum6(flow, b) / Math.max(0.3, sum6(occ, b));
-          if (r === surf[c] && ln > 0.2) {
+          if ((r === surf[c] && ln > 0.2) || (r < surf[c] && ln > 0.9)) {   // the surface, and where it is steep, its walls
             // the surface: bright, its glyph matched to the line through the cell. Matched at more
             // weight where the water moves, so a moving surface draws '~' and still water '-' and '_'
             g = glyphFor(keyOf(line, b, 0.4 + 0.7 * Math.min(1, fl / 1.5)), 0) || glyphFor(keyOf(line, b, 1.3), 0) || DASH; col = 0; a = 0.62 + 0.2 * Math.min(1, ln / 1.6) + 0.18 * Math.min(1, fl / 1.5);
-          } else if (r > surf[c] && o > 0.3) {
-            // the body: dim with depth; moving water shows dashes and tildes, fresh foam light speckles
-            const depth = Math.min(1, (r - surf[c]) / Math.max(4, rows * 0.6));
-            g = DOT; col = 1; a = 0.42 - 0.2 * depth; flap = true;
-            if (fl > 1.1) { g = fl > 1.9 ? TILDE : DASH; a += 0.12; }
-            // foam: speckles that come and go, thicker (and now and then a bubble) where it is fresh
+          } else if (r > surf[c]) {
+            // below the surface, the body: a solid mass of the heaviest glyph, brightest just under
+            // the surface and darker with depth; where it moves fast it loosens to '='. Foam,
+            // bubbles and pockets of air show as lighter speckles in it.
+            const depth = Math.min(1, (r - surf[c]) / Math.max(4, rows * 0.7));
+            g = o < 0.25 ? COLON : fl > 1.6 ? EQ : HASH; col = 0; a = 0.5 - 0.22 * depth;
             const froth = (fz / 6) * Math.max(0, 1 - (r - surf[c]) / 6), speck = hash(c, r, (t * 7) | 0);
-            if (froth > 0.25 + 0.7 * speck) { g = froth > 0.5 && speck < 0.12 ? OH : froth > 0.35 ? COLON : DOT; col = 0; a = 0.35 + Math.min(0.45, froth * 0.6); }
-          } else if (od > 0.04) {
-            // falling water and spray
-            g = glyphFor(keyOf(drop, b, 1.1), 1); col = 0; a = 0.45 + 0.55 * Math.min(1, od * 2.5);
+            if (froth > 0.25 + 0.7 * speck) { g = froth > 0.5 && speck < 0.15 ? OH : froth > 0.35 ? COLON : DOT; a = 0.55 + Math.min(0.35, froth * 0.5); }
+          } else if (drops[i]) {
+            // above it, falling drops, drawn round by their size (a lone droplet by its shape)
+            const m = drops[i] / BLOB;
+            g = m > 1.15 ? AT : m > 0.6 ? BIGO : m > 0.25 ? OH : glyphFor(keyOf(drop, b, 1.1), 1);
+            col = 0; a = 0.5 + 0.5 * Math.min(1, od * 2.5);
+          } else if (od > 0.04 || o > 0.22) {
+            // and spray: water thrown up above the surface, by its shape
+            for (let k = 0; k < 6; k++) { const j = b + (k >> 1) * SX + (k & 1); spray[k] = occ[j] + drop[j]; }
+            g = glyphFor(keyOf6(spray, 1.1), 1); col = 0; a = 0.45 + 0.5 * Math.min(1, (o + od) * 2.5);
           }
         }
         // split-flap: roll through the ramp a step at a time (two in the body) toward the new glyph
