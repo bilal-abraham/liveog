@@ -179,7 +179,6 @@
   /* built to be shared: four cards, a title and a picture, the most important top left and widest */
   .bento { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 520px; gap: 1px; background: var(--line); border-block: 1px solid var(--line); margin-bottom: 104px; }
   .tile { position: relative; background: var(--paper); overflow: hidden; }
-  .tile.w2 { grid-column: span 2; }
   .bento.solo { grid-template-columns: 1fr; grid-auto-rows: 560px; }
   .tile .ct { position: absolute; z-index: 3; margin: 0; font: 500 26px/1.12 var(--sans); letter-spacing: -.03em; max-width: 300px; }
   .tile .tl { left: 48px; top: 34px; } .tile .bl { left: 48px; bottom: 34px; }
@@ -211,7 +210,6 @@
   .omni { flex: 1; max-width: 260px; margin: 0 auto; height: 22px; border-radius: 6px; background: var(--win-field); display: flex; align-items: center; justify-content: center; gap: 6px;
     font: 400 11.5px/1 var(--sans); color: var(--ink2); min-width: 0; }
   .omni svg { width: 11px; height: 11px; color: var(--mute); }
-  .wtitle { flex: 1; text-align: center; font: 500 11.5px/1 var(--sans); color: #9a9a9a; padding-right: 45px; }
 
   /* 2 · the browser on your user's screen draws the page itself: blank, characters, the cover */
   .win { position: absolute; left: 48px; right: 48px; top: 120px; bottom: 48px; border: 1px solid var(--win-line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;
@@ -224,12 +222,6 @@
   .wf .m { flex: none; padding: 12px 16px 14px; } .wf .m b { display: block; font-weight: 600; font-size: 15px; } .wf .m span { color: var(--mute); font: 400 12px var(--mono); }
 
   /* 4 · a terminal, typed exactly; the mark beside it watches */
-  .agent { position: absolute; left: 48px; right: 48px; top: 120px; bottom: 48px; display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; }
-  .term { height: 100%; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #0c0c0c; box-shadow: 0 24px 60px -36px rgba(0,0,0,.6); --win-top: #161616; --win-line: #2a2a2a; }
-  .tty { flex: 1; margin: 0; padding: 14px 16px; font: 400 13px/1.75 var(--mono); color: #d6d6d6; white-space: pre; overflow: hidden; }
-  .tty .pr { color: #7a7a7a; } .tty .ok { color: #3ddc84; } .tty .dim { color: #7a7a7a; }
-  .tty .cur { display: inline-block; width: .6em; height: 1.15em; background: #d6d6d6; vertical-align: -.2em; animation: blink 1.05s steps(1) infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
 
   /* hover notes: dotted words you can hover, focus or tap */
   .tipped { cursor: help; outline: none; border-radius: 3px; text-decoration: underline dotted var(--soft); text-underline-offset: 4px; text-decoration-thickness: 1px; }
@@ -320,8 +312,7 @@
     .fin { padding: 72px 16px 28px; }
     .foot { gap: 18px; margin-top: 32px; }
     .bento { grid-template-columns: 1fr; grid-auto-rows: 400px; margin-bottom: 72px; }
-    .tile.w2 { grid-column: auto; }
-    .bento.solo { grid-auto-rows: auto; }
+      .bento.solo { grid-auto-rows: auto; }
     /* before over after, each with room */
     .ba { position: relative; inset: auto; grid-template-columns: 1fr; }
     .ba > div { min-height: 330px; padding: 76px 10% 40px; }
@@ -334,11 +325,9 @@
   .ba .bare svg { width: 34px; height: 34px; flex: none; }
   .ba .msg-l, .ba .msg-d { font-size: 12.5px; padding: 7px 11px; }
     .arrow { width: 50px; height: 50px; } .arrow svg { width: 21px; height: 21px; }
-    .win, .wf, .agent { left: 16px; right: 16px; top: 80px; }
+    .win, .wf { left: 16px; right: 16px; top: 80px; }
     .win { bottom: 20px; }
-    .agent { grid-template-columns: 1fr; bottom: 20px; }
-    .tty { font-size: 11px; padding: 12px; }
-            }
+                }
 </style>
 </head>
 <body>
@@ -401,7 +390,7 @@
   </section>
 
   <section class="screen" id="before">
-    <div class="why-head wrap"><h2>Links people want to open</h2></div>
+    <div class="why-head wrap"><h2>Make the change</h2></div>
     <div class="bento solo wrap">
       <div class="tile">
         <div class="ba">
@@ -426,12 +415,6 @@
       <div class="tile" data-rise style="--d:.08s">
         <h3 class="ct tl">Nothing to run or pay for</h3>
         <div class="win"><div class="chrome"><span class="lights"><i></i><i></i><i></i></span><span class="omni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>abc.xyz/f/ruby</span></div><canvas id="paint" aria-hidden="true"></canvas></div>
-      </div>
-      <div class="tile w2" data-rise style="--d:.12s">
-        <h3 class="ct tl">Your agent does the setup</h3>
-        <div class="agent">
-          <div class="term"><div class="chrome"><span class="lights"><i></i><i></i><i></i></span><span class="wtitle">abc — zsh</span></div><pre class="tty" id="tty" aria-hidden="true"></pre></div>
-        </div>
       </div>
     </div>
   </section>
@@ -676,50 +659,9 @@ set up link previews for this project</pre><button class="cp" data-copy="Set up 
   let water = null;
   const inkNow = () => { const css = getComputedStyle(root); return [css.getPropertyValue('--ink2').trim(), css.getPropertyValue('--mute').trim()]; };
 
-  // --- 4 · a terminal, typed one key at a time; the mark beside it watches ------------------------
-  const tty = $('tty');
-  const PROMPT = '<span class="pr">~/abc ❯</span> ';
-  let lines = [];
-  const fits = () => Math.max(4, Math.floor((tty.clientHeight - 28) / (parseFloat(getComputedStyle(tty).lineHeight) || 22)));
-  const tshow = (cursor = true) => { tty.innerHTML = lines.slice(-fits()).join('\n') + (cursor ? '<span class="cur"></span>' : ''); };
-  const lookAtLast = () => {};
-  const lookAtCursor = () => {};
-  async function type(prefix, text, speed) {
-    lines.push(prefix); tshow();
-    for (let i = 1; i <= text.length; i++) {
-      lines[lines.length - 1] = prefix + htm(text.slice(0, i)); tshow();
-      lookAtCursor();                                        // the eyes follow the letters
-      await wait(speed * (.6 + Math.random() * .9) + (text[i - 1] === ' ' ? speed * .6 : 0));
-    }
-  }
-  async function session() {
-    lines = []; tshow(); lookAtCursor(); await wait(1100);
-    await type(PROMPT, 'npx liveog mcp add', 62); await wait(500);
-    lines.push('<span class="dim">Adding liveog to your agent apps</span>'); tshow(); await wait(650);
-    for (const a of ['Claude Code', 'Cursor', 'Codex']) { lines.push(`  <span class="ok">✓</span> ${a}`); tshow(); lookAtCursor(); await wait(330); }
-    lookAtCursor(); await wait(1200);
-    await type(PROMPT, 'claude', 85); await wait(650);
-    await type('<span class="pr">&gt;</span> ', 'set up link previews for this project', 46); await wait(550);
-    // what the agent does next, said plainly
-    const think = async (n) => { lines.push(''); for (let i = 0; i < n; i++) { lines[lines.length - 1] = `<span class="dim">  Working${'.'.repeat(i % 4)}</span>`; tshow(false); lookAtLast(); await wait(340); } lines.pop(); };
-    const step = async (what, done, ms = 900) => {
-      lines.push(`<span class="ok">⏺</span> ${what}`); tshow(false); lookAtLast(); await wait(ms);
-      if (done) { lines.push(`<span class="dim">  ⎿ ${done}</span>`); tshow(false); lookAtLast(); await wait(ms * .7); }
-    };
-    await think(4);
-    await step('Reading your project', 'your colours, fonts, logo and pages');
-    await step('Finding the links people share', 'invites /i/ and listings /h/');
-    await step('Drawing cover ideas in your style', '3 ideas · you pick one', 1100);
-    await step('Adding the preview to every page', 'invite codes stay private');
-    await step('Checking it like iMessage would', '<span class="ok">✓</span> abc.xyz/i/8f2k shows who is going', 1100);
-    await step('Done. Your links stay current.', '', 2800);
-    await wait(400); session();
-  }
-
   document.fonts.ready.then(() => {
     paintSize(); requestAnimationFrame(paintFrame);
     if (window.startWater) { const [ink, quiet] = inkNow(); water = window.startWater($('sand'), { ink, quiet, cell: [7, 14], font: 'JetBrains Mono, monospace' }); }
-    session();
   });
   let rsz;
   addEventListener('resize', () => { clearTimeout(rsz); rsz = setTimeout(() => { paintSize(); water?.resize(); }, 200); });
