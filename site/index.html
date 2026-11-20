@@ -251,8 +251,11 @@
   .ways .more { margin-top: 32px; }
   .icons { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
   .icons.stack { gap: 0; flex-wrap: nowrap; --ring: var(--bg); }
-  .icons.stack .chip { outline: 2px solid var(--ring); transition: margin .25s cubic-bezier(.2,.7,.2,1), transform .2s ease; }
+  .icons.stack .chip { outline: 1px solid var(--line); transition: margin .25s cubic-bezier(.2,.7,.2,1), transform .2s ease; }
   .icons.stack .chip + .chip { margin-left: -5px; }
+  /* dark pages: a ring in the page's colour separates the tiles; light pages: a hairline edge */
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .icons.stack .chip { outline: 2px solid var(--ring); } }
+  :root[data-theme="dark"] .icons.stack .chip { outline: 2px solid var(--ring); }
   @media (min-width: 1100px) { .icons.stack:hover .chip + .chip, .icons.stack:focus-within .chip + .chip { margin-left: 6px; } }
   /* each app as its own icon: its real mark and colours, on a small chip with a little depth */
   .chip { position: relative; width: 34px; height: 34px; border-radius: 9px; background: var(--bg); display: grid; place-items: center; overflow: hidden;
