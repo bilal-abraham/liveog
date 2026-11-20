@@ -303,8 +303,8 @@
   @media (max-width: 900px) {
     nav a.label { display: none; }
     .bar { padding: 0 16px; gap: 16px; }
-    .hero { min-height: auto; }
-    .hero .in { justify-content: flex-start; padding: 14svh 16px 18svh; }
+    /* the hero still fills the screen on phones; its words just sit higher than the middle */
+    .hero .in { justify-content: flex-start; padding: 16svh 16px 56px; }
     .ex-head, .ways-head, .why-head { padding: 72px 16px 32px; }
     .ex-head { flex-direction: column; align-items: flex-start; gap: 20px; }
     .stage, .ways { grid-template-columns: 1fr; }
