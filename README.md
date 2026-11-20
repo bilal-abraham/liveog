@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  Link previews that stay current.<br>
+  Link previews that show what’s happening now.<br>
   <a href="https://bilal-abraham.github.io/liveog/">Website</a> · <a href="https://www.npmjs.com/package/liveog">npm</a> · MIT
 </p>
 
