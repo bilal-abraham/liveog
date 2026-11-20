@@ -28,6 +28,16 @@ the fundraiser is. And it does it without an image server.
 
 ### Let your agent do it
 
+Paste this into your coding agent (Claude Code, Codex, Cursor, or any other):
+
+> Add the liveog MCP server so you can set up link previews for me. It runs on this computer with
+> the command `npx -y liveog mcp` and needs no sign-in. Run `npx liveog mcp add`, or add it to the
+> app you are running in using https://bilal-abraham.github.io/liveog/agents.md. If you need a
+> restart before its tools appear, tell me. Then look at this project, suggest what each link people
+> share should show, and let me pick before you change anything.
+
+Or set it up yourself in one command:
+
 ```sh
 npx liveog mcp add
 ```
@@ -35,7 +45,8 @@ npx liveog mcp add
 This finds the agent apps on your machine and adds the liveog MCP server to each one: Hermes
 Agent, Claude Code, Codex, Kimi Code, Cursor, VS Code, Amp, Windsurf (Devin Desktop), Claude Desktop,
 OpenCode, Kiro and LM Studio. Muse Code, Factory, Antigravity, Zed, JetBrains, Cline, Warp, Goose,
-Continue and Kilo Code work too, with one step by hand (see below). Restart the app, then ask:
+Continue and Kilo Code work too, with one step by hand (see [agents.md](site/agents.md)). Restart
+the app, then ask:
 
 > Set up link previews for this project.
 
