@@ -235,19 +235,20 @@
   .ways h3 { margin: 0; font: 500 24px/1.2 var(--sans); letter-spacing: -.025em; }
   .ways p { margin: 0; color: var(--ink2); max-width: 440px; }
   .ways .note { margin-top: 16px; }
-  /* Connect your agent: copies a prompt the agent follows to add liveog, then set things up */
-  .connect { position: relative; display: inline-flex; align-items: center; gap: 12px; height: 44px; padding: 0 14px 0 12px; margin-top: 24px; align-self: flex-start;
-    border: 1px solid var(--line); color: var(--ink); font: 500 13.5px/1 var(--sans); letter-spacing: 0; cursor: pointer; }
-  .connect.glow { border-color: transparent; }
+  /* Connect your agent: copies a prompt the agent follows to add liveog, then set things up.
+     Square like the command boxes; a soft rainbow glow along its bottom edge only */
+  .connect { position: relative; display: inline-flex; align-items: center; gap: 12px; height: 44px; padding: 0 14px; align-self: flex-start;
+    background: var(--code); border: 1px solid var(--line); color: var(--ink); font: 500 13.5px/1 var(--sans); cursor: pointer; }
+  .ways .connect { margin-top: 24px; }
+  .connect::before, .connect::after { content: ""; position: absolute; left: 10%; right: 10%; bottom: -1px; height: 1px; pointer-events: none;
+    background: linear-gradient(90deg, transparent, #ff5f6d 15%, #a46bff 45%, #3fa9f5 75%, transparent); }
+  .connect::before { height: 10px; bottom: -6px; filter: blur(9px); opacity: .55; }
   .connect > svg { width: 15px; height: 15px; color: var(--mute); flex: none; }
+  .connect:hover > svg { color: var(--ink); }
   .connect .ok, .connect.done .copy { display: none; } .connect.done .ok { display: block; color: var(--ink); }
-  .connect .ag { display: flex; }
-  .connect .ag i { width: 22px; height: 22px; border-radius: 6px; background: #fff; display: grid; place-items: center; outline: 1px solid var(--line); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .connect .ag i { outline: 2px solid var(--code); } }
-  :root[data-theme="dark"] .connect .ag i { outline: 2px solid var(--code); }
-  .connect .ag i + i { margin-left: -5px; }
-  .connect .ag img { width: 14px; height: 14px; object-fit: contain; display: block; }
-  .connect .ag i.inv img { width: 22px; height: 22px; border-radius: 6px; object-fit: cover; filter: invert(1); }
+  .connect .ag { display: flex; align-items: center; gap: 8px; }
+  .connect .ag i { width: 15px; height: 15px; background: currentColor; -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; }
+  @media (max-width: 480px) { .ctas .connect .ag { display: none; } }
   .ways .cmd { margin-top: 24px; align-self: flex-start; }
   .code { position: relative; margin-top: 16px; background: var(--code); border: 1px solid var(--line); }
   .code pre { margin: 0; padding: 16px 56px 16px 18px; overflow-x: auto; font: 400 13px/1.7 var(--mono); }
@@ -331,6 +332,7 @@
     .ctas .cmd { gap: 4px; height: 40px; padding: 0 2px 0 10px; font-size: 11.5px; min-width: 0; }
     .ctas .cmd > svg { display: none; }
     .ctas .cp { width: 28px; height: 28px; }
+    .ctas .connect { height: 40px; padding: 0 10px; gap: 8px; font-size: 12.5px; flex: none; }
     .fin { padding: 72px 16px 28px; }
     .foot { gap: 18px; margin-top: 32px; }
     .bento { grid-template-columns: 1fr; grid-auto-rows: 400px; margin-bottom: 72px; }
@@ -373,7 +375,7 @@
       <p class="lede" data-rise style="--d:.12s">Link previews that show what’s happening now.</p>
       <div class="ctas" data-rise style="--d:.24s">
         <div class="cmd rtext"><svg><use href="#i-box"/></svg><code>npm i liveog</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
-        <div class="cmd glow"><svg><use href="#i-term"/></svg><code>npx liveog mcp add</code><button class="cp" aria-label="Copy"><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button></div>
+        <button class="connect" type="button" data-copy="Add the liveog MCP server so you can set up link previews for me. It runs on this computer with the command `npx -y liveog mcp` and needs no sign-in. Run `npx liveog mcp add`, or add it to the app you are running in using https://bilal-abraham.github.io/liveog/agents.md. If you need a restart before its tools appear, tell me. Then look at this project, suggest what each link people share should show, and let me pick before you change anything."><span class="ag" aria-hidden="true"><i style="--m:url(logos/claude.svg)"></i><i style="--m:url(logos/codex-mask.png)"></i><i style="--m:url(logos/cursor.svg)"></i></span><span>Connect your agent</span><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button>
       </div>
     </div>
     <!-- "Working with" comes back with more names -->
@@ -427,8 +429,8 @@
       </div>
       <div>
         <h3>Or let your agent do it</h3>
-        <button class="connect glow" type="button" data-copy="Add the liveog MCP server so you can set up link previews for me. It runs on this computer with the command `npx -y liveog mcp` and needs no sign-in. Run `npx liveog mcp add`, or add it to the app you are running in using https://bilal-abraham.github.io/liveog/agents.md. If you need a restart before its tools appear, tell me. Then look at this project, suggest what each link people share should show, and let me pick before you change anything."><span class="ag" aria-hidden="true"><i><img src="logos/claude.svg" alt=""></i><i class="inv"><img src="logos/codex.png" alt=""></i><i><img src="logos/cursor.svg" alt=""></i></span><span>Connect your agent</span><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button>
-        <div class="apps"><div class="icons stack"><span class="chip full" style="--bg:#FFFFFF" tabindex="0" data-tip="Hermes Agent"><img src="logos/hermes.png" alt="Hermes Agent" width="34" height="34" loading="lazy"></span><span class="chip full inv" style="--bg:#ffffff" tabindex="0" data-tip="Codex"><img src="logos/codex.png" alt="Codex" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Claude Code"><img src="logos/claude.svg" alt="Claude Code" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Cursor"><img src="logos/cursor.svg" alt="Cursor" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="OpenCode"><img src="logos/opencode.svg" alt="OpenCode" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Devin (Cognition)"><img src="logos/devin.svg" alt="Devin" width="34" height="34" loading="lazy"></span><span class="chip full inv" style="--bg:#ffffff" tabindex="0" data-tip="Factory"><img src="logos/factory.svg" alt="Factory" width="34" height="34" loading="lazy"></span><span class="chip full inv hue" style="--bg:#ffffff" tabindex="0" data-tip="Kimi Code"><img src="logos/kimi.png" alt="Kimi Code" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Muse Code"><img src="logos/muse-code.svg" alt="Muse Code" width="34" height="34" loading="lazy"></span><span class="chip vs" style="--bg:#ffffff" tabindex="0" data-tip="VS Code"><img src="logos/vscode.png" alt="VS Code" width="34" height="34" loading="lazy"></span><span class="chip etc" style="--bg:#ffffff" tabindex="0" data-tip="And most other agent apps"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.9"/><circle cx="10" cy="10" r="1.9"/><circle cx="15.5" cy="10" r="1.9"/></svg></span></div></div>
+        <button class="connect" type="button" data-copy="Add the liveog MCP server so you can set up link previews for me. It runs on this computer with the command `npx -y liveog mcp` and needs no sign-in. Run `npx liveog mcp add`, or add it to the app you are running in using https://bilal-abraham.github.io/liveog/agents.md. If you need a restart before its tools appear, tell me. Then look at this project, suggest what each link people share should show, and let me pick before you change anything."><span class="ag" aria-hidden="true"><i style="--m:url(logos/claude.svg)"></i><i style="--m:url(logos/codex-mask.png)"></i><i style="--m:url(logos/cursor.svg)"></i></span><span>Connect your agent</span><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button>
+        <div class="apps"><div class="icons stack"><span class="chip full" style="--bg:#FFFFFF" tabindex="0" data-tip="Hermes Agent"><img src="logos/hermes.png" alt="Hermes Agent" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="OpenCode"><img src="logos/opencode.svg" alt="OpenCode" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Devin (Cognition)"><img src="logos/devin.svg" alt="Devin" width="34" height="34" loading="lazy"></span><span class="chip full inv" style="--bg:#ffffff" tabindex="0" data-tip="Factory"><img src="logos/factory.svg" alt="Factory" width="34" height="34" loading="lazy"></span><span class="chip full inv hue" style="--bg:#ffffff" tabindex="0" data-tip="Kimi Code"><img src="logos/kimi.png" alt="Kimi Code" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Muse Code"><img src="logos/muse-code.svg" alt="Muse Code" width="34" height="34" loading="lazy"></span><span class="chip vs" style="--bg:#ffffff" tabindex="0" data-tip="VS Code"><img src="logos/vscode.png" alt="VS Code" width="34" height="34" loading="lazy"></span><span class="chip etc" style="--bg:#ffffff" tabindex="0" data-tip="And most other agent apps"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.9"/><circle cx="10" cy="10" r="1.9"/><circle cx="15.5" cy="10" r="1.9"/></svg></span></div></div>
         <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#any-other-mcp-client">Using another MCP client? →</a></div>
       </div>
     </div></div>
