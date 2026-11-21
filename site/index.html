@@ -240,25 +240,31 @@
   .connect { position: relative; display: inline-flex; align-items: center; gap: 12px; height: 44px; padding: 0 14px; align-self: flex-start;
     background: var(--code); border: 1px solid var(--line); color: var(--ink); font: 500 13.5px/1 var(--sans); cursor: pointer; }
   .ways .connect { margin-top: 24px; }
-  /* the glow stays inside the box. Its colour flows sideways at the pace of the npm letters (6s);
-     how high it reaches breathes between about an eighth and half of the button on an uneven
-     14s rhythm; its top edge is two smooth waves of different sizes, so it differs at every
-     point; and it gently pulses */
-  @property --h { syntax: "<percentage>"; inherits: false; initial-value: 30%; }
-  .connect { overflow: hidden; isolation: isolate; --ga: .55;
-    --fl: linear-gradient(90deg, #e5484d, #c2410c, #15803d, #1d4ed8, #7c3aed, #e5484d); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .connect { --ga: .75; --fl: linear-gradient(90deg, #ff5f6d, #ffc371, #47e891, #3fa9f5, #a46bff, #ff5f6d); } }
-  :root[data-theme="dark"] .connect { --ga: .75; --fl: linear-gradient(90deg, #ff5f6d, #ffc371, #47e891, #3fa9f5, #a46bff, #ff5f6d); }
-  .connect::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-    background: var(--fl) 0 0 / 200% 100%; opacity: var(--ga); filter: blur(4px);
-    -webkit-mask: linear-gradient(to top, #000 0%, #000 calc(var(--h) * .4), rgb(0 0 0 / .45) calc(var(--h) * .75), transparent var(--h)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='f' gradientUnits='userSpaceOnUse' x1='0' y1='8' x2='0' y2='60'%3E%3Cstop offset='0' stop-color='%23fff' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23fff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url%28%23f%29' d='M0 48.2 L5 51.2 L10 52.6 L15 52.5 L20 51.3 L25 49.7 L30 48.4 L35 47.8 L40 48.4 L45 50.2 L50 52.8 L55 55.8 L60 58.5 L65 60.1 L70 60.2 L75 58.6 L80 55.2 L85 50.5 L90 45.2 L95 40.1 L100 35.8 L105 32.8 L110 31.4 L115 31.5 L120 32.7 L125 34.3 L130 35.6 L135 36.2 L140 35.6 L145 33.8 L150 31.2 L155 28.2 L160 25.5 L165 23.9 L170 23.8 L175 25.4 L180 28.8 L185 33.5 L190 38.8 L195 43.9 L200 48.2 V100 H0 Z'/%3E%3C/svg%3E") 0 0 / 200% 100% repeat-x, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='f' gradientUnits='userSpaceOnUse' x1='0' y1='8' x2='0' y2='60'%3E%3Cstop offset='0' stop-color='%23fff' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23fff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url%28%23f%29' d='M0 58.3 L5 59.1 L10 59.2 L15 58.7 L20 57.4 L25 55.4 L30 52.7 L35 49.6 L40 46.1 L45 42.5 L50 39.1 L55 36.0 L60 33.4 L65 31.5 L70 30.4 L75 30.2 L80 30.7 L85 31.9 L90 33.7 L95 35.9 L100 38.3 L105 40.8 L110 43.0 L115 45.0 L120 46.6 L125 47.7 L130 48.4 L135 48.6 L140 48.6 L145 48.4 L150 48.2 L155 48.2 L160 48.3 L165 48.8 L170 49.6 L175 50.8 L180 52.2 L185 53.9 L190 55.6 L195 57.1 L200 58.3 V100 H0 Z'/%3E%3C/svg%3E") 0 0 / 66.667% 100% repeat-x; -webkit-mask-composite: source-in, source-in;
-    mask: linear-gradient(to top, #000 0%, #000 calc(var(--h) * .4), rgb(0 0 0 / .45) calc(var(--h) * .75), transparent var(--h)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='f' gradientUnits='userSpaceOnUse' x1='0' y1='8' x2='0' y2='60'%3E%3Cstop offset='0' stop-color='%23fff' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23fff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url%28%23f%29' d='M0 48.2 L5 51.2 L10 52.6 L15 52.5 L20 51.3 L25 49.7 L30 48.4 L35 47.8 L40 48.4 L45 50.2 L50 52.8 L55 55.8 L60 58.5 L65 60.1 L70 60.2 L75 58.6 L80 55.2 L85 50.5 L90 45.2 L95 40.1 L100 35.8 L105 32.8 L110 31.4 L115 31.5 L120 32.7 L125 34.3 L130 35.6 L135 36.2 L140 35.6 L145 33.8 L150 31.2 L155 28.2 L160 25.5 L165 23.9 L170 23.8 L175 25.4 L180 28.8 L185 33.5 L190 38.8 L195 43.9 L200 48.2 V100 H0 Z'/%3E%3C/svg%3E") 0 0 / 200% 100% repeat-x, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='f' gradientUnits='userSpaceOnUse' x1='0' y1='8' x2='0' y2='60'%3E%3Cstop offset='0' stop-color='%23fff' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23fff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url%28%23f%29' d='M0 58.3 L5 59.1 L10 59.2 L15 58.7 L20 57.4 L25 55.4 L30 52.7 L35 49.6 L40 46.1 L45 42.5 L50 39.1 L55 36.0 L60 33.4 L65 31.5 L70 30.4 L75 30.2 L80 30.7 L85 31.9 L90 33.7 L95 35.9 L100 38.3 L105 40.8 L110 43.0 L115 45.0 L120 46.6 L125 47.7 L130 48.4 L135 48.6 L140 48.6 L145 48.4 L150 48.2 L155 48.2 L160 48.3 L165 48.8 L170 49.6 L175 50.8 L180 52.2 L185 53.9 L190 55.6 L195 57.1 L200 58.3 V100 H0 Z'/%3E%3C/svg%3E") 0 0 / 66.667% 100% repeat-x; mask-composite: intersect;
-    animation: flow 6s linear infinite, waves 24s linear infinite, breathe 14s ease-in-out infinite, pulse 7s ease-in-out infinite alternate; }
-  /* the long wave drifts right and the short one left, at different speeds, so the edge rises and
-     falls in place rather than sliding one way (both move a whole number of their own widths) */
-  @keyframes waves { to { -webkit-mask-position: 0 0, -400% 0, -600% 0; mask-position: 0 0, -400% 0, -600% 0; } }
-  @keyframes breathe { 0% { --h: 30%; } 18% { --h: 56%; } 34% { --h: 36%; } 52% { --h: 62%; } 70% { --h: 22%; } 86% { --h: 48%; } 100% { --h: 30%; } }
-  @keyframes pulse { from { opacity: var(--ga); } to { opacity: calc(var(--ga) * .6); } }
+  /* the glow stays inside the box: four soft pools of colour, each about half the button high,
+     fading in and out on its own slow rhythm and drifting a little, so sometimes one corner
+     glows, sometimes another patch; quiet, never a line */
+  @property --a1 { syntax: "<number>"; inherits: false; initial-value: .9; }
+  @property --a2 { syntax: "<number>"; inherits: false; initial-value: .2; }
+  @property --a3 { syntax: "<number>"; inherits: false; initial-value: .6; }
+  @property --a4 { syntax: "<number>"; inherits: false; initial-value: .1; }
+  @property --x1 { syntax: "<percentage>"; inherits: false; initial-value: 4%; }
+  @property --x2 { syntax: "<percentage>"; inherits: false; initial-value: 34%; }
+  @property --x3 { syntax: "<percentage>"; inherits: false; initial-value: 66%; }
+  @property --x4 { syntax: "<percentage>"; inherits: false; initial-value: 96%; }
+  .connect { overflow: hidden; isolation: isolate; --ga: .3; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .connect { --ga: .42; } }
+  :root[data-theme="dark"] .connect { --ga: .42; }
+  .connect::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; filter: blur(8px);
+    background: radial-gradient(30% 58% at var(--x1) 100%, rgb(255 95 109 / calc(var(--ga) * var(--a1))), transparent),
+      radial-gradient(30% 52% at var(--x2) 100%, rgb(71 232 145 / calc(var(--ga) * var(--a2) * .8)), transparent),
+      radial-gradient(30% 56% at var(--x3) 100%, rgb(63 169 245 / calc(var(--ga) * var(--a3))), transparent),
+      radial-gradient(30% 60% at var(--x4) 100%, rgb(164 107 255 / calc(var(--ga) * var(--a4))), transparent);
+    animation: pool1 11s ease-in-out infinite alternate, pool2 13s ease-in-out infinite alternate,
+      pool3 9s ease-in-out infinite alternate, pool4 15s ease-in-out infinite alternate; }
+  @keyframes pool1 { 0% { --a1: .9; --x1: 4%; } 45% { --a1: .15; --x1: 14%; } 100% { --a1: .7; --x1: 8%; } }
+  @keyframes pool2 { 0% { --a2: .2; --x2: 34%; } 55% { --a2: .85; --x2: 26%; } 100% { --a2: .3; --x2: 40%; } }
+  @keyframes pool3 { 0% { --a3: .6; --x3: 66%; } 40% { --a3: .1; --x3: 58%; } 100% { --a3: .9; --x3: 72%; } }
+  @keyframes pool4 { 0% { --a4: .1; --x4: 96%; } 60% { --a4: .8; --x4: 88%; } 100% { --a4: .25; --x4: 94%; } }
   .connect > svg { width: 15px; height: 15px; color: var(--mute); flex: none; }
   .connect:hover > svg { color: var(--ink); }
   .connect .ok, .connect.done .copy { display: none; } .connect.done .ok { display: block; color: var(--ink); }
