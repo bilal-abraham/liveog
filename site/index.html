@@ -240,15 +240,34 @@
   .connect { position: relative; display: inline-flex; align-items: center; gap: 12px; height: 44px; padding: 0 14px; align-self: flex-start;
     background: var(--code); border: 1px solid var(--line); color: var(--ink); font: 500 13.5px/1 var(--sans); cursor: pointer; }
   .ways .connect { margin-top: 24px; }
-  .connect::before, .connect::after { content: ""; position: absolute; left: 10%; right: 10%; bottom: -1px; height: 1px; pointer-events: none;
-    background: linear-gradient(90deg, transparent, #ff5f6d 15%, #a46bff 45%, #3fa9f5 75%, transparent); }
-  .connect::before { height: 10px; bottom: -6px; filter: blur(9px); opacity: .55; }
+  /* the glow stays inside the box: three soft pools along the bottom that rise and fall out of step */
+  @property --g1 { syntax: "<percentage>"; inherits: false; initial-value: 118%; }
+  @property --g2 { syntax: "<percentage>"; inherits: false; initial-value: 112%; }
+  @property --g3 { syntax: "<percentage>"; inherits: false; initial-value: 104%; }
+  .connect { overflow: hidden; isolation: isolate; }
+  .connect::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; filter: blur(7px);
+    background: radial-gradient(42% 75% at 18% var(--g1), rgb(255 95 109 / var(--ga)), transparent 72%),
+      radial-gradient(42% 75% at 50% var(--g2), rgb(164 107 255 / var(--ga)), transparent 72%),
+      radial-gradient(42% 75% at 82% var(--g3), rgb(63 169 245 / var(--ga)), transparent 72%);
+    animation: liquid 9s ease-in-out infinite alternate; }
+  .connect::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; pointer-events: none; opacity: .7;
+    background: linear-gradient(90deg, transparent, #ff5f6d, #a46bff, #3fa9f5, transparent) 0 0 / 200% 100%; animation: flow 9s linear infinite; }
+  @keyframes liquid { 0% { --g1: 118%; --g2: 108%; --g3: 100%; } 50% { --g1: 102%; --g2: 120%; --g3: 112%; } 100% { --g1: 110%; --g2: 104%; --g3: 122%; } }
+  .connect { --ga: .5; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .connect { --ga: .55; } }
+  :root[data-theme="dark"] .connect { --ga: .55; }
   .connect > svg { width: 15px; height: 15px; color: var(--mute); flex: none; }
   .connect:hover > svg { color: var(--ink); }
   .connect .ok, .connect.done .copy { display: none; } .connect.done .ok { display: block; color: var(--ink); }
   .connect .ag { display: flex; align-items: center; gap: 8px; }
   .connect .ag i { width: 15px; height: 15px; background: currentColor; -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; }
   @media (max-width: 480px) { .ctas .connect .ag { display: none; } }
+  /* phones: the two Get started boxes run full width, copy icon at the right edge */
+  @media (max-width: 560px) {
+    .ways > div > .cmd, .ways > div > .connect { align-self: stretch; }
+    .ways .cmd code { flex: 1; }
+    .ways .connect > .copy, .ways .connect > .ok { margin-left: auto; }
+  }
   .ways .cmd { margin-top: 24px; align-self: flex-start; }
   .code { position: relative; margin-top: 16px; background: var(--code); border: 1px solid var(--line); }
   .code pre { margin: 0; padding: 16px 56px 16px 18px; overflow-x: auto; font: 400 13px/1.7 var(--mono); }
@@ -261,6 +280,10 @@
 
   /* the agent apps: set up for you, or one step by hand */
   .apps { margin-top: 24px; }
+  .works { margin-top: 48px; }
+  .works .wl { margin: 0; color: var(--mute); }
+  .works .apps { margin-top: 14px; }
+  .ways .works .wm { margin-top: 18px; }
   .ways .more { margin-top: 32px; }
   .icons { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
   .icons.stack { gap: 0; flex-wrap: nowrap; --ring: var(--bg); }
@@ -279,7 +302,6 @@
   .chip img { width: 20px; height: 20px; object-fit: contain; display: block; }
   .chip.full img { width: 100%; height: 100%; object-fit: cover; }
   .chip.inv img { filter: invert(1); }
-  .chip.inv.hue img { filter: invert(1) hue-rotate(180deg); }
   .chip.vs img { width: 22px; height: 22px; }
   .chip.etc svg { width: 20px; height: 20px; fill: #0a0a0a; }
   .more a { text-decoration: none; border-bottom: 1px solid var(--soft); }
@@ -430,8 +452,11 @@
       <div>
         <h3>Or let your agent do it</h3>
         <button class="connect" type="button" data-copy="Add the liveog MCP server so you can set up link previews for me. It runs on this computer with the command `npx -y liveog mcp` and needs no sign-in. Run `npx liveog mcp add`, or add it to the app you are running in using https://bilal-abraham.github.io/liveog/agents.md. If you need a restart before its tools appear, tell me. Then look at this project, suggest what each link people share should show, and let me pick before you change anything."><span class="ag" aria-hidden="true"><i style="--m:url(logos/claude.svg)"></i><i style="--m:url(logos/codex-mask.png)"></i><i style="--m:url(logos/cursor.svg)"></i></span><span>Connect your agent</span><svg class="copy"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-ok"/></svg></button>
-        <div class="apps"><div class="icons stack"><span class="chip full" style="--bg:#FFFFFF" tabindex="0" data-tip="Hermes Agent"><img src="logos/hermes.png" alt="Hermes Agent" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="OpenCode"><img src="logos/opencode.svg" alt="OpenCode" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Devin (Cognition)"><img src="logos/devin.svg" alt="Devin" width="34" height="34" loading="lazy"></span><span class="chip full inv" style="--bg:#ffffff" tabindex="0" data-tip="Factory"><img src="logos/factory.svg" alt="Factory" width="34" height="34" loading="lazy"></span><span class="chip full inv hue" style="--bg:#ffffff" tabindex="0" data-tip="Kimi Code"><img src="logos/kimi.png" alt="Kimi Code" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Muse Code"><img src="logos/muse-code.svg" alt="Muse Code" width="34" height="34" loading="lazy"></span><span class="chip vs" style="--bg:#ffffff" tabindex="0" data-tip="VS Code"><img src="logos/vscode.png" alt="VS Code" width="34" height="34" loading="lazy"></span><span class="chip etc" style="--bg:#ffffff" tabindex="0" data-tip="And most other agent apps"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.9"/><circle cx="10" cy="10" r="1.9"/><circle cx="15.5" cy="10" r="1.9"/></svg></span></div></div>
-        <div class="more"><a class="label" href="https://github.com/bilal-abraham/liveog#any-other-mcp-client">Using another MCP client? →</a></div>
+        <div class="works">
+          <p class="label wl">Works with</p>
+          <div class="apps"><div class="icons stack"><span class="chip full" style="--bg:#FFFFFF" tabindex="0" data-tip="Hermes Agent"><img src="logos/hermes.png" alt="Hermes Agent" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="OpenCode"><img src="logos/opencode.svg" alt="OpenCode" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Devin (Cognition)"><img src="logos/devin.svg" alt="Devin" width="34" height="34" loading="lazy"></span><span class="chip full inv" style="--bg:#ffffff" tabindex="0" data-tip="Factory"><img src="logos/factory.svg" alt="Factory" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Kimi Code"><img src="logos/kimi-k.png" alt="Kimi Code" width="34" height="34" loading="lazy"></span><span class="chip" style="--bg:#ffffff" tabindex="0" data-tip="Muse Code"><img src="logos/muse-mono.svg" alt="Muse Code" width="34" height="34" loading="lazy"></span><span class="chip vs" style="--bg:#ffffff" tabindex="0" data-tip="VS Code"><img src="logos/vscode-mono.png" alt="VS Code" width="34" height="34" loading="lazy"></span><span class="chip etc" style="--bg:#ffffff" tabindex="0" data-tip="And most other agent apps"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4.5" cy="10" r="1.9"/><circle cx="10" cy="10" r="1.9"/><circle cx="15.5" cy="10" r="1.9"/></svg></span></div></div>
+          <div class="more wm"><a class="label" href="https://github.com/bilal-abraham/liveog#any-other-mcp-client">Using another MCP client? →</a></div>
+        </div>
       </div>
     </div></div>
   </section>
