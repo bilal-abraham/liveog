@@ -251,9 +251,9 @@
   @property --x2 { syntax: "<percentage>"; inherits: false; initial-value: 34%; }
   @property --x3 { syntax: "<percentage>"; inherits: false; initial-value: 66%; }
   @property --x4 { syntax: "<percentage>"; inherits: false; initial-value: 96%; }
-  .connect { overflow: hidden; isolation: isolate; --ga: .3; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .connect { --ga: .42; } }
-  :root[data-theme="dark"] .connect { --ga: .42; }
+  .connect { overflow: hidden; isolation: isolate; --ga: .55; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .connect { --ga: .52; } }
+  :root[data-theme="dark"] .connect { --ga: .52; }
   .connect::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; filter: blur(8px);
     background: radial-gradient(30% 58% at var(--x1) 100%, rgb(255 95 109 / calc(var(--ga) * var(--a1))), transparent),
       radial-gradient(30% 52% at var(--x2) 100%, rgb(71 232 145 / calc(var(--ga) * var(--a2) * .8)), transparent),
